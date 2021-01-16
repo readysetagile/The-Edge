@@ -1,10 +1,18 @@
 import {StatusBar} from 'expo-status-bar';
 import React, {useState} from 'react';
-import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
-
+import {Alert, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import * as firebase from 'firebase';
+import styles from './src/screens/styles.js';
+import {AsyncStorage} from 'react-native';
+// Set the configuration for your app
 
 export default function App () {
+
   const [text, setText] = useState(null);
+  let accInfo = {
+    email: null,
+    password: null
+  };
 
   return (
     <View style={styles.container}>
@@ -14,7 +22,7 @@ export default function App () {
           style={styles.inputText}
           placeholder="Email"
           placeholderTextColor="#003f5c"
-          onChangeText={text => setText({email: text})} />
+          onChangeText={txt => accInfo.email = txt} />
       </View>
       <View style={styles.inputView} >
         <TextInput
@@ -22,67 +30,71 @@ export default function App () {
           placeholder="Password"
           placeholderTextColor="#003f5c"
           secureTextEntry
-          onChangeText={text => setText({password: text})} />
+          onChangeText={txt => accInfo.password = txt} />
       </View>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onForgotPassword}>
         <Text style={styles.forgot}>Forgot Password?</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.loginButton}>
+      <TouchableOpacity onPress={onLogIn} style={styles.loginButton}>
         <Text style={styles.loginText}>LOGIN</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity>
+      <TouchableOpacity onPress={onCreateAccount}>
         <Text style={styles.loginText}>Signup</Text>
       </TouchableOpacity>
 
-
     </View>
   );
+
+  async function onLogIn () {
+
+    const data = await getAccountInfo();
+    console.log(data, 1, accInfo);
+    if (data.email == accInfo.email && data.pass == accInfo.password) {
+      Alert.alert("Logged in sucessfully!");
+    } else {
+      Alert.alert("Could not find this account. Please try again");
+    }
+
+  }
+  async function onCreateAccount () {
+    try {
+
+      if (accInfo.email != null && accInfo.password != null) {
+
+        const info = await getAccountInfo();
+        if (info.email != null && accInfo.email == info.email) {
+          Alert.alert("Could not create an account as you already have an account under this email");
+          return;
+        }
+
+        await AsyncStorage.setItem("@User:email", accInfo.email);
+        await AsyncStorage.setItem("@User:password", accInfo.password);
+        Alert.alert("Account Created!");
+      } else {
+        Alert.alert("Please input your email and password");
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+  }
 }
 
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f92a82',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  logo: {
-    fontWeight: "bold",
-    fontSize: 50,
-    color: "#d6d5b3",
-    marginBottom: 40
-  },
-  inputView: {
-    width: "80%",
-    backgroundColor: "#ed7b84",
-    borderRadius: 25,
-    height: 50,
-    marginBottom: 20,
-    justifyContent: "center",
-    padding: 20
-  },
-  inputText: {
-    height: 50,
-    color: "white"
-  },
-  forgot: {
-    color: "white",
-    fontSize: 15
-  },
-  loginButton: {
-    width: "80%",
-    backgroundColor: "#7eb77f",
-    borderRadius: 25,
-    height: 50,
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 40,
-    marginBottom: 10
-  },
-  loginText: {
-    color: "white"
+
+
+async function getAccountInfo () {
+  try {
+    const email = await AsyncStorage.getItem("@User:email");
+    const pass = await AsyncStorage.getItem("@User:password");
+    return {email: email, pass: pass};
+  } catch (e) {
+    console.error(e);
   }
-});
+}
+
+function onForgotPassword () {
+  Alert.alert("Sadly, you can't forget your password right now");
+}
