@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
 import {Alert, AsyncStorage, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
+import React from 'react';
 
 
 export default function LoginScreen ({navigation}) {

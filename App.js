@@ -4,6 +4,9 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import {LoginScreen} from "./src/screens";
 import {HomeScreen} from "./src/screens";
+import {StatusBar} from 'expo-status-bar';
+import React from 'react';
+
 
 // Set the configuration for your app
 
