@@ -8,7 +8,7 @@ export default StyleSheet.create({
     },
     contentContainer:{
         backgroundColor: "#2adaf9",
-        height: '80%',
+        height: '70%',
         width: '80%',
         marginTop: 20,
         shadowColor: "black",
@@ -41,6 +41,20 @@ export default StyleSheet.create({
         marginTop: 20,
         color: "#f92a89",
         fontWeight: 'bold'
+    },
+    createAccountButton: {
+        width: "80%",
+        backgroundColor: "#7eb77f",
+        borderRadius: 25,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: 40,
+        marginBottom: 10
+    },
+    createAccountText: {
+        color: "black",
+        fontSize: 20
     }
 
 });

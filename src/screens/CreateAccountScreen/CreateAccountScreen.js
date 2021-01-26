@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {TextInput} from "react-native";
 
@@ -43,9 +43,16 @@ export default function CreateAccountScreen ({navigation}) {
                 </View>
 
             </View>
+            <TouchableOpacity onPress={onCreateAccount()} style={styles.createAccountButton}>
+                <Text style={styles.createAccountText}>Create Account</Text>
+            </TouchableOpacity>
 
         </View>
     );
+}
+
+function onCreateAccount(){
+
 }
 
 /*
