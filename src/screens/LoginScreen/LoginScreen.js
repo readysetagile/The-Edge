@@ -19,6 +19,7 @@ export default function LoginScreen ({navigation}) {
                         placeholderTextColor="#003f5c"
                         onChangeText={txt => accInfo.email = txt} />
                 </View>
+
                 <View style={styles.inputView} >
                     <TextInput
                         style={styles.inputText}
@@ -54,25 +55,8 @@ export default function LoginScreen ({navigation}) {
 
     }
     async function onCreateAccount () {
-        try {
 
-            if (accInfo.email != null && accInfo.password != null) {
-
-                const info = await getAccountInfo();
-                if (info.email != null && accInfo.email === info.email) {
-                    Alert.alert("Could not create an account as you already have an account under this email");
-                    return;
-                }
-
-                await AsyncStorage.setItem("@User:email", accInfo.email);
-                await AsyncStorage.setItem("@User:password", accInfo.password);
-                Alert.alert("Account Created!");
-            } else {
-                Alert.alert("Please input your email and password");
-            }
-        } catch (e) {
-            console.error(e);
-        }
+        navigation.navigate("Create Account")
 
     }
 

@@ -2,9 +2,7 @@
 import 'react-native-gesture-handler';
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
-import {LoginScreen} from "./src/screens";
-import {HomeScreen} from "./src/screens";
-import {StatusBar} from 'expo-status-bar';
+import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
 import React from 'react';
 
 
@@ -23,6 +21,8 @@ export default function App () {
 
           </Stack.Screen>
             <Stack.Screen name="Home" component={HomeScreen}/>
+            <Stack.Screen name="Create Account" component={CreateAccountScreen}/>
+
         </Stack.Navigator>
 
       </NavigationContainer>
