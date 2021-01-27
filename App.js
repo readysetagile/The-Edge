@@ -5,18 +5,17 @@ import {createStackNavigator} from "@react-navigation/stack";
 import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
 import React from 'react';
 
-
 // Set the configuration for your app
 
 export default function App () {
 
-  const Stack = createStackNavigator();
+    const Stack = createStackNavigator();
 
-  return (
+    return (
       <NavigationContainer>
 
         <Stack.Navigator>
-          <Stack.Screen name="Login"
+          <Stack.Screen name="Logins"
                         component={LoginScreen}>
 
           </Stack.Screen>

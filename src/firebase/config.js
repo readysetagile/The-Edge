@@ -3,17 +3,17 @@ import '@firebase/auth';
 import '@firebase/firestore';
 
 const firebaseConfig = {
-    apiKey: 'AIzaSyAmvGAGleB_oaQekWdBEoV3F5GclwYfNBs',
-    authDomain: 'the-edge-32a69.firebaseapp.com',
-    databaseURL: 'https://the-edge-32a69.firebaseio.com',
-    projectId: 'the-edge-32a69',
-    storageBucket: 'the-edge-32a69.appspot.com',
-    messagingSenderId: '971963592101',
-    appId: '1:971963592101:ios:d746c454fe962f14aa8c4c',
+    apiKey: "AIzaSyBAP55Nxd84Xszz-G9JrVLcxoQjYivWr0g",
+    authDomain: "the-edge-9ad19.firebaseapp.com",
+    databaseURL: "https://the-edge-9ad19-default-rtdb.firebaseio.com/",
+    projectId: "the-edge-9ad19",
+    storageBucket: "the-edge-9ad19.appspot.com",
+    messagingSenderId: "601530250397",
+    appId: "1:601530250397:ios:412aebb9d8ea809bcc5074"
 };
 
 if (!firebase.apps.length) {
     firebase.initializeApp(firebaseConfig);
-}
+} else firebase.app();
 
 export {firebase};
