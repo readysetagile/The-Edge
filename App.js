@@ -4,7 +4,6 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
 import React from 'react';
-import {UserAuthentication} from "./src/firebase/UserAuthentication";
 
 // Set the configuration for your app
 

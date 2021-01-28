@@ -30,10 +30,10 @@ export default function LoginScreen ({navigation}) {
                         onChangeText={txt => accInfo.password = txt} />
                 </View>
 
-                <TouchableOpacity onPress={onForgotPassword}>
+                <TouchableOpacity >
                     <Text style={styles.forgot}>Forgot Password?</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={onLogIn} style={styles.loginButton}>
+                <TouchableOpacity style={styles.loginButton}>
                     <Text style={styles.loginText}>LOGIN</Text>
                 </TouchableOpacity>
 
@@ -44,35 +44,8 @@ export default function LoginScreen ({navigation}) {
             </View>
     );
 
-    async function onLogIn () {
-
-        const data = await getAccountInfo();
-        if (data.email === accInfo.email && data.pass === accInfo.password) {
-            Alert.alert("Logged in sucessfully!");
-            navigation.navigate("Home");
-        } else {
-            Alert.alert("Could not find this account. Please try again");
-        }
-
-    }
     async function onCreateAccount () {
-
         navigation.navigate("Create Account")
-
-    }
-
-    async function getAccountInfo () {
-        try {
-            const email = await AsyncStorage.getItem("@User:email");
-            const pass = await AsyncStorage.getItem("@User:password");
-            return {email: email, pass: pass};
-        } catch (e) {
-            console.error(e);
-        }
-    }
-
-    function onForgotPassword () {
-        Alert.alert("Sadly, you can't forget your password right now");
     }
 
 }

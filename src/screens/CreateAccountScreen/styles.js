@@ -7,7 +7,7 @@ export default StyleSheet.create({
         backgroundColor: Colors.background
     },
     contentContainer:{
-        backgroundColor: "#2780b3",
+        backgroundColor: "#2780f4",
         height: '70%',
         width: '80%',
         marginTop: 20,
@@ -22,6 +22,13 @@ export default StyleSheet.create({
         color: Colors.titleText,
         fontWeight: 'bold'
     },
+    errorMsg:{
+        color:"red",
+        height:14,
+        position:'absolute',
+        bottom: 5,
+        left: '-20%'
+    },
 
     inputView: {
         width: "80%",
@@ -29,11 +36,12 @@ export default StyleSheet.create({
         borderRadius: 25,
         height: 50,
         marginBottom: 20,
-        justifyContent: "center",
+        justifyContent: 'space-around',
+
         padding: 20
     },
     inputText: {
-        height: 50,
+        height: 10,
         color: "white"
     },
     inputDescription:{
@@ -53,7 +61,7 @@ export default StyleSheet.create({
         marginBottom: 10
     },
     createAccountText: {
-        color: "black",
+        color: "white",
         fontSize: 20
     }
 
