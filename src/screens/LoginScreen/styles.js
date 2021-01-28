@@ -1,20 +1,21 @@
 import {StyleSheet} from "react-native";
+import Colors from '../styles';
 export default StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#f92a82',
+        backgroundColor: Colors.background,
         alignItems: 'center',
         justifyContent: 'center',
     },
     logo: {
         fontWeight: "bold",
         fontSize: 50,
-        color: "#d6d5b3",
+        color: Colors.titleText,
         marginBottom: 40
     },
     inputView: {
         width: "80%",
-        backgroundColor: "#ed7b84",
+        backgroundColor: Colors.inputBox,
         borderRadius: 25,
         height: 50,
         marginBottom: 20,
@@ -31,7 +32,7 @@ export default StyleSheet.create({
     },
     loginButton: {
         width: "80%",
-        backgroundColor: "#7eb77f",
+        backgroundColor: Colors.mainButton,
         borderRadius: 25,
         height: 50,
         alignItems: "center",

@@ -2,7 +2,9 @@ import React from 'react';
 import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {TextInput} from "react-native";
+
 import {useState} from 'react';
+import HiddenView from "../../CustomTypes/HiddenView";
 
 
 export default function CreateAccountScreen ({navigation}) {
@@ -11,6 +13,9 @@ export default function CreateAccountScreen ({navigation}) {
         username: null,
         password: null
     }
+    let state = {
+        isHidden: false
+    };
     return (
         <View style={styles.container}>
 
@@ -24,6 +29,9 @@ export default function CreateAccountScreen ({navigation}) {
                     placeholder="Username"
                     placeholderTextColor="white"
                     onChangeText={text => accInfo.username = text}/>
+                    <HiddenView hide={true}>
+                        <Text>Invalid Password</Text>
+                    </HiddenView>
                 </View>
 
                 <Text style={styles.inputDescription}>Email</Text>
@@ -63,6 +71,7 @@ export default function CreateAccountScreen ({navigation}) {
         if(Object.values(accInfo).some(i => i == null)){
 
             console.log(true);
+            state.isHidden = !state.isHidden;
 
         }
     }

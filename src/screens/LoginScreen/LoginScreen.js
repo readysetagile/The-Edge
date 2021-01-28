@@ -1,4 +1,4 @@
-import {Alert, AsyncStorage, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, AsyncStorage, Text, TextInput, TouchableOpacity, View, Image} from 'react-native';
 import styles from './styles';
 import React from 'react';
 
@@ -11,6 +11,7 @@ export default function LoginScreen ({navigation}) {
 
     return (
             <View style={styles.container}>
+                <Image source={require("../../assets/iPhoneApp.png")}/>
                 <Text style={styles.logo}>The Edge</Text>
                 <View style={styles.inputView} >
                     <TextInput
