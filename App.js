@@ -11,8 +11,6 @@ export default function App () {
 
     const Stack = createStackNavigator();
 
-    //UserAuthentication.createAccount("test@gmail.com", "testpassword");
-    //UserAuthentication.signInWithEmailAndPassword("test@gmail.com", "testpassword")
     return (
       <NavigationContainer>
 

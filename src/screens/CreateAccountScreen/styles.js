@@ -25,9 +25,13 @@ export default StyleSheet.create({
     errorMsg:{
         color:"red",
         height:14,
-        position:'absolute',
         bottom: 5,
-        left: '-20%'
+        textAlign: 'center',
+    },
+    hiddenViewErr:{
+        width: '80%',
+        justifyContent: 'space-around',
+        marginTop: -12
     },
 
     inputView: {
@@ -37,11 +41,10 @@ export default StyleSheet.create({
         height: 50,
         marginBottom: 20,
         justifyContent: 'space-around',
-
         padding: 20
     },
     inputText: {
-        height: 10,
+        height: 15,
         color: "white"
     },
     inputDescription:{

@@ -2,6 +2,24 @@ import {firebase} from './config';
 
 module.exports.UserAuthentication = class UserAuthentication{
 
+
+    /**
+     * Checks the database if a user by username exists
+     * @param name the name of the user to check
+     * @returns {Promise<boolean>} a boolean of if it exists (false) or not (true)
+     */
+    static async isUnknownUsername(name){
+
+        const reference = firebase.database().ref("users/"+name);
+        return await new Promise((resolve) => {
+             reference.once('value', snap => {
+                 resolve(snap.val() == null)
+            }).catch(() => {
+                resolve(false)
+            });
+        });
+     }
+
     /**
      * Creates a new user account if it is a ble to
      * @param email the email associated with the account
@@ -19,6 +37,7 @@ module.exports.UserAuthentication = class UserAuthentication{
      * }     */
     static async createAccount(email, password){
 
+        console.log(email, password)
         const responseData = {};
         return await new Promise(resolve => {
             firebase.auth().createUserWithEmailAndPassword(email, password).then(userCredentials => {

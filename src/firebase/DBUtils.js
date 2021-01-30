@@ -1,5 +1,4 @@
 import { firebase, firestore, storage } from "./config";
-import crypto from 'crypto';
 
 module.exports.DB = class DB{
 
@@ -7,6 +6,15 @@ module.exports.DB = class DB{
         this.database = firebase.database();
     }
 
+    static addUserToDB(username, email){
 
+        const ref = firebase.database().ref('users');
+        let obj = {};
+        obj[username] = {
+            email: email,
+            isEmailVerified: false
+        }
+        ref.update(obj);
+    }
 
 }

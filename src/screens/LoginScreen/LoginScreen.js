@@ -8,7 +8,6 @@ export default function LoginScreen ({navigation}) {
         email: null,
         password: null
     };
-
     return (
             <View style={styles.container}>
                 <Image source={require("../../assets/iPhoneApp.png")}/>
