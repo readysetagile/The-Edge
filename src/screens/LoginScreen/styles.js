@@ -42,5 +42,16 @@ export default StyleSheet.create({
     },
     loginText: {
         color: "white"
+    },
+    hiddenViewErr:{
+        width: '80%',
+        justifyContent: 'space-around',
+        marginTop: -12
+    },
+    errorMsg:{
+        color:"yellow",
+        height:14,
+        bottom: 5,
+        textAlign: 'center',
     }
 });

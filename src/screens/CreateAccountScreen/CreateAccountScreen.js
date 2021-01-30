@@ -5,7 +5,6 @@ import {TextInput} from "react-native";
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {DB} from "../../firebase/DBUtils";
-import {HomeScreen} from "../index";
 
 export default class CreateAccountScreen extends Component{
 
@@ -33,10 +32,10 @@ export default class CreateAccountScreen extends Component{
     constructor(props) {
         super(props);
         this.accInfo = {
-            email: "applebadsfees@gmail.com",
-            username: "banfana",
-            password: "coymansaw",
-            verifiedPass: "coymansaw"
+            email: "",
+            username: "",
+            password: "",
+            verifiedPass: ""
         }
     }
 
