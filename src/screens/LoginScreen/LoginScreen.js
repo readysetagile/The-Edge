@@ -21,8 +21,8 @@ export default class LoginScreen extends Component{
     constructor(props) {
         super(props);
         this.accInfo = {
-            email: "appleman@gmail.com",
-            password: "qwerty",
+            email: "",
+            password: "",
         }
     }
     checkEmail(email){

@@ -21,7 +21,6 @@ module.exports.UserAuthentication = class UserAuthentication{
      */
     static async signUserIn(email, password){
 
-        console.log(6);
         return await new Promise(resolve => {
             const responseData = {};
 
@@ -76,7 +75,6 @@ module.exports.UserAuthentication = class UserAuthentication{
      * */
     static async createAccount(email, password){
 
-        console.log(email, password)
         const responseData = {};
         return await new Promise(resolve => {
             firebase.auth().createUserWithEmailAndPassword(email, password).then(userCredentials => {
