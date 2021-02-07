@@ -38,5 +38,18 @@
     "@babel/core": "~7.9.0",
     "@types/cors": "^2.8.9"
   },
-  "private": true
+  "private": true,
+  "name": "the-edge",
+  "description": "Application for IOS and Android devices.",
+  "version": "1.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zmillisor/The-Edge.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zmillisor/The-Edge/issues"
+  },
+  "homepage": "https://github.com/zmillisor/The-Edge#readme"
 }
