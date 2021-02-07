@@ -4,6 +4,7 @@ import React from 'react';
 import {Component} from "react";
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
+import HomeScreen from "../HomeScreen/HomeScreen";
 
 export default class LoginScreen extends Component{
 
@@ -30,40 +31,55 @@ export default class LoginScreen extends Component{
         return re.test(email);
     }
 
+    /**
+     * Attempts to sign in the user. If failed, this will display an error message
+     * @todo make a loading appearance appear when user clicks login so that they know they are being logged in.
+     * @returns {Promise<void>}
+     */
     onSignIn = async () => {
 
         const email = this.accInfo.email.trim();
         const pass = this.accInfo.password;
-
-
         const emailPassed = this.checkEmail(email);
-            this.setState({
-                email:{
-                    hide: emailPassed,
-                    msg: "X Invalid Email"
-                }
-            })
 
-            this.setState({
-                password:{
-                    hide: !!pass.length,
-                    msg: "X Invalid Password"
-                }
-            })
+        this.updateState(emailPassed, pass);
 
-        if(!emailPassed || !pass.length){
+        if(!emailPassed || !pass){
             return;
         }
 
         const data = await UserAuthentication.signUserIn(email, pass);
         if(data.confirmed){
-            Alert.alert("Congratulations!", "You've sign in");
+            this.sendToHomePage();
         }else{
             Alert.alert(data.message);
         }
 
     }
 
+    updateState(emailPassed, password){
+        this.setState({
+            email:{
+                hide: emailPassed,
+                msg: "X Invalid Email"
+            }
+        })
+
+        this.setState({
+            password:{
+                hide: !password,
+                msg: "X Invalid Password"
+            }
+        })
+    }
+
+    sendToHomePage(){
+        const {navigator} = this.props;
+        navigator.replace({
+            component: HomeScreen,
+            title: "Home"
+        })
+    }
 
     render() {
         const {navigation} = this.props;

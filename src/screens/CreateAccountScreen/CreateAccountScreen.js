@@ -39,39 +39,25 @@ export default class CreateAccountScreen extends Component{
         }
     }
 
+    /**
+     * Creates an account for the user if they have valid credentials
+     * @todo map each error message to a friendlier message
+     * @returns {Promise<void>}
+     */
     onCreateAccount = async () => {
+        const {navigation} = this.props;
+        const validEmail = this.checkEmail(this.accInfo.email.trim());
+        const validUsername = await this.checkUsername(this.accInfo.username.trim());
+        const passMatch = this.checkPass(this.accInfo.password, this.accInfo.verifiedPass);
 
-        let validEmail = this.checkEmail(this.accInfo.email.trim());
-        let validUsername = await this.checkUsername(this.accInfo.username.trim());
-        let passMatch = this.checkPass(this.accInfo.password, this.accInfo.verifiedPass);
-
-            this.setState({
-                email:{
-                    hide: validEmail,
-                    msg: "X Invalid Email"
-                }
-            })
-
-            this.setState({
-                username:{
-                    hide: validUsername,
-                    msg: "X Username already in use"
-                }
-            })
-
-            this.setState({
-                confirmPassword:{
-                    hide: passMatch,
-                    msg: "X Passwords do not match"
-                }
-            });
+        this.updateStates(validEmail, validUsername, passMatch);
 
         if(validEmail && validUsername && passMatch){
 
             const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password);
             if(msg.confirmed){
                 DB.addUserToDB(this.accInfo.username, this.accInfo.email);
-                Alert.alert("Congratulations!", "You've logged in!")
+                navigation.navigate("Home");
             }else{
                 Alert.alert(
                     "Invalid Credentials",
@@ -83,14 +69,62 @@ export default class CreateAccountScreen extends Component{
 
     }
 
+    /**
+     * Updates the login forum boxes of the page. This will display to the user
+     * if a filled out box was invalid or not
+     * @param email boolean of if the email is valid
+     * @param username boolean of if the username is valid
+     * @param password boolean of if the password is valid
+     */
+    updateStates(email, username, password){
+        this.setState({
+            email:{
+                hide: email,
+                msg: "X Invalid Email"
+            }
+        })
+
+        this.setState({
+            username:{
+                hide: username,
+                msg: "X Username already in use"
+            }
+        })
+
+        this.setState({
+            confirmPassword:{
+                hide: password,
+                msg: "X Passwords do not match"
+            }
+        });
+    }
+
+    /**
+     * Verifies an email address based on a regex match
+     * @param email the email to verify
+     * @returns {boolean} if the email passed the verification
+     */
     checkEmail(email){
         const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
     }
 
+    /**
+     * Any username is valid as long as it is not already existing in the database
+     * @param name the name to verify
+     * @returns {Promise<boolean>} if the username was valid or not
+     */
     async checkUsername(name){
         return await UserAuthentication.isUnknownUsername(name.trim()) && name !== ""
     }
+
+    /**
+     * Compares the two passwords (confirmation password and initial password) to see if they are equal
+     * and compares them to empty strings
+     * @param password the password to verify
+     * @param confirmPass the retyped password to verify
+     * @returns {boolean} if the verification passed
+     */
     checkPass(password, confirmPass){
         return password === confirmPass && password !== "" && confirmPass !== ""
     }
