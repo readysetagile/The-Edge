@@ -1,14 +1,17 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import styles from './styles';
 
 
-export default function HomeScreen ({navigation}) {
-    return (
-        <View>
-            <Text style={
-                styles.text
-            }>Welcome to the Amazing Home Screen</Text>
-        </View>
-    );
+export default class HomeScreen extends Component{
+
+    render() {
+        return (
+            <View>
+                <Text style={
+                    styles.text
+                }>Welcome to the Amazing Home Screen</Text>
+            </View>
+        );
+    }
 }

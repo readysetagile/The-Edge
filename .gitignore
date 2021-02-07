@@ -1,3 +1,4 @@
 node_modules
 .expo/web/cache/*
 .expo/packager-info.json
+src/firebase/the-edge-9ad19-firebase-adminsdk-bkh33-be3c04759c.json
