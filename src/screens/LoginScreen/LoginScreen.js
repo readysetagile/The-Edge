@@ -5,6 +5,7 @@ import {Component} from "react";
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import HomeScreen from "../HomeScreen/HomeScreen";
+import {DB} from "../../firebase/DBUtils";
 
 export default class LoginScreen extends Component{
 
@@ -79,6 +80,9 @@ export default class LoginScreen extends Component{
     }
 
     render() {
+
+        DB.getPersistentLogin().then(r => UserAuthentication.signInWithPersistentLogin(r).then(console.log));
+
         const {navigation} = this.props;
          return (
              <View style={styles.container}>
@@ -87,7 +91,7 @@ export default class LoginScreen extends Component{
                  <View style={styles.inputView}>
                      <TextInput
                          style={styles.inputText}
-                         placeholder="Email"
+                         placeholder="Emaill"
                          placeholderTextColor="#003f5c"
                          onChangeText={txt => this.accInfo.email = txt}>{this.accInfo.email}</TextInput>
                  </View>

@@ -50,9 +50,9 @@ module.exports.UserAuthentication = class UserAuthentication{
         const reference = firebase.database().ref("users/"+name);
         return await new Promise((resolve) => {
              reference.once('value', snap => {
-                 resolve(snap.val() == null)
+                 resolve(snap)
             }).catch(() => {
-                resolve(false)
+                resolve(null)
             });
         });
      }
@@ -79,7 +79,7 @@ module.exports.UserAuthentication = class UserAuthentication{
         return await new Promise(resolve => {
             firebase.auth().createUserWithEmailAndPassword(email, password).then(userCredentials => {
                 responseData.confirmed = true;
-                responseData.credentials = userCredentials.user;
+                responseData.credentials = userCredentials;
                 resolve(responseData);
             }).catch((err) => {
                 responseData.confirmed = false;
@@ -88,6 +88,13 @@ module.exports.UserAuthentication = class UserAuthentication{
                 resolve(responseData);
             })
         });
+
+    }
+
+    static async signInWithPersistentLogin(credentials){
+
+        console.log(credentials);
+        return await firebase.auth().signInWithCustomToken(credentials)
 
     }
 
