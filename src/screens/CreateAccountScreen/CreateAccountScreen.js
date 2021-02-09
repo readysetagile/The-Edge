@@ -62,7 +62,8 @@ export default class CreateAccountScreen extends Component{
                 navigation.reset({
                     index: 0,
                     routes: [{name: "Home"}]
-                })            }else{
+                })
+            }else{
                 Alert.alert(
                     "Invalid Credentials",
                     msg.message,
