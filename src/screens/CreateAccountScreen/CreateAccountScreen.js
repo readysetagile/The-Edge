@@ -58,7 +58,6 @@ export default class CreateAccountScreen extends Component{
             const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password, this.accInfo.username);
             if(msg.confirmed){
                 DB.addUserToDB(this.accInfo.username, this.accInfo.email, this.state.rememberMe);
-                const {navigation} = this.props;
                 navigation.reset({
                     index: 0,
                     routes: [{name: "Home"}]
