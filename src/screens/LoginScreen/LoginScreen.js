@@ -104,7 +104,6 @@ export default class LoginScreen extends Component{
     }
 
     render() {
-        //console.log(firebase.auth().currentUser);
         const {navigation} = this.props;
             return (
                 <View style={styles.container}>

@@ -29,7 +29,6 @@ export default class App extends Component{
      */
     handleAppStateChange = (nextAppState) => {
         if (nextAppState === 'inactive') {
-            console.log('the app is closed');
             let currentUser = firebase.auth().currentUser;
             if(currentUser != null){
                 DB.getUserData(currentUser.displayName).then(r => {
