@@ -14,17 +14,37 @@ module.exports.DB = class DB{
      * @param email the email of the user
      * @precondition the user does not already exist in the database
      */
-    static addUserToDB(username, email){
+    static addUserToDB(username, email, rememberUser){
 
         const ref = firebase.database().ref('users');
         let obj = {};
         obj[username] = {
             email: email,
-            isEmailVerified: false
+            isEmailVerified: false,
+            rememberLogin: rememberUser
         }
         ref.update(obj);
     }
 
+    /**
+     * Returns the data for a user
+     * @param username the username of the user to get data from
+     * @returns {Promise<object>} an object of the data stored in the users database
+     */
+    static async getUserData(username){
+        const ref = firebase.database().ref("users/"+username);
+        return await new Promise(resolve => {
+            ref.on('value', snapshot => {
+                resolve(snapshot);
+            })
+        })
+
+    }
+
+    static async updateUserData(refPath, data){
+        const ref = firebase.database().ref(refPath);
+        await ref.update(data);
+    }
 
     /**
      * Sets the persistent login for this device

@@ -60,12 +60,16 @@ export default StyleSheet.create({
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 10
     },
     createAccountText: {
         color: "white",
         fontSize: 20
+    },
+    rememberMeView:{
+        marginTop: 10,
+        flexDirection: 'row',
     }
 
 });

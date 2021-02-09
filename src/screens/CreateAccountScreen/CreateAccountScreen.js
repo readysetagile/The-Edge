@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, TouchableOpacity, View, Alert} from 'react-native';
+import {Text, TouchableOpacity, View, Alert, Switch} from 'react-native';
 import styles from './styles';
 import {TextInput} from "react-native";
 import HiddenView from "../../Components/HiddenView";
@@ -24,7 +24,8 @@ export default class CreateAccountScreen extends Component{
         confirmPassword:{
             hide: true,
             msg: ""
-        }
+        },
+        rememberMe: false
     }
 
     accInfo = {}
@@ -54,10 +55,9 @@ export default class CreateAccountScreen extends Component{
 
         if(validEmail && validUsername && passMatch){
 
-            const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password);
+            const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password, this.accInfo.username);
             if(msg.confirmed){
-                DB.addUserToDB(this.accInfo.username, this.accInfo.email);
-                await DB.setPersistentLogin(msg.credentials.user);
+                DB.addUserToDB(this.accInfo.username, this.accInfo.email, this.state.rememberMe);
                 navigation.navigate("Home");
             }else{
                 Alert.alert(
@@ -130,6 +130,10 @@ export default class CreateAccountScreen extends Component{
         return password === confirmPass && password !== "" && confirmPass !== ""
     }
 
+    onRememberMe = () => {
+        this.setState({rememberMe: !this.state.rememberMe})
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -183,6 +187,27 @@ export default class CreateAccountScreen extends Component{
                         <Text style={styles.errorMsg}>{this.state.confirmPassword.msg}</Text>
                     </HiddenView>
                 </View>
+
+                <View style={styles.rememberMeView}>
+                    <Text style={{
+                        fontSize: 20,
+                        color: 'white',
+                        padding: 5,
+                        alignSelf: 'center',
+                        textAlign: 'right'
+                    }}>Remember Me?</Text>
+                    <Switch
+                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        thumbColor={this.state.rememberMe ? "#f5dd4b" : "#f4f3f4"}
+                        ios_backgroundColor="#3e3e3e"
+                        onValueChange={this.onRememberMe}
+                        value={this.state.rememberMe}
+                        style={{
+                            alignSelf: 'center'
+                        }}
+                    />
+                </View>
+
                 <TouchableOpacity onPress={this.onCreateAccount} style={styles.createAccountButton}>
                     <Text style={styles.createAccountText}>Create Account</Text>
                 </TouchableOpacity>

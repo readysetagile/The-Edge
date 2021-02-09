@@ -53,5 +53,11 @@ export default StyleSheet.create({
         height:14,
         bottom: 5,
         textAlign: 'center',
+    },
+
+    rememberMeView:{
+        flexDirection: 'row',
+        height: 50,
     }
+
 });
