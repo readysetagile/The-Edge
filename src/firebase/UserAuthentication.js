@@ -50,9 +50,9 @@ module.exports.UserAuthentication = class UserAuthentication{
         const reference = firebase.database().ref("users/"+name);
         return await new Promise((resolve) => {
              reference.once('value', snap => {
-                 resolve(snap.val() == null)
+                 resolve(snap)
             }).catch(() => {
-                resolve(false)
+                resolve(null)
             });
         });
      }
@@ -61,6 +61,7 @@ module.exports.UserAuthentication = class UserAuthentication{
      * Creates a new user account if it is a ble to
      * @param email the email associated with the account
      * @param password the password associated with the account
+     * @param displayName the name of the user
      * @returns {Promise<object>} if the account create worked, returns:<p>
      * {<p>
      *     confirmed: true,<p>
@@ -73,13 +74,14 @@ module.exports.UserAuthentication = class UserAuthentication{
      *     message: error message<p>
      * }
      * */
-    static async createAccount(email, password){
+    static async createAccount(email, password, displayName){
 
         const responseData = {};
         return await new Promise(resolve => {
             firebase.auth().createUserWithEmailAndPassword(email, password).then(userCredentials => {
                 responseData.confirmed = true;
-                responseData.credentials = userCredentials.user;
+                userCredentials.user.updateProfile({displayName: displayName})
+                responseData.credentials = userCredentials;
                 resolve(responseData);
             }).catch((err) => {
                 responseData.confirmed = false;

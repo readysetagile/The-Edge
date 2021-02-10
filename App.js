@@ -3,28 +3,59 @@ import 'react-native-gesture-handler';
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
-import React from 'react';
+import React, {Component} from 'react';
+import {AppState} from "react-native";
+import {firebase} from "./src/firebase/config";
+import {DB} from "./src/firebase/DBUtils";
 
 // Set the configuration for your app
 
-export default function App () {
+export default class App extends Component{
 
-    const Stack = createStackNavigator();
+    componentDidMount() {
+        AppState.addEventListener('change',
+            this.handleAppStateChange);
+    }
 
-    return (
-      <NavigationContainer>
+    componentWillUnmount() {
+        AppState.removeEventListener('change', this.handleAppStateChange);
+    }
 
-        <Stack.Navigator>
-          <Stack.Screen name="Login"
-                        component={LoginScreen}>
+    /**
+     * Detects when the apps state changes for a logout.
+     * When the user closes the app and they opted to not be remembered, we will log them out
+     * @todo Figure out how to make it so that it detects an actual app quit rather than app inactivity
+     * @param nextAppState the next state of the app
+     */
+    handleAppStateChange = (nextAppState) => {
+        if (nextAppState === 'inactive') {
+            let currentUser = firebase.auth().currentUser;
+            if(currentUser != null){
+                DB.getUserData(currentUser.displayName).then(r => {
+                    if(!r.rememberLogin)
+                        firebase.auth().signOut().catch(console.error);
+                })
+            }
+        }
+    }
 
-          </Stack.Screen>
-            <Stack.Screen name="Home" component={HomeScreen}/>
-            <Stack.Screen name="Create Account" component={CreateAccountScreen}/>
+    render() {
+        const Stack = createStackNavigator();
 
-        </Stack.Navigator>
+        return (
+            <NavigationContainer>
 
-      </NavigationContainer>
-  );
+                <Stack.Navigator>
+                    <Stack.Screen name="Login"
+                                  component={LoginScreen}>
 
+                    </Stack.Screen>
+                    <Stack.Screen name="Home" component={HomeScreen}/>
+                    <Stack.Screen name="Create Account" component={CreateAccountScreen}/>
+
+                </Stack.Navigator>
+
+            </NavigationContainer>
+        );
+    }
 }
