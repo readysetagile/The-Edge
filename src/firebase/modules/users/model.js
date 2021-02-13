@@ -10,8 +10,6 @@ module.exports = {
         icon: "",
         rememberLogin: false
     },
-    profiles:{
-        parent: ""
-    },
+    profiles: new Map(),
 
 }
