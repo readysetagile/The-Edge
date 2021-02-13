@@ -1,24 +1,26 @@
 const DEFAULTUSER = require("./model");
-import {Edge} from "../../index"
+import {createUUID} from "../../index"
 import {firebase} from "../../config";
 
 module.exports.Users = class Users{
 
-    async constructor() {
+     constructor() {
         const ref = firebase.database().ref("users");
         this.reference = ref;
-        this.database = await new Promise(resolve => {
-            ref.on('value', snapshot => {
-                resolve(snapshot);
-            })
-        })
-        console.log("User database initialized");
+        (async () => {
+             this.database = await new Promise(resolve => {
+                 ref.on('value', snapshot => {
+                     resolve(snapshot);
+                 })
+             })
+             console.log("User database initialized");
+         })();
 
     }
 
     async create(email, rememberLogin){
 
-        const uuid = Edge.createUUID();
+        const uuid = createUUID();
         let obj = Object.assign({}, DEFAULTUSER);
         obj.userData.ID = uuid;
         obj.userData.email = email;
@@ -29,3 +31,4 @@ module.exports.Users = class Users{
     }
 
 }
+

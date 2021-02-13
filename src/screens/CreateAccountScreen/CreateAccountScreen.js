@@ -5,6 +5,8 @@ import {TextInput} from "react-native";
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {DB} from "../../firebase/DBUtils";
+import Edge from "../../firebase";
+import {firebase} from "../../firebase/config";
 
 export default class CreateAccountScreen extends Component{
 
@@ -57,10 +59,12 @@ export default class CreateAccountScreen extends Component{
 
             const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password, this.accInfo.username);
             if(msg.confirmed){
-                DB.addUserToDB(this.accInfo.username, this.accInfo.email, this.state.rememberMe);
+                await Edge.users.create(this.accInfo.email, this.state.rememberMe);
+                await firebase.auth().updateCurrentUser(msg.credentials);
                 navigation.reset({
                     index: 0,
-                    routes: [{name: "Home"}]
+                    routes: [{name: "Home"}],
+
                 })
             }else{
                 Alert.alert(
@@ -145,6 +149,7 @@ export default class CreateAccountScreen extends Component{
 
                 <View style={styles.contentContainer}>
 
+                    <View style={styles.prompt}>
                     <Text style={styles.inputDescription}>Display Name</Text>
                     <View style={styles.inputView}>
                         <TextInput style={styles.inputText}
@@ -156,7 +161,9 @@ export default class CreateAccountScreen extends Component{
                     <HiddenView hide={this.state.username.hide} style={styles.hiddenViewErr}>
                         <Text style={styles.errorMsg}>{this.state.username.msg}</Text>
                     </HiddenView>
+                    </View>
 
+                    <View style={styles.prompt}>
                     <Text style={styles.inputDescription}>Email</Text>
                     <View style={styles.inputView}>
                         <TextInput style={styles.inputText}
@@ -167,6 +174,9 @@ export default class CreateAccountScreen extends Component{
                     <HiddenView hide={this.state.email.hide} style={styles.hiddenViewErr}>
                         <Text style={styles.errorMsg}>{this.state.email.msg}</Text>
                     </HiddenView>
+                    </View>
+
+                    <View style={styles.prompt}>
                     <Text style={styles.inputDescription}>Password</Text>
                     <View style={styles.inputView}>
                         <TextInput style={styles.inputText}
@@ -178,6 +188,9 @@ export default class CreateAccountScreen extends Component{
                     <HiddenView hide={this.state.password.hide}style={styles.hiddenViewErr}>
                         <Text style={styles.errorMsg}>{this.state.password.msg}</Text>
                     </HiddenView>
+                    </View>
+
+                    <View style={styles.prompt}>
                     <Text style={styles.inputDescription}>Verify Password</Text>
                     <View style={styles.inputView}>
                         <TextInput style={styles.inputText}
@@ -189,6 +202,7 @@ export default class CreateAccountScreen extends Component{
                     <HiddenView hide={this.state.confirmPassword.hide}style={styles.hiddenViewErr}>
                         <Text style={styles.errorMsg}>{this.state.confirmPassword.msg}</Text>
                     </HiddenView>
+                    </View>
                 </View>
 
                 <View style={styles.rememberMeView}>

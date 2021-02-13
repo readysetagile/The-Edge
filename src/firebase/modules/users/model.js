@@ -1,7 +1,7 @@
 module.exports = {
 
     settings:{
-
+        test: ""
     },
     userData:{
         ID: "",
@@ -10,6 +10,8 @@ module.exports = {
         icon: "",
         rememberLogin: false
     },
-    profiles:{},
+    profiles:{
+        parent: ""
+    },
 
 }

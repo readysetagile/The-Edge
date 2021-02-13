@@ -81,7 +81,7 @@ export default class LoginScreen extends Component{
         const {navigation} = this.props;
         navigation.reset({
             index: 0,
-            routes: [{name: "Home"}]
+            routes: [{name: "Home", }],
         })
     }
 
@@ -99,7 +99,6 @@ export default class LoginScreen extends Component{
             }
         });
 
-
     }
 
     onRememberMe = () => {
@@ -107,6 +106,7 @@ export default class LoginScreen extends Component{
     }
 
     render() {
+        //firebase.auth().signOut();
         const {navigation} = this.props;
             return (
                 <View style={styles.container}>
