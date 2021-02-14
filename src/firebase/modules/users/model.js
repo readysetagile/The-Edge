@@ -1,15 +1,16 @@
 module.exports = {
 
     settings:{
-        test: ""
+        rememberLogin: false
     },
     userData:{
-        ID: "",
+        id: "",
         email: "",
         isVerified: false,
         icon: "",
-        rememberLogin: false
     },
-    profiles: new Map(),
+    profiles: {
+        test: ""
+    },
 
 }

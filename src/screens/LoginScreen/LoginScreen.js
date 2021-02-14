@@ -6,7 +6,7 @@ import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
 import {Switch} from "react-native";
-import {DB} from "../../firebase/DBUtils";
+import Edge, {createUUID} from "../../firebase";
 
 export default class LoginScreen extends Component{
 
@@ -34,12 +34,25 @@ export default class LoginScreen extends Component{
         return re.test(email);
     }
 
+    async createProfile(){
+
+        let accountUUID = firebase.auth().currentUser.uid;
+        let profID = "c762-1042-e2d1-c567-0e7d"
+        //console.log(Edge.users.accounts)
+        var user = Edge.users.get(accountUUID)
+        user.settings.rememberLogin = true;
+        user.update({settings: user.settings})
+        var profile = await user.profiles.get("fe08-aee4-1ef4-1fe6-e3e3");
+    }
+
     /**
      * Attempts to sign in the user. If failed, this will display an error message
      * @todo make a loading appearance appear when user clicks login so that they know they are being logged in.
      * @returns {Promise<void>}
      */
     onSignIn = async () => {
+
+        this.createProfile();
 
         const email = this.accInfo.email.trim();
         const pass = this.accInfo.password;
@@ -53,7 +66,7 @@ export default class LoginScreen extends Component{
 
         const data = await UserAuthentication.signUserIn(email, pass);
         if(data.confirmed){
-            await DB.updateUserData("users/" + firebase.auth().currentUser.displayName, {rememberLogin: this.state.rememberMe});
+            await Edge.users.set(firebase.auth().currentUser.uid, {rememberLogin: this.state.rememberMe}, "settings")
             this.sendToHomePage();
         }else{
             Alert.alert(data.message);
@@ -79,10 +92,11 @@ export default class LoginScreen extends Component{
 
     sendToHomePage() {
         const {navigation} = this.props;
-        navigation.reset({
-            index: 0,
-            routes: [{name: "Home", }],
-        })
+        navigation.navigate("Home")
+        // navigation.reset({
+        //     index: 0,
+        //     routes: [{name: "Home", }],
+        // })
     }
 
 

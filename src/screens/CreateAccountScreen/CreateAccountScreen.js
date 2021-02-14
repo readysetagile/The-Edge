@@ -4,7 +4,6 @@ import styles from './styles';
 import {TextInput} from "react-native";
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
-import {DB} from "../../firebase/DBUtils";
 import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
 
@@ -58,14 +57,16 @@ export default class CreateAccountScreen extends Component{
         if(validEmail && validUsername && passMatch){
 
             const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password, this.accInfo.username);
-            if(msg.confirmed){
-                await Edge.users.create(this.accInfo.email, this.state.rememberMe);
-                await firebase.auth().updateCurrentUser(msg.credentials);
-                navigation.reset({
-                    index: 0,
-                    routes: [{name: "Home"}],
 
-                })
+            if(msg.confirmed){
+                let uuid = msg.credentials.user.uid
+                await Edge.users.create(this.accInfo.email, this.state.rememberMe, uuid);
+                await navigation.navigate("Home");
+                // navigation.reset({
+                //     index: 0,
+                //     routes: [{name: "Home"}],
+                //
+                // })
             }else{
                 Alert.alert(
                     "Invalid Credentials",

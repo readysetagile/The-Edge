@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import styles from './styles';
 import {firebase} from "../../firebase/config";
+import Edge from '../../firebase/index';
 
 
 export default class HomeScreen extends Component {
@@ -15,7 +16,7 @@ export default class HomeScreen extends Component {
             <View>
                 <Text style={
                     styles.text
-                }>Welcome to the Amazing Home Screen {firebase.auth().currentUser.displayName}</Text>
+                }>Welcome to the Amazing Home Screen</Text>
             </View>
         );
     }
