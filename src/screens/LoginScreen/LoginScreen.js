@@ -75,7 +75,7 @@ export default class LoginScreen extends Component{
 
     sendToHomePage() {
         const {navigation} = this.props;
-        navigation.navigate("Home");
+        navigation.navigate("ProfileScreen");
     }
 
     render() {

@@ -57,7 +57,7 @@ export default class CreateAccountScreen extends Component{
             const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password);
             if(msg.confirmed){
                 DB.addUserToDB(this.accInfo.username, this.accInfo.email);
-                navigation.navigate("Home");
+                navigation.navigate("ProfileScreen");
             }else{
                 Alert.alert(
                     "Invalid Credentials",
