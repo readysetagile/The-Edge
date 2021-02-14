@@ -23,6 +23,11 @@ module.exports.User = class User{
         return profile;
     }
 
+    async removeProfile(profileUUID){
+        this.#_profiles.remove(profileUUID);
+        this.#reference.update({profiles: this.#_profiles});
+    }
+
     /**
      * Updates the database to the value input
      * @param objectToUpdate the object in the database to update

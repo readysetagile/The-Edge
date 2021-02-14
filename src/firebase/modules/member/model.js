@@ -1,9 +1,8 @@
 module.exports = {
 
-    joinedTimestamp: new Date().getTime(),
+    joinedTimestamp: 0,
     permissions: new Map(),//map of user permissions
     teamAnswers:{},
     userNotes:{},
-
 
 }

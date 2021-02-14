@@ -38,11 +38,11 @@ class Profile{
      * @param value the new value to update it to. This must be an object ex. {username: "Bob"}
      * @returns {Promise<void>}
      */
-    async update(value, path=""){
+     update(value, path=""){
         path = path.replace(/\./g, "/")
         let ref = this.#reference.child(this.profileUUID);
         if(path) ref = ref.child(path);
-        return await ref.update(value);
+        return ref.update(value);
     }
 
     /**
@@ -53,12 +53,11 @@ class Profile{
      * @param path the location of the value to place it in
      * @returns {Promise<any>} returns when the value is updated
      */
-    static async update(accountUUID, profileUUID, value, path=""){
+    static update(accountUUID, profileUUID, value, path=""){
         path = path.replace(/\./g, "/")
-
-        return await firebase.database().ref('users/'+accountUUID+"/profiles/"+profileUUID)
-            .child(path).update(value);
-
+        let ref = firebase.database().ref('users/'+accountUUID+"/profiles/"+profileUUID);
+        if(path) ref = ref.child(path);
+        return ref.update(value);
     }
 
 
@@ -68,11 +67,11 @@ class Profile{
      * @param value the new value to update it to. This must be an object ex. {username: "Bob"}
      * @returns {Promise<void>}
      */
-    async set(value, path=""){
+    set(value, path=""){
         path = path.replace(/\./g, "/")
         let ref = this.#reference.child(this.profileUUID);
         if(path) ref = ref.child(path);
-        return await ref.set(value);
+        return ref.set(value);
     }
 
     /**
@@ -80,14 +79,21 @@ class Profile{
      * @param path the path to remove. If none, this will delete the user
      * @returns {Promise<any>}
      */
-    async remove(path=""){
+    remove(path=""){
         path = path.replace(/\./g, "/")
         let reference = this.#reference.child(this.profileUUID);
         if(path) reference = reference.child(path);
-        return await reference.remove();
+        return reference.remove();
     }
 
-    static async createProfile(accountUUID, profileUUID, username){
+    /**
+     * Creates a new user profile.
+     * @param accountUUID the account to create the profile under
+     * @param profileUUID the profile uuid
+     * @param username the username of the profile
+     * @returns {Promise<Profile>}
+     */
+     static async createProfile(accountUUID, profileUUID, username){
 
         let profileObj = Object.assign({}, DEFAULTPROFILE);
         profileObj.id = profileUUID;

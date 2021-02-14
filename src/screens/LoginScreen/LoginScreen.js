@@ -34,17 +34,6 @@ export default class LoginScreen extends Component{
         return re.test(email);
     }
 
-    async createProfile(){
-
-        let accountUUID = firebase.auth().currentUser.uid;
-        let profID = "c762-1042-e2d1-c567-0e7d"
-        //console.log(Edge.users.accounts)
-        var user = Edge.users.get(accountUUID)
-        user.settings.rememberLogin = true;
-        user.update({settings: user.settings})
-        var profile = await user.profiles.get("fe08-aee4-1ef4-1fe6-e3e3");
-    }
-
     /**
      * Attempts to sign in the user. If failed, this will display an error message
      * @todo make a loading appearance appear when user clicks login so that they know they are being logged in.
@@ -52,7 +41,6 @@ export default class LoginScreen extends Component{
      */
     onSignIn = async () => {
 
-        this.createProfile();
 
         const email = this.accInfo.email.trim();
         const pass = this.accInfo.password;
