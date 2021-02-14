@@ -59,12 +59,10 @@ export default class CreateAccountScreen extends Component {
             if (msg.confirmed) {
                 let uuid = msg.credentials.user.uid
                 await Edge.users.create(this.accInfo.email, this.state.rememberMe, uuid);
-                await navigation.navigate("Home");
-                // navigation.reset({
-                //     index: 0,
-                //     routes: [{name: "Home"}],
-                //
-                // })
+                navigation.reset({
+                    index: 0,
+                    routes: [{name: "Home"}],
+                })
             } else {
                 Alert.alert(
                     "Invalid Credentials",
