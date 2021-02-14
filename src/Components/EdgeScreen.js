@@ -7,7 +7,5 @@ class EdgeScreen extends Component{
         super(props);
         this.edge = new Edge();
     }
-
-
-
+    
 }
