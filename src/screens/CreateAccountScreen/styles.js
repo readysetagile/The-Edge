@@ -1,19 +1,14 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import Colors from '../styles';
 
-import { Dimensions } from 'react-native';
-
-const { width, fontScale } = Dimensions.get("window");
+const {width, height} = Dimensions.get("window");
 const guidelineBaseWidth = 350;
 const guidelineBaseHeight = 680;
 
 const scale = size => width / guidelineBaseWidth * size;
 const verticalScale = size => height / guidelineBaseHeight * size;
-const moderateScale = (size, factor = 0.5) => size + ( scale(size) - size ) * factor;
+const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
 
-
-
-//export {scale, verticalScale, moderateScale};
 
 export default StyleSheet.create({
     container: {
@@ -21,7 +16,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: Colors.background
     },
-    contentContainer:{
+    contentContainer: {
         backgroundColor: "#2780f4",
         height: '70%',
         width: '80%',
@@ -38,13 +33,13 @@ export default StyleSheet.create({
         color: Colors.titleText,
         fontWeight: 'bold'
     },
-    errorMsg:{
-        color:"red",
+    errorMsg: {
+        color: "red",
         height: 14,
         bottom: 5,
         textAlign: 'center',
     },
-    hiddenViewErr:{
+    hiddenViewErr: {
         width: '80%',
         justifyContent: 'space-around',
         marginTop: 10,
@@ -59,13 +54,13 @@ export default StyleSheet.create({
         padding: 20,
         flex: .25
     },
-    prompt:{
+    prompt: {
         flex: 1,
         alignItems: 'center',
         justifyContent: 'space-evenly',
         width: '100%'
     },
-    inputDescription:{
+    inputDescription: {
         fontSize: 35,
         color: Colors.background,
         fontWeight: 'bold',
@@ -88,7 +83,7 @@ export default StyleSheet.create({
         color: "white",
         fontSize: 20
     },
-    rememberMeView:{
+    rememberMeView: {
         marginTop: 10,
         flexDirection: 'row',
     }

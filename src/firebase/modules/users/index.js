@@ -1,18 +1,19 @@
 import {Profile} from "../profiles";
 import {firebase} from "../../config";
 import {User} from "./User";
+
 const DEFAULTUSER = require("./model");
 
-module.exports.Users = class Users{
-
+module.exports.Users = class Users {
 
     #reference;
-     constructor() {
-         this.#reference = firebase.database().ref("users");
-             this.#reference.on('value', snap => {
-                 if(snap.val() != null)
-                 this.accounts = new Map(Object.entries(snap.val()));
-             })
+
+    constructor() {
+        this.#reference = firebase.database().ref("users");
+        this.#reference.on('value', snap => {
+            if (snap.val() != null)
+                this.accounts = new Map(Object.entries(snap.val()));
+        })
     }
 
     /**
@@ -22,7 +23,7 @@ module.exports.Users = class Users{
      * @param uuid
      * @returns {User} returns the new user account created
      */
-    async create(email, rememberLogin, uuid){
+    async create(email, rememberLogin, uuid) {
         let obj = Object.assign({}, DEFAULTUSER);
         obj.userData.id = uuid;
         obj.userData.email = email;
@@ -41,7 +42,7 @@ module.exports.Users = class Users{
      * @param uuid the uuid assigned to the user account
      * @returns {Promise<User>}
      */
-     get(uuid){
+    get(uuid) {
         return new User(this.accounts.get(uuid));
     }
 
@@ -51,11 +52,11 @@ module.exports.Users = class Users{
      * @param profileUUID the uuid of the profile
      * @returns {Promise<Profile|null>}
      */
-    async getProfile(uuid, profileUUID){
+    async getProfile(uuid, profileUUID) {
 
         let account = await this.get(uuid);
         let profile = account.profiles[profileUUID]
-        if(profile)
+        if (profile)
             return new Profile(profile);
         else return null;
     }
@@ -67,7 +68,7 @@ module.exports.Users = class Users{
      * @param value the new value to update it to. This must be an object ex. {username: "Bob"}
      * @returns {Promise<void>}
      */
-    async update(uuid, value, path=""){
+    async update(uuid, value, path = "") {
         path = path.replace(/\./g, "/")
         return await this.#reference.child(uuid).child(path).update(value);
     }
@@ -81,7 +82,7 @@ module.exports.Users = class Users{
      * @param path the parent of the value you're trying to set
      * @returns {Promise<void>}
      */
-    async set(uuid, value, path=""){
+    async set(uuid, value, path = "") {
         path = path.replace(/\./g, "/")
         return await this.#reference.child(uuid).child(path).set(value);
     }
@@ -92,10 +93,10 @@ module.exports.Users = class Users{
      * @param path the path to remove. If none, this will delete the user
      * @returns {Promise<any>}
      */
-    async remove(uuid, path=""){
+    async remove(uuid, path = "") {
         path = path.replace(/\./g, "/")
         let reference = this.#reference.child(uuid);
-        if(path) reference = reference.child(path);
+        if (path) reference = reference.child(path);
         return await reference.remove();
     }
 

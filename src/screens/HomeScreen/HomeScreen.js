@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {Text, View} from 'react-native';
 import styles from './styles';
-import {firebase} from "../../firebase/config";
-import Edge from '../../firebase/index';
 
 
 export default class HomeScreen extends Component {

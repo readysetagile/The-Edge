@@ -1,28 +1,26 @@
 import React, {Component} from 'react';
-import {Text, TouchableOpacity, View, Alert, Switch} from 'react-native';
+import {Alert, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
-import {TextInput} from "react-native";
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import Edge from "../../firebase";
-import {firebase} from "../../firebase/config";
 
-export default class CreateAccountScreen extends Component{
+export default class CreateAccountScreen extends Component {
 
     state = {
-        username:{
+        username: {
             hide: true,
             msg: ""
         },
-        email:{
+        email: {
             hide: true,
             msg: ""
         },
-        password:{
+        password: {
             hide: true,
             msg: ""
         },
-        confirmPassword:{
+        confirmPassword: {
             hide: true,
             msg: ""
         },
@@ -54,11 +52,11 @@ export default class CreateAccountScreen extends Component{
 
         this.updateStates(validEmail, validUsername, passMatch);
 
-        if(validEmail && validUsername && passMatch){
+        if (validEmail && validUsername && passMatch) {
 
             const msg = await UserAuthentication.createAccount(this.accInfo.email, this.accInfo.password, this.accInfo.username);
 
-            if(msg.confirmed){
+            if (msg.confirmed) {
                 let uuid = msg.credentials.user.uid
                 await Edge.users.create(this.accInfo.email, this.state.rememberMe, uuid);
                 await navigation.navigate("Home");
@@ -67,7 +65,7 @@ export default class CreateAccountScreen extends Component{
                 //     routes: [{name: "Home"}],
                 //
                 // })
-            }else{
+            } else {
                 Alert.alert(
                     "Invalid Credentials",
                     msg.message,
@@ -85,23 +83,23 @@ export default class CreateAccountScreen extends Component{
      * @param username boolean of if the username is valid
      * @param password boolean of if the password is valid
      */
-    updateStates(email, username, password){
+    updateStates(email, username, password) {
         this.setState({
-            email:{
+            email: {
                 hide: email,
                 msg: "X Invalid Email"
             }
         })
 
         this.setState({
-            username:{
+            username: {
                 hide: username,
                 msg: "X Username already in use"
             }
         })
 
         this.setState({
-            confirmPassword:{
+            confirmPassword: {
                 hide: password,
                 msg: "X Passwords do not match"
             }
@@ -113,7 +111,7 @@ export default class CreateAccountScreen extends Component{
      * @param email the email to verify
      * @returns {boolean} if the email passed the verification
      */
-    checkEmail(email){
+    checkEmail(email) {
         const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
     }
@@ -123,7 +121,7 @@ export default class CreateAccountScreen extends Component{
      * @param name the name to verify
      * @returns {Promise<boolean>} if the username was valid or not
      */
-    async checkUsername(name){
+    async checkUsername(name) {
         return await UserAuthentication.isUnknownUsername(name.trim()) && name !== ""
     }
 
@@ -134,7 +132,7 @@ export default class CreateAccountScreen extends Component{
      * @param confirmPass the retyped password to verify
      * @returns {boolean} if the verification passed
      */
-    checkPass(password, confirmPass){
+    checkPass(password, confirmPass) {
         return password === confirmPass && password !== "" && confirmPass !== ""
     }
 
@@ -151,58 +149,58 @@ export default class CreateAccountScreen extends Component{
                 <View style={styles.contentContainer}>
 
                     <View style={styles.prompt}>
-                    <Text style={styles.inputDescription}>Display Name</Text>
-                    <View style={styles.inputView}>
-                        <TextInput style={styles.inputText}
-                                   placeholder="Username"
-                                   placeholderTextColor="white"
-                                   onChangeText={text => this.accInfo.username = text}>{this.accInfo.username}</TextInput>
+                        <Text style={styles.inputDescription}>Display Name</Text>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.inputText}
+                                       placeholder="Username"
+                                       placeholderTextColor="white"
+                                       onChangeText={text => this.accInfo.username = text}>{this.accInfo.username}</TextInput>
 
-                    </View>
-                    <HiddenView hide={this.state.username.hide} style={styles.hiddenViewErr}>
-                        <Text style={styles.errorMsg}>{this.state.username.msg}</Text>
-                    </HiddenView>
-                    </View>
-
-                    <View style={styles.prompt}>
-                    <Text style={styles.inputDescription}>Email</Text>
-                    <View style={styles.inputView}>
-                        <TextInput style={styles.inputText}
-                                   placeholder="example@email.com"
-                                   placeholderTextColor="white"
-                                   onChangeText={text => this.accInfo.email = text}>{this.accInfo.email}</TextInput>
-                    </View>
-                    <HiddenView hide={this.state.email.hide} style={styles.hiddenViewErr}>
-                        <Text style={styles.errorMsg}>{this.state.email.msg}</Text>
-                    </HiddenView>
+                        </View>
+                        <HiddenView hide={this.state.username.hide} style={styles.hiddenViewErr}>
+                            <Text style={styles.errorMsg}>{this.state.username.msg}</Text>
+                        </HiddenView>
                     </View>
 
                     <View style={styles.prompt}>
-                    <Text style={styles.inputDescription}>Password</Text>
-                    <View style={styles.inputView}>
-                        <TextInput style={styles.inputText}
-                                   placeholder="Password"
-                                   secureTextEntry
-                                   placeholderTextColor="white"
-                                   onChangeText={text => this.accInfo.password = text}>{this.accInfo.password}</TextInput>
-                    </View>
-                    <HiddenView hide={this.state.password.hide}style={styles.hiddenViewErr}>
-                        <Text style={styles.errorMsg}>{this.state.password.msg}</Text>
-                    </HiddenView>
+                        <Text style={styles.inputDescription}>Email</Text>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.inputText}
+                                       placeholder="example@email.com"
+                                       placeholderTextColor="white"
+                                       onChangeText={text => this.accInfo.email = text}>{this.accInfo.email}</TextInput>
+                        </View>
+                        <HiddenView hide={this.state.email.hide} style={styles.hiddenViewErr}>
+                            <Text style={styles.errorMsg}>{this.state.email.msg}</Text>
+                        </HiddenView>
                     </View>
 
                     <View style={styles.prompt}>
-                    <Text style={styles.inputDescription}>Verify Password</Text>
-                    <View style={styles.inputView}>
-                        <TextInput style={styles.inputText}
-                                   placeholder="Repeat Password"
-                                   secureTextEntry
-                                   onChangeText={text => this.accInfo.verifiedPass = text}
-                                   placeholderTextColor="white">{this.accInfo.verifiedPass}</TextInput>
+                        <Text style={styles.inputDescription}>Password</Text>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.inputText}
+                                       placeholder="Password"
+                                       secureTextEntry
+                                       placeholderTextColor="white"
+                                       onChangeText={text => this.accInfo.password = text}>{this.accInfo.password}</TextInput>
+                        </View>
+                        <HiddenView hide={this.state.password.hide} style={styles.hiddenViewErr}>
+                            <Text style={styles.errorMsg}>{this.state.password.msg}</Text>
+                        </HiddenView>
                     </View>
-                    <HiddenView hide={this.state.confirmPassword.hide}style={styles.hiddenViewErr}>
-                        <Text style={styles.errorMsg}>{this.state.confirmPassword.msg}</Text>
-                    </HiddenView>
+
+                    <View style={styles.prompt}>
+                        <Text style={styles.inputDescription}>Verify Password</Text>
+                        <View style={styles.inputView}>
+                            <TextInput style={styles.inputText}
+                                       placeholder="Repeat Password"
+                                       secureTextEntry
+                                       onChangeText={text => this.accInfo.verifiedPass = text}
+                                       placeholderTextColor="white">{this.accInfo.verifiedPass}</TextInput>
+                        </View>
+                        <HiddenView hide={this.state.confirmPassword.hide} style={styles.hiddenViewErr}>
+                            <Text style={styles.errorMsg}>{this.state.confirmPassword.msg}</Text>
+                        </HiddenView>
                     </View>
                 </View>
 
@@ -215,7 +213,7 @@ export default class CreateAccountScreen extends Component{
                         textAlign: 'right'
                     }}>Remember Me?</Text>
                     <Switch
-                        trackColor={{ false: "#767577", true: "#81b0ff" }}
+                        trackColor={{false: "#767577", true: "#81b0ff"}}
                         thumbColor={this.state.rememberMe ? "#f5dd4b" : "#f4f3f4"}
                         ios_backgroundColor="#3e3e3e"
                         onValueChange={this.onRememberMe}

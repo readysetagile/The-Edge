@@ -1,16 +1,12 @@
 module.exports = {
 
     id: "",
-    modules:{
-        teamQuestions:{
+    modules: {
+        teamQuestions: {
             required: true,
         },
-        schedule:{
-
-        },
-        drills:{
-
-        }
+        schedule: {},
+        drills: {}
     },
     members: new Map()//map of member objects {memberID => memberObject}
 
