@@ -3,7 +3,11 @@ import {Text, View} from 'react-native';
 import styles from './styles';
 
 
-export default class HomeScreen extends Component{
+export default class HomeScreen extends Component {
+
+    constructor(props) {
+        super(props);
+    }
 
     render() {
         return (

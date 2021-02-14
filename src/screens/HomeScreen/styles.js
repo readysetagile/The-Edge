@@ -16,7 +16,7 @@ export default StyleSheet.create({
         marginRight: 30,
         paddingLeft: 16
     },
-    text:{
+    text: {
         fontSize: 20,
         alignSelf: 'center'
     }

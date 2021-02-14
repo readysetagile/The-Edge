@@ -1,5 +1,6 @@
 import {StyleSheet} from "react-native";
 import Colors from '../styles';
+
 export default StyleSheet.create({
     container: {
         flex: 1,
@@ -43,15 +44,21 @@ export default StyleSheet.create({
     loginText: {
         color: "white"
     },
-    hiddenViewErr:{
+    hiddenViewErr: {
         width: '80%',
         justifyContent: 'space-around',
         marginTop: -12
     },
-    errorMsg:{
-        color:"yellow",
-        height:14,
+    errorMsg: {
+        color: "yellow",
+        height: 14,
         bottom: 5,
         textAlign: 'center',
+    },
+
+    rememberMeView: {
+        flexDirection: 'row',
+        height: 50,
     }
+
 });

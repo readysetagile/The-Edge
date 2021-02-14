@@ -1,57 +1,73 @@
-import {StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import Colors from '../styles';
+
+const {width, height} = Dimensions.get("window");
+const guidelineBaseWidth = 350;
+const guidelineBaseHeight = 680;
+
+const scale = size => width / guidelineBaseWidth * size;
+const verticalScale = size => height / guidelineBaseHeight * size;
+const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
+
+
 export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
         backgroundColor: Colors.background
     },
-    contentContainer:{
+    contentContainer: {
         backgroundColor: "#2780f4",
         height: '70%',
         width: '80%',
         marginTop: 20,
         shadowColor: "black",
         alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 30
+        justifyContent: 'space-evenly',
+        borderRadius: 30,
+        flex: 4
     },
     text: {
-        fontSize: 42,
+        fontSize: moderateScale(42),
         marginTop: 20,
         color: Colors.titleText,
         fontWeight: 'bold'
     },
-    errorMsg:{
-        color:"red",
-        height:14,
+    errorMsg: {
+        color: "red",
+        height: 14,
         bottom: 5,
         textAlign: 'center',
     },
-    hiddenViewErr:{
+    hiddenViewErr: {
         width: '80%',
         justifyContent: 'space-around',
-        marginTop: -12
+        marginTop: 10,
+        marginBottom: 5
     },
 
     inputView: {
-        width: "80%",
+        width: '80%',
         backgroundColor: Colors.inputBox,
         borderRadius: 25,
-        height: 50,
-        marginBottom: 20,
-        justifyContent: 'space-around',
-        padding: 20
+        justifyContent: 'center',
+        padding: 20,
+        flex: .25
+    },
+    prompt: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        width: '100%'
+    },
+    inputDescription: {
+        fontSize: 35,
+        color: Colors.background,
+        fontWeight: 'bold',
     },
     inputText: {
         height: 15,
         color: "white"
-    },
-    inputDescription:{
-        fontSize: 42,
-        marginTop: 20,
-        color: Colors.background,
-        fontWeight: 'bold'
     },
     createAccountButton: {
         width: "80%",
@@ -60,12 +76,16 @@ export default StyleSheet.create({
         height: 50,
         alignItems: "center",
         justifyContent: "center",
-        marginTop: 40,
+        marginTop: 10,
         marginBottom: 10
     },
     createAccountText: {
         color: "white",
         fontSize: 20
+    },
+    rememberMeView: {
+        marginTop: 10,
+        flexDirection: 'row',
     }
 
 });
