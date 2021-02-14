@@ -12,7 +12,6 @@ module.exports.Users = class Users{
              this.#reference.on('value', snap => {
                  if(snap.val() != null)
                  this.accounts = new Map(Object.entries(snap.val()));
-                 console.log("User db added");
              })
     }
 
