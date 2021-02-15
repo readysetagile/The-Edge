@@ -61,7 +61,7 @@ export default class CreateAccountScreen extends Component {
                 await Edge.users.create(this.accInfo.email, this.state.rememberMe, uuid);
                 navigation.reset({
                     index: 0,
-                    routes: [{name: "ProfileScreen"}],
+                    routes: [{name: "Profile Screen"}],
                 });
             } else {
                 Alert.alert(

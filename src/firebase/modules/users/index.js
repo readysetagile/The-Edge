@@ -7,14 +7,11 @@ const DEFAULTUSER = require("./model");
 module.exports.Users = class Users {
 
     #reference;
-
     constructor() {
         this.#reference = firebase.database().ref("users");
-        this.#reference.on('value', snap => {
-            if (snap.val() != null)
-                this.accounts = new Map(Object.entries(snap.val()));
-        })
+
     }
+
 
     /**
      * Adds the default user to the database
@@ -42,8 +39,22 @@ module.exports.Users = class Users {
      * @param uuid the uuid assigned to the user account
      * @returns {Promise<User>}
      */
-    get(uuid) {
-        return new User(this.accounts.get(uuid));
+    async get(uuid) {
+        if(this.accounts == null) {
+            return await new Promise(resolve => {
+                this.#reference.on('value', snap => {
+                    if (snap.val() != null) {
+                        this.accounts = new Map(Object.entries(snap.val()));
+                        resolve(new User(this.accounts.get(uuid)));
+                    }
+                });
+            });
+        }else{
+            let userObject = this.accounts.get(uuid);
+            if(userObject == null) return null;
+            return new User(userObject);
+        }
+
     }
 
     /**

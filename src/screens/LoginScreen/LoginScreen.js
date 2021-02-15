@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
-import Edge from "../../firebase";
+import Edge, {createUUID} from "../../firebase";
 
 export default class LoginScreen extends Component {
 
@@ -66,22 +66,21 @@ export default class LoginScreen extends Component {
             email: {
                 hide: emailPassed,
                 msg: "X Invalid Email"
-            }
-        });
-
-        this.setState({
+            },
             password: {
                 hide: !!password,
                 msg: "X Invalid Password"
             }
         });
+
     }
 
     sendToHomePage () {
         const {navigation} = this.props;
+
         navigation.reset({
             index: 0,
-            routes: [{name: "ProfileScreen"}],
+            routes: [{name: "Profile Screen"}],
         });
     }
 
@@ -107,6 +106,7 @@ export default class LoginScreen extends Component {
 
     render () {
         //firebase.auth().signOut();
+
         const {navigation} = this.props;
         return (
             <View style={styles.container}>

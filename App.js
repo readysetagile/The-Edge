@@ -2,7 +2,7 @@
 import 'react-native-gesture-handler';
 import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
-import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
+import {HomeScreen, CreateAccountScreen, LoginScreen, ProfileScreen} from "./src/screens";
 import React, {Component} from 'react';
 import {AppState} from "react-native";
 import {firebase} from "./src/firebase/config";
@@ -32,7 +32,6 @@ export default class App extends Component {
             let currentUser = firebase.auth().currentUser;
             if (currentUser != null) {
                 Edge.users.get(currentUser.uid).then(r => {
-                    console.log(r);
                     if (!r.settings.rememberLogin) {
                         firebase.auth().signOut().catch(console.error);
                     }
@@ -40,6 +39,7 @@ export default class App extends Component {
             }
         }
     };
+
 
     render () {
         const Stack = createStackNavigator();
@@ -51,6 +51,7 @@ export default class App extends Component {
                     <Stack.Screen name="Login" component={LoginScreen} />
                     <Stack.Screen name="Home" component={HomeScreen} />
                     <Stack.Screen name="Create Account" component={CreateAccountScreen} />
+                    <Stack.Screen name="Profile Screen" component={ProfileScreen}/>
 
                 </Stack.Navigator>
 

@@ -10,7 +10,7 @@ module.exports = {
         icon: "",
     },
     profiles: {
-        test: ""
+        _: 0
     },
 
 }
