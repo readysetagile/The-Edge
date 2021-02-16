@@ -1,12 +1,11 @@
 
 import 'react-native-gesture-handler';
-import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
-import {HomeScreen, CreateAccountScreen, LoginScreen, ProfileScreen} from "./src/screens";
 import React, {Component} from 'react';
 import {AppState} from "react-native";
 import {firebase} from "./src/firebase/config";
 import Edge from "./src/firebase";
+import Login from './routes/LoginStack';
 
 // Set the configuration for your app
 
@@ -45,17 +44,25 @@ export default class App extends Component {
         const Stack = createStackNavigator();
 
         return (
-            <NavigationContainer>
-
-                <Stack.Navigator>
-                    <Stack.Screen name="Login" component={LoginScreen} />
-                    <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Create Account" component={CreateAccountScreen} />
-                    <Stack.Screen name="Profile Screen" component={ProfileScreen}/>
-
-                </Stack.Navigator>
-
-            </NavigationContainer>
+            <Login/>
+            // <NavigationContainer>
+            //
+            //     <Stack.Navigator>
+            //         <Stack.Screen name="Login" component={LoginScreen} />
+            //         <Stack.Screen name="Home" component={HomeScreen} />
+            //         <Stack.Screen name="Create Account" component={CreateAccountScreen} />
+            //         <Stack.Screen name="Profiles" component={ProfileScreen} options={{
+            //             headerRight: () => (
+            //                 <Button
+            //                     onPress={() => alert('This is a button!')}
+            //                     title="Info"
+            //                 />
+            //             )
+            //         }}/>
+            //
+            //     </Stack.Navigator>
+            //
+            // </NavigationContainer>
         );
     }
 }

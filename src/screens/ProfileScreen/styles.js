@@ -1,10 +1,16 @@
 import {StyleSheet} from 'react-native';
+import Colors from '../styles';
 
 export default StyleSheet.create({
+
+    background:{
+        backgroundColor: Colors.background
+    },
     profileContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
-        alignItems: 'flex-start'
+        alignItems: 'flex-start',
+        borderRadius: 25,
     },
     item:{
         width: '50%',

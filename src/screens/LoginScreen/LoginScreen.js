@@ -5,6 +5,7 @@ import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
 import Edge, {createUUID} from "../../firebase";
+import {NavigationActions, StackActions} from "react-navigation";
 
 export default class LoginScreen extends Component {
 
@@ -78,10 +79,11 @@ export default class LoginScreen extends Component {
     sendToHomePage () {
         const {navigation} = this.props;
 
-        navigation.reset({
+        const resetAction = StackActions.reset({
             index: 0,
-            routes: [{name: "Profile Screen"}],
+            actions: [NavigationActions.navigate({ routeName: 'Profiles' })],
         });
+        navigation.dispatch(resetAction);
     }
 
 
@@ -100,6 +102,11 @@ export default class LoginScreen extends Component {
 
     }
 
+    createAccount(){
+        const {navigation} = this.props;
+        navigation.navigate("Create_Account");
+    }
+
     onRememberMe = () => {
         this.setState({rememberMe: !this.state.rememberMe});
     };
@@ -107,7 +114,6 @@ export default class LoginScreen extends Component {
     render () {
         //firebase.auth().signOut();
 
-        const {navigation} = this.props;
         return (
             <View style={styles.container}>
                 <Image source={require("../../assets/iPhoneApp.png")} />
@@ -164,7 +170,7 @@ export default class LoginScreen extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate("Create Account");
+                    this.createAccount()
                 }}>
                     <Text style={styles.loginText}>Signup</Text>
                 </TouchableOpacity>

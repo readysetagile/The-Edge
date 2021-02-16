@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, Text, TouchableOpacity, View, ScrollView} from 'react-native';
+import {Image, Text, TouchableOpacity, View, ScrollView, Button} from 'react-native';
 import styles from './styles';
 import Edge, {createUUID} from "../../firebase";
 import {firebase} from "../../firebase/config";
@@ -21,28 +21,36 @@ export default class ProfileScreen extends Component {
         return user.profiles;
     }
 
-    async addProfile(){
+    async onAddProfile(){
         let userPromise = await Edge.users.get(firebase.auth().currentUser.uid);
         let profile = userPromise.addProfile(createUUID(), "madness")
-        this.state.accounts.push(this.generateProfileImage(profile.username, this.state.accounts.length));
+        this.state.accounts.push(this.generateProfileImage(profile, this.state.accounts.length));
         this.setState({
             accounts: this.state.accounts
         })
 
     }
 
-    generateProfileImage(username, index){
+    editProfile(profile){
+        console.log(profile)
+    }
+
+    generateProfileImage(profile, index){
         return(
-            <View key={index} style={styles.item}>
-                <TouchableOpacity onPress={() => this.addProfile()}>
-                    <Image style={styles.profilePicture} source={{uri: "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg"}}/>
-                    <Text style={styles.text}>{username}</Text>
-                </TouchableOpacity>
+            <View key={index} profile={profile} style={styles.item}>
+
+                    <TouchableOpacity onPress={() => this.enterProfile(profile)} onLongPress={() => this.editProfile(profile)}
+                                      delayLongPress={500}>
+                        <Image style={styles.profilePicture} source={{uri: profile.avatar}}/>
+                        <Text style={styles.text}>{profile.username}</Text>
+                    </TouchableOpacity>
             </View>
         )
     }
 
-    enterProfile(){
+    enterProfile(profile){
+
+        //navigation.navigate("screen", profile)
 
     }
 
@@ -51,7 +59,7 @@ export default class ProfileScreen extends Component {
             let profiles = await this.getProfiles();
             if(profiles != null) {
                 const accArr = Array.from(profiles.values()).filter(i => i != null).map((i, j) => {
-                    return this.generateProfileImage(i.username, j)
+                    return this.generateProfileImage(i, j)
                 });
                 this.setState({accounts: accArr});
             }
@@ -62,8 +70,13 @@ export default class ProfileScreen extends Component {
 
     render() {
         return (
-            <View>
-                <Text style={styles.text}>
+            <View style={styles.background}>
+                <Text style={{
+                    fontSize: 20,
+                    alignSelf: 'center',
+                    fontWeight: 'bold',
+                    padding: 5
+                }}>
                     Who is using this account?
                 </Text>
 

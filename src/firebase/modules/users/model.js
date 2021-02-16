@@ -7,7 +7,6 @@ module.exports = {
         id: "",
         email: "",
         isVerified: false,
-        icon: "",
     },
     profiles: {
         _: 0

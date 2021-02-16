@@ -4,6 +4,7 @@ import styles from './styles';
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import Edge from "../../firebase";
+import {NavigationActions, StackActions} from "react-navigation";
 
 export default class CreateAccountScreen extends Component {
 
@@ -59,10 +60,8 @@ export default class CreateAccountScreen extends Component {
             if (msg.confirmed) {
                 let uuid = msg.credentials.user.uid;
                 await Edge.users.create(this.accInfo.email, this.state.rememberMe, uuid);
-                navigation.reset({
-                    index: 0,
-                    routes: [{name: "Profile Screen"}],
-                });
+                this.sendToProfilePage()
+                navigation.dispatch(resetAction);
             } else {
                 Alert.alert(
                     "Invalid Credentials",
@@ -73,6 +72,16 @@ export default class CreateAccountScreen extends Component {
         }
 
     };
+
+    sendToProfilePage(){
+        const {navigation} = this.props;
+
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'Profiles' })],
+        });
+        navigation.dispatch(resetAction);
+    }
 
     /**
      * Updates the login forum boxes of the page. This will display to the user

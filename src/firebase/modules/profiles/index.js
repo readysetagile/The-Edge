@@ -1,4 +1,5 @@
 const DEFAULTPROFILE = require("./model");
+const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";
 import {firebase} from "../../config";
 
 class Profile{
@@ -121,9 +122,11 @@ class Profile{
     }
 
     get avatar() {
+         if(!this._avatar)
+             return DEFAULTAVATR;
         return this._avatar;
     }
 }
-
+export {DEFAULTAVATR}
 export {Profile};
 
