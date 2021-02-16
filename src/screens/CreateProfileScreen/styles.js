@@ -15,6 +15,9 @@ export default StyleSheet.create({
         width: 100,
         height: 100
     },
+    contentView:{
+        height: '70%'
+    },
     inputView: {
         width: "80%",
         backgroundColor: Colors.inputBox,
