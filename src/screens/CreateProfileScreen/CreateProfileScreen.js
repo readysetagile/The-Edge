@@ -1,22 +1,55 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {View, Image, Text, TextInput} from 'react-native';
 import styles from './styles';
 import {DEFAULTAVATR} from "../../firebase/modules/profiles";
 import {TouchableOpacity} from "react-native";
+import {
+    SafeAreaView,
+    StyleSheet,
+    Platform,
+    Alert,
+} from 'react-native';
 
-const options = {
-    title: "Select Avatar",
-    storageOptions:{
-        skipBackup: true,
-        path: 'images'
-    }
-}
+import ImagePicker from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+
+const [image, setImage] = useState(null);
+const [uploading, setUploading] = useState(false);
+const [transferred, setTransferred] = useState(0);
+
 
 export default class CreateProfileScreen extends Component{
 
-    pickImage(){
+
+    async uploadImage(){
 
 
+
+    }
+
+    selectImage(){
+
+        const options = {
+            maxWidth: 2000,
+            maxHeight: 2000,
+            storageOptions: {
+                skipBackup: true,
+                path: 'images'
+            }
+        };
+        ImagePicker.showImagePicker(options, response => {
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+                console.log('User tapped custom button: ', response.customButton);
+            } else {
+                const source = { uri: response.uri };
+                console.log(source);
+                setImage(source);
+            }
+        });
 
     }
 
@@ -25,7 +58,7 @@ export default class CreateProfileScreen extends Component{
 
             <View style={styles.background}>
 
-                    <TouchableOpacity onPress={() => this.pickImage()}>
+                    <TouchableOpacity onPress={() => this.selectImage()}>
                         <View style={{alignItems: 'center', padding: 40}}>
 
                         <Image style={styles.avatar} source={{uri: DEFAULTAVATR}}/>

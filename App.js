@@ -41,28 +41,8 @@ export default class App extends Component {
 
 
     render () {
-        const Stack = createStackNavigator();
-
         return (
             <Login/>
-            // <NavigationContainer>
-            //
-            //     <Stack.Navigator>
-            //         <Stack.Screen name="Login" component={LoginScreen} />
-            //         <Stack.Screen name="Home" component={HomeScreen} />
-            //         <Stack.Screen name="Create Account" component={CreateAccountScreen} />
-            //         <Stack.Screen name="Profiles" component={ProfileScreen} options={{
-            //             headerRight: () => (
-            //                 <Button
-            //                     onPress={() => alert('This is a button!')}
-            //                     title="Info"
-            //                 />
-            //             )
-            //         }}/>
-            //
-            //     </Stack.Navigator>
-            //
-            // </NavigationContainer>
         );
     }
 }
