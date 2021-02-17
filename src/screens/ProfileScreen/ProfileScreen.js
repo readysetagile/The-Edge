@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, Text, TouchableOpacity, View, ScrollView, Button} from 'react-native';
+import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import Edge, {createUUID} from "../../firebase";
 import {firebase} from "../../firebase/config";
@@ -35,17 +35,20 @@ export default class ProfileScreen extends Component {
         console.log(profile)
     }
 
-    generateProfileImage(profile, index){
-        return(
+     generateProfileImage(profile, index, profileImage){
+        if(profileImage == null) profileImage = profile.avatar;
+        return (
             <View key={index} profile={profile} style={styles.item}>
 
-                    <TouchableOpacity onPress={() => this.enterProfile(profile)} onLongPress={() => this.editProfile(profile)}
-                                      delayLongPress={500}>
-                        <Image style={styles.profilePicture} source={{uri: profile.avatar}}/>
-                        <Text style={styles.text}>{profile.username}</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.enterProfile(profile)}
+                                  onLongPress={() => this.editProfile(profile)}
+                                  delayLongPress={500}>
+                    <Image style={styles.profilePicture}
+                           source={{uri: profileImage}}/>
+                    <Text style={styles.text}>{profile.username}</Text>
+                </TouchableOpacity>
             </View>
-        )
+        );
     }
 
     enterProfile(profile){
@@ -58,10 +61,17 @@ export default class ProfileScreen extends Component {
         try{
             let profiles = await this.getProfiles();
             if(profiles != null) {
-                const accArr = Array.from(profiles.values()).filter(i => i != null).map((i, j) => {
-                    return this.generateProfileImage(i, j)
+                await new Promise(async resolve => {
+                    let accArr = await Array.from(profiles.values()).filter(i => i != null);
+                    let prom = await Promise.all(accArr.map(async (i, j) => {
+                        let pfpI = await i.getProfilePicture();
+                        return this.generateProfileImage(i, j, pfpI);
+                    }));
+
+                    resolve(prom)
+                }).then(r => {
+                    this.setState({accounts: r});
                 });
-                this.setState({accounts: accArr});
             }
         }catch(err){
             console.error(err);

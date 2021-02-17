@@ -1,10 +1,10 @@
 import React, {Component, useState} from 'react';
-import {View, Image, Text, TextInput, Platform} from 'react-native';
+import {View, Image, Text, TextInput, Platform, Alert} from 'react-native';
 import styles from './styles';
 import {DEFAULTAVATR} from "../../firebase/modules/profiles";
 import {TouchableOpacity} from "react-native";
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import firebase from '../../firebase/config';
+import {firebase} from '../../firebase/config';
 import Edge, {createUUID} from '../../firebase/index'
 import * as ImagePicker from 'expo-image-picker';
 
@@ -25,7 +25,6 @@ export default class CreateProfileScreen extends Component{
             if(status !== 'granted'){
                 return false;
             }
-
         }
 
     }
@@ -49,21 +48,30 @@ export default class CreateProfileScreen extends Component{
 
 
     async createProfile(){
-        await this.uploadImage();
+        await this.uploadProfilePicture();
         let user = await Edge.users.get(firebase.auth().currentUser.uid);
-        let profile = await user.addProfile(this.state.uuid, this.state.username)
-        console.log(profile)
+
+        if(!this.state.username){
+            Alert.alert("Invalid Username");
+            return;
+        }
+        await user.addProfile(this.state.uuid, this.state.username);
+        const {navigation} = this.props;
+        navigation.pop();//TODO navigate to new account home page
+
 
     }
 
-    uploadProfilePicture(){
+    async uploadProfilePicture(){
         if(this.state.image) {
 
             let uuid = firebase.auth().currentUser.uid;
-            let user = Edge.users.get(uuid);
             let storage = firebase.storage();
             let ref = storage.ref(uuid + "/pfp/" + this.state.uuid);
-            ref.put(this.state.image.uri);
+
+            let response = await fetch(this.state.image.uri);
+            const blob = await response.blob();
+            ref.put(blob)
 
         }
     }

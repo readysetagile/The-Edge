@@ -4,7 +4,8 @@ import Colors from '../styles';
 export default StyleSheet.create({
 
     background:{
-        backgroundColor: Colors.background
+        backgroundColor: Colors.background,
+        height: '100%'
     },
     profileContainer: {
         flexDirection: 'row',

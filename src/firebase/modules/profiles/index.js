@@ -1,5 +1,3 @@
-import Edge from "../../index";
-
 const DEFAULTPROFILE = require("./model");
 const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";
 import {firebase} from "../../config";
@@ -63,6 +61,17 @@ class Profile{
         return ref.update(value);
     }
 
+    async getProfilePicture(){
+
+        let storage = firebase.storage()
+        let ref = storage.ref(this.accountUUID+"/pfp/"+this.profileUUID);
+        return await new Promise(resolve => {
+            ref.getDownloadURL().then(url => {
+                resolve(url);
+            }).catch(() => resolve(null))
+        })
+
+    }
 
     /**
      * Updates a value for a user
@@ -76,6 +85,12 @@ class Profile{
         if(path) ref = ref.child(path);
         return ref.set(value);
     }
+    /*
+    nFlushedQueue
+
+https://firebasestorage.googleapis.com/v0/b/the-edge-9ad19.appspot.com/o/BN9BoaTkIkTCAFVQ2ui3rW4OdeN2%2Fpfp%2F6e4a-c1e3-91ee-170b?alt=media&token=260e096b-a6b0-4410-95b8-cf7f1cab2f43
+
+     */
 
     /**
      * Removes the specified path
@@ -87,11 +102,6 @@ class Profile{
         let reference = this.#reference.child(this.profileUUID);
         if(path) reference = reference.child(path);
         return reference.remove();
-    }
-
-    async getProfilePicture(){
-        let imageRef = firebase.storage().ref(this.accountUUID+"/pfp/"+this.profileUUID);
-        return await imageRef.getDownloadURL()
     }
 
     /**
@@ -120,14 +130,9 @@ class Profile{
     }
 
      set avatar(value) {
-
-         let uuid = this.accountUUID
-         let storage = firebase.storage();
-         let ref = storage.ref(uuid + "/pfp/" + this.profileUUID);
-         ref.put(value);
-         this._avatar = value;
-
-     }
+        this._avatar = value;
+        this.update({avatar: value}).catch(console.error);
+    }
 
     get username() {
         return this._username;
@@ -136,7 +141,7 @@ class Profile{
     get avatar() {
          if(!this._avatar)
              return DEFAULTAVATR;
-        return this.getProfilePicture()
+        return this._avatar;
     }
 }
 export {DEFAULTAVATR}
