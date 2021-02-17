@@ -78,9 +78,8 @@ module.exports.UserAuthentication = class UserAuthentication{
 
         const responseData = {};
         return await new Promise(resolve => {
-            firebase.auth().createUserWithEmailAndPassword(email, password).then(userCredentials => {
+            firebase.auth().createUserWithEmailAndPassword(email, password).then(async userCredentials => {
                 responseData.confirmed = true;
-                userCredentials.user.updateProfile({displayName: displayName})
                 responseData.credentials = userCredentials;
                 resolve(responseData);
             }).catch((err) => {

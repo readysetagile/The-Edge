@@ -6,7 +6,7 @@ import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
 import React, {Component} from 'react';
 import {AppState} from "react-native";
 import {firebase} from "./src/firebase/config";
-import {DB} from "./src/firebase/DBUtils";
+import Edge from "./src/firebase";
 
 // Set the configuration for your app
 
@@ -31,9 +31,11 @@ export default class App extends Component{
         if (nextAppState === 'inactive') {
             let currentUser = firebase.auth().currentUser;
             if(currentUser != null){
-                DB.getUserData(currentUser.displayName).then(r => {
-                    if(!r.rememberLogin)
+                Edge.users.get(currentUser.uid).then(r => {
+                    console.log(r);
+                    if(!r.settings.rememberLogin){
                         firebase.auth().signOut().catch(console.error);
+                    }
                 })
             }
         }
@@ -46,10 +48,7 @@ export default class App extends Component{
             <NavigationContainer>
 
                 <Stack.Navigator>
-                    <Stack.Screen name="Login"
-                                  component={LoginScreen}>
-
-                    </Stack.Screen>
+                    <Stack.Screen name="Login" component={LoginScreen}/>
                     <Stack.Screen name="Home" component={HomeScreen}/>
                     <Stack.Screen name="Create Account" component={CreateAccountScreen}/>
 
