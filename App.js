@@ -4,6 +4,7 @@ import {NavigationContainer} from "@react-navigation/native";
 import {createStackNavigator} from "@react-navigation/stack";
 import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
 import React from 'react';
+import DashboardScreen from "./src/screens/DashboardScreen/DashboardScreen";
 
 // Set the configuration for your app
 
@@ -17,10 +18,10 @@ export default function App () {
         <Stack.Navigator>
           <Stack.Screen name="Login"
                         component={LoginScreen}>
-
           </Stack.Screen>
             <Stack.Screen name="Home" component={HomeScreen}/>
             <Stack.Screen name="Create Account" component={CreateAccountScreen}/>
+            <Stack.Screen name="Dashboard" component={DashboardScreen}/>
 
         </Stack.Navigator>
 
