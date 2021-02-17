@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
-import Edge, {createUUID} from "../../firebase";
+import Edge from "../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
 
 export default class LoginScreen extends Component {

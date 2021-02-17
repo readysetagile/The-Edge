@@ -1,9 +1,8 @@
-import React, {Component, useState} from 'react';
+import React, {Component} from 'react';
 import {View, Image, Text, TextInput, Platform, Alert} from 'react-native';
 import styles from './styles';
 import {DEFAULTAVATR} from "../../firebase/modules/profiles";
 import {TouchableOpacity} from "react-native";
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import {firebase} from '../../firebase/config';
 import Edge, {createUUID} from '../../firebase/index'
 import * as ImagePicker from 'expo-image-picker';
@@ -20,28 +19,28 @@ export default class CreateProfileScreen extends Component{
     async uploadImage(){
 
         if(Platform.OS !== 'web'){
-
             const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            if(status !== 'granted'){
-                return false;
-            }
+            return status === 'granted';
         }
+        return false;
 
     }
 
-    selectImage = async () => {
+    selectImage = async () => {//TODO figure out proper sizes for profile pictures
 
-        await this.uploadImage();
-        const options = {
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        }
-        let result = await ImagePicker.launchImageLibraryAsync(options);
-        if(!result.cancelled){
-            this.setState({image: result});
+        if(await this.uploadImage()) {
+            const options = {
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+            }
+            let result = await ImagePicker.launchImageLibraryAsync(options);
+            if (!result.cancelled) {
+                console.log(result);
+                this.setState({image: result});
 
+            }
         }
 
     }

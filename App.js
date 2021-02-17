@@ -1,6 +1,5 @@
 
 import 'react-native-gesture-handler';
-import {createStackNavigator} from "@react-navigation/stack";
 import React, {Component} from 'react';
 import {AppState} from "react-native";
 import {firebase} from "./src/firebase/config";

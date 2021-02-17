@@ -21,21 +21,12 @@ export default class ProfileScreen extends Component {
         return user.profiles;
     }
 
-    async onAddProfile(){
-        let userPromise = await Edge.users.get(firebase.auth().currentUser.uid);
-        let profile = userPromise.addProfile(createUUID(), "madness")
-        this.state.accounts.push(this.generateProfileImage(profile, this.state.accounts.length));
-        this.setState({
-            accounts: this.state.accounts
-        })
-
-    }
-
     editProfile(profile){
         console.log(profile)
     }
 
-     generateProfileImage(profile, index, profileImage){
+     async generateProfileImage(profile, index){
+        let profileImage = await profile.getProfilePicture();
         if(profileImage == null) profileImage = profile.avatar;
         return (
             <View key={index} profile={profile} style={styles.item}>
@@ -64,8 +55,7 @@ export default class ProfileScreen extends Component {
                 await new Promise(async resolve => {
                     let accArr = await Array.from(profiles.values()).filter(i => i != null);
                     let prom = await Promise.all(accArr.map(async (i, j) => {
-                        let pfpI = await i.getProfilePicture();
-                        return this.generateProfileImage(i, j, pfpI);
+                        return this.generateProfileImage(i, j);
                     }));
 
                     resolve(prom)

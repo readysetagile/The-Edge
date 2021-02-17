@@ -62,15 +62,16 @@ class Profile{
     }
 
     async getProfilePicture(){
-
-        let storage = firebase.storage()
-        let ref = storage.ref(this.accountUUID+"/pfp/"+this.profileUUID);
-        return await new Promise(resolve => {
-            ref.getDownloadURL().then(url => {
-                resolve(url);
-            }).catch(() => resolve(null))
-        })
-
+        if(!this._avatar) {
+            let storage = firebase.storage()
+            let ref = storage.ref(this.accountUUID + "/pfp/" + this.profileUUID);
+            return await new Promise(resolve => {
+                ref.getDownloadURL().then(url => {
+                    this._avatar = url;
+                    resolve(url);
+                }).catch(() => resolve(null))
+            })
+        }else return this._avatar;
     }
 
     /**
@@ -85,12 +86,6 @@ class Profile{
         if(path) ref = ref.child(path);
         return ref.set(value);
     }
-    /*
-    nFlushedQueue
-
-https://firebasestorage.googleapis.com/v0/b/the-edge-9ad19.appspot.com/o/BN9BoaTkIkTCAFVQ2ui3rW4OdeN2%2Fpfp%2F6e4a-c1e3-91ee-170b?alt=media&token=260e096b-a6b0-4410-95b8-cf7f1cab2f43
-
-     */
 
     /**
      * Removes the specified path
