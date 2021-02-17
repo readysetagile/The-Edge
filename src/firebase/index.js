@@ -3,19 +3,18 @@ import {Users} from "./modules/users";
  class Edge{
 
     constructor() {
-
         this.initialize();
-
     }
 
-    initialize(){
-        this.initDB();
-    }
+
 
     initDB(){
         this.users = new Users();
     }
 
+     initialize() {
+         this.initDB()
+     }
  }
 
   export function createUUID(){

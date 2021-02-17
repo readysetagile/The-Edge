@@ -10,7 +10,6 @@ module.exports.Teams = class Teams {
                     resolve(snapshot);
                 })
             })
-            console.log("Team database initialized");
         })();
     }
 

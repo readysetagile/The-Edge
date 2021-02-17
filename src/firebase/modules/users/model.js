@@ -7,10 +7,9 @@ module.exports = {
         id: "",
         email: "",
         isVerified: false,
-        icon: "",
     },
     profiles: {
-        test: ""
+        _: 0
     },
 
 }

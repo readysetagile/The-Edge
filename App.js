@@ -1,23 +1,21 @@
 
 import 'react-native-gesture-handler';
-import {NavigationContainer} from "@react-navigation/native";
-import {createStackNavigator} from "@react-navigation/stack";
-import {HomeScreen, CreateAccountScreen, LoginScreen} from "./src/screens";
 import React, {Component} from 'react';
 import {AppState} from "react-native";
 import {firebase} from "./src/firebase/config";
 import Edge from "./src/firebase";
+import Login from './routes/LoginStack';
 
 // Set the configuration for your app
 
-export default class App extends Component{
+export default class App extends Component {
 
-    componentDidMount() {
+    componentDidMount () {
         AppState.addEventListener('change',
             this.handleAppStateChange);
     }
 
-    componentWillUnmount() {
+    componentWillUnmount () {
         AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
@@ -30,31 +28,20 @@ export default class App extends Component{
     handleAppStateChange = (nextAppState) => {
         if (nextAppState === 'inactive') {
             let currentUser = firebase.auth().currentUser;
-            if(currentUser != null){
+            if (currentUser != null) {
                 Edge.users.get(currentUser.uid).then(r => {
-                    console.log(r);
-                    if(!r.settings.rememberLogin){
+                    if (!r.settings.rememberLogin) {
                         firebase.auth().signOut().catch(console.error);
                     }
-                })
+                });
             }
         }
-    }
+    };
 
-    render() {
-        const Stack = createStackNavigator();
 
+    render () {
         return (
-            <NavigationContainer>
-
-                <Stack.Navigator>
-                    <Stack.Screen name="Login" component={LoginScreen}/>
-                    <Stack.Screen name="Home" component={HomeScreen}/>
-                    <Stack.Screen name="Create Account" component={CreateAccountScreen}/>
-
-                </Stack.Navigator>
-
-            </NavigationContainer>
+            <Login/>
         );
     }
 }

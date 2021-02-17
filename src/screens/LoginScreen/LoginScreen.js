@@ -5,6 +5,7 @@ import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
 import Edge from "../../firebase";
+import {NavigationActions, StackActions} from "react-navigation";
 
 export default class LoginScreen extends Component {
 
@@ -18,17 +19,17 @@ export default class LoginScreen extends Component {
             msg: ""
         },
         rememberMe: false
-    }
+    };
 
-    constructor(props) {
+    constructor (props) {
         super(props);
         this.accInfo = {
             email: "",
             password: "",
-        }
+        };
     }
 
-    checkEmail(email) {
+    checkEmail (email) {
         const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
     }
@@ -53,36 +54,36 @@ export default class LoginScreen extends Component {
 
         const data = await UserAuthentication.signUserIn(email, pass);
         if (data.confirmed) {
-            await Edge.users.set(firebase.auth().currentUser.uid, {rememberLogin: this.state.rememberMe}, "settings")
+            await Edge.users.set(firebase.auth().currentUser.uid, {rememberLogin: this.state.rememberMe}, "settings");
             this.sendToHomePage();
         } else {
             Alert.alert(data.message);
         }
 
-    }
+    };
 
-    updateState(emailPassed, password) {
+    updateState (emailPassed, password) {
         this.setState({
             email: {
                 hide: emailPassed,
                 msg: "X Invalid Email"
-            }
-        })
-
-        this.setState({
+            },
             password: {
                 hide: !!password,
                 msg: "X Invalid Password"
             }
-        })
+        });
+
     }
 
-    sendToHomePage() {
+    sendToHomePage () {
         const {navigation} = this.props;
-        navigation.reset({
+
+        const resetAction = StackActions.reset({
             index: 0,
-            routes: [{name: "Home"}],
-        })
+            actions: [NavigationActions.navigate({ routeName: 'Profiles' })],
+        });
+        navigation.dispatch(resetAction);
     }
 
 
@@ -91,7 +92,7 @@ export default class LoginScreen extends Component {
      * it will send them to the home (profile) page
      * @returns {null}
      */
-    componentDidMount() {
+    componentDidMount () {
         const that = this;
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -101,16 +102,21 @@ export default class LoginScreen extends Component {
 
     }
 
-    onRememberMe = () => {
-        this.setState({rememberMe: !this.state.rememberMe})
+    createAccount(){
+        const {navigation} = this.props;
+        navigation.navigate("Create_Account");
     }
 
-    render() {
+    onRememberMe = () => {
+        this.setState({rememberMe: !this.state.rememberMe});
+    };
+
+    render () {
         //firebase.auth().signOut();
-        const {navigation} = this.props;
+
         return (
             <View style={styles.container}>
-                <Image source={require("../../assets/iPhoneApp.png")}/>
+                <Image source={require("../../assets/iPhoneApp.png")} />
                 <Text style={styles.logo}>The Edge</Text>
                 <View style={styles.inputView}>
                     <TextInput
@@ -164,7 +170,7 @@ export default class LoginScreen extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => {
-                    navigation.navigate("Create Account")
+                    this.createAccount()
                 }}>
                     <Text style={styles.loginText}>Signup</Text>
                 </TouchableOpacity>
