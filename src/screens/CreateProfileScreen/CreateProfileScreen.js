@@ -38,7 +38,7 @@ export default class CreateProfileScreen extends Component{
             title: "Select pfp"
         };
 
-        launchImageLibrary(options, res => {
+        launchCamera(options, res => {
 
         })
 
