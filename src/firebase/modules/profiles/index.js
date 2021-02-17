@@ -1,3 +1,5 @@
+import Edge from "../../index";
+
 const DEFAULTPROFILE = require("./model");
 const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";
 import {firebase} from "../../config";
@@ -87,6 +89,11 @@ class Profile{
         return reference.remove();
     }
 
+    async getProfilePicture(){
+        let imageRef = firebase.storage().ref(this.accountUUID+"/pfp/"+this.profileUUID);
+        return await imageRef.getDownloadURL()
+    }
+
     /**
      * Creates a new user profile.
      * @param accountUUID the account to create the profile under
@@ -113,9 +120,14 @@ class Profile{
     }
 
      set avatar(value) {
-        this._avatar = value;
-        this.update({avatar: value}).catch(console.error);
-    }
+
+         let uuid = this.accountUUID
+         let storage = firebase.storage();
+         let ref = storage.ref(uuid + "/pfp/" + this.profileUUID);
+         ref.put(value);
+         this._avatar = value;
+
+     }
 
     get username() {
         return this._username;
@@ -124,7 +136,7 @@ class Profile{
     get avatar() {
          if(!this._avatar)
              return DEFAULTAVATR;
-        return this._avatar;
+        return this.getProfilePicture()
     }
 }
 export {DEFAULTAVATR}
