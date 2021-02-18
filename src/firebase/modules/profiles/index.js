@@ -16,6 +16,7 @@ class Profile{
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
         this.teams = profileObject.teams;
+        this.isDisabled = profileObject.disabled;
         this.#reference = firebase.database().ref("users/"+this.accountUUID+"/profiles");
     }
 
@@ -44,6 +45,23 @@ class Profile{
         let ref = this.#reference.child(this.profileUUID);
         if(path) ref = ref.child(path);
         return ref.update(value);
+    }
+
+    async delete(){
+
+         await this.remove();
+
+        let storage = firebase.storage();
+        let ref = storage.ref(this.accountUUID + "/pfp/" + this.profileUUID);
+        return await ref.delete().catch(err => {})
+
+    }
+
+    async setEnabled(enabled){
+
+         this.isDisabled = enabled;
+         await this.update(enabled, "disabled");
+         //TODO figure out what to do here to disable the account
     }
 
     /**
@@ -89,7 +107,7 @@ class Profile{
 
     /**
      * Removes the specified path
-     * @param path the path to remove. If none, this will delete the user
+     * @param path the path to remove. If none, this will delete the profile
      * @returns {Promise<any>}
      */
     remove(path=""){

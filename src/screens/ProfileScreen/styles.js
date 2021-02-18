@@ -25,5 +25,6 @@ export default StyleSheet.create({
     text:{
         fontSize: 20,
         alignSelf: 'center',
-    }
+    },
+
 });
