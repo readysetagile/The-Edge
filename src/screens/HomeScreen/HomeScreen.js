@@ -69,20 +69,15 @@ class HomeScreen extends Component {
 
         const options = ['Create Team', 'Join Team', 'Cancel'];
         const cancelButtonIndex = 2;
+        const actionMap = {
+            0: this.createTeam,
+            1: this.joinTeam,
+        }
         this.props.showActionSheetWithOptions({
-            options, cancelButtonIndex
+            options, cancelButtonIndex//, destructiveButtonIndex
         },
         buttonIndex => {
-            switch (buttonIndex) {
-                case 0:{
-                    this.createTeam();
-                    break;
-                }
-                case 1:{
-                    this.joinTeam();
-                    break;
-                }
-            }
+            actionMap[buttonIndex]();
         })
 
     }
