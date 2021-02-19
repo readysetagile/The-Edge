@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {ScrollView, Text, View, TouchableOpacity} from 'react-native';
 import styles from './styles';
+import { connectActionSheet } from '@expo/react-native-action-sheet'
 
 
-export default class HomeScreen extends Component {
+class HomeScreen extends Component {
 
 
     state = {
@@ -56,9 +57,33 @@ export default class HomeScreen extends Component {
 
     }
 
+    createTeam(){
+        console.log("create team");
+    }
+
+    joinTeam(){
+        console.log("join team");
+    }
+
     newTeam(){
 
-
+        const options = ['Create Team', 'Join Team', 'Cancel'];
+        const cancelButtonIndex = 2;
+        this.props.showActionSheetWithOptions({
+            options, cancelButtonIndex
+        },
+        buttonIndex => {
+            switch (buttonIndex) {
+                case 0:{
+                    this.createTeam();
+                    break;
+                }
+                case 1:{
+                    this.joinTeam();
+                    break;
+                }
+            }
+        })
 
     }
 
@@ -101,3 +126,6 @@ export default class HomeScreen extends Component {
         );
     }
 }
+
+const HomeScreenApp = connectActionSheet(HomeScreen);
+export default HomeScreenApp;
