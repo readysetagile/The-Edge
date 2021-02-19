@@ -63,15 +63,10 @@ export default class ProfileScreen extends Component {
 
     }
 
-    toggleProfile(profile, index) {
-        profile.setEnabled(!profile.isEnabled)
-    }
-
     async generateProfileImage(profile, index) {
         let profileImage = await profile.getProfilePicture();
         if (profileImage == null) profileImage = profile.avatar;
         return (
-
             <View key={index} profile={profile} style={styles.item}>
 
                 <Menu>
@@ -83,9 +78,6 @@ export default class ProfileScreen extends Component {
                         <MenuOption onSelect={() => this.alertEdit(profile, "Delete")}>
                             <Text style={{color: 'red'}}>Delete</Text>
                         </MenuOption>
-                        <MenuOption onSelect={() => {
-                            this.toggleProfile(profile, index)
-                        }} text={profile.isDisabled ? "Enable" : "Disable"}/>
                     </MenuOptions>
 
                 </Menu>

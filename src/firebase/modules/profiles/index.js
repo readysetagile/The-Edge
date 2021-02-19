@@ -16,7 +16,6 @@ class Profile {
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
         this.teams = profileObject.teams;
-        this.isDisabled = profileObject.disabled;
         this.#reference = firebase.database().ref("users/" + this.accountUUID + "/profiles");
     }
 
@@ -56,13 +55,6 @@ class Profile {
         return await ref.delete().catch(err => {
         })
 
-    }
-
-    async setEnabled(enabled) {
-
-        this.isDisabled = enabled;
-        await this.update(enabled, "disabled");
-        //TODO figure out what to do here to disable the account
     }
 
     /**
