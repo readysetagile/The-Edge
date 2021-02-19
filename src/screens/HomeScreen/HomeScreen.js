@@ -1,14 +1,16 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, View, TouchableOpacity} from 'react-native';
+import {ScrollView, Text, View, TouchableOpacity, Modal, StyleSheet} from 'react-native';
 import styles from './styles';
 import { connectActionSheet } from '@expo/react-native-action-sheet'
+import {Ionicons} from "@expo/vector-icons";
 
 
 class HomeScreen extends Component {
 
 
     state = {
-        teams: []
+        teams: [],
+        modalOpen: false
     }
 
     constructor(props) {
@@ -57,11 +59,12 @@ class HomeScreen extends Component {
 
     }
 
-    createTeam(){
+    createTeam = () => {
         console.log("create team");
+        this.setState({modalOpen: true})
     }
 
-    joinTeam(){
+    joinTeam = () => {
         console.log("join team");
     }
 
@@ -77,7 +80,7 @@ class HomeScreen extends Component {
             options, cancelButtonIndex//, destructiveButtonIndex
         },
         buttonIndex => {
-            actionMap[buttonIndex]();
+            if(actionMap[buttonIndex] != null) actionMap[buttonIndex]();
         })
 
     }
@@ -87,6 +90,13 @@ class HomeScreen extends Component {
         let teams = this.state.teams;
         return (
             <View style={styles.container}>
+
+                <Modal visible={this.state.modalOpen} animationType={'slide'}>
+                    <View style={{height: '60%'}}>
+                            <Ionicons style={styles.closeCreateTeam} name={"close"} size={24} onPress={() => this.setState({modalOpen: false})}/>
+                    </View>
+                </Modal>
+
                 <Text style={
                     {
                         fontWeight: 'bold',
@@ -109,12 +119,7 @@ class HomeScreen extends Component {
             </ScrollView>
 
                 <TouchableOpacity style={styles.newTeamButton} onPress={() => this.newTeam()}>
-                    <Text style={{
-                        alignSelf: 'center',
-                        color: 'gold',
-                        fontSize: 30,
-                        fontWeight: 'bold'
-                    }}>+</Text>
+                    <Ionicons name={'add'} size={35} style={{alignSelf:'center', color: 'gold'}}/>
                 </TouchableOpacity>
 
             </View>

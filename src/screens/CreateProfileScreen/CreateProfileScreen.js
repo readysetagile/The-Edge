@@ -4,9 +4,10 @@ import styles from './styles';
 import {DEFAULTAVATR} from "../../firebase/modules/profiles";
 import {TouchableOpacity} from "react-native";
 import {firebase} from '../../firebase/config';
-import Edge, {createUUID} from '../../firebase/index'
+import Edge from '../../firebase/index'
 import * as ImagePicker from 'expo-image-picker';
 import {NavigationActions, StackActions} from "react-navigation";
+import {createUUID} from "../../firebase/Util";
 
 
 export default class CreateProfileScreen extends Component{

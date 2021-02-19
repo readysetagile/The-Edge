@@ -1,9 +1,10 @@
 import React, {Component} from 'react';
 import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
-import Edge, {createUUID} from "../../firebase";
+import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
 import {NavigationActions, StackActions} from "react-navigation";
+import {createUUID} from "../../firebase/Util";
 
 export default class ProfileScreen extends Component {
 

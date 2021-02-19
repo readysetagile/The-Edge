@@ -44,6 +44,10 @@ export default StyleSheet.create({
             height: 5
         },
         shadowOpacity: 0.6
+    },
+    closeCreateTeam:{
+        left: 20,
+        top:40
     }
 
 });

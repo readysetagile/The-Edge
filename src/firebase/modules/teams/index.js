@@ -1,6 +1,6 @@
 import {firebase} from "../../config";
-import {createUUID} from "../../index";
 import {Team} from "./Team";
+import {createUUID} from "../../Util";
 
 const DEFAULTTEAM = require("./model");
 
