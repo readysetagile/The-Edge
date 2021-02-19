@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, View, TouchableOpacity, Modal, StyleSheet} from 'react-native';
+import {Modal, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
-import { connectActionSheet } from '@expo/react-native-action-sheet'
+import {connectActionSheet} from '@expo/react-native-action-sheet'
 import {Ionicons} from "@expo/vector-icons";
+import ReviewForm from './ReviewForm';
 
 
 class HomeScreen extends Component {
@@ -17,14 +18,14 @@ class HomeScreen extends Component {
         super(props);
     }
 
-    getTeams(){
+    getTeams() {
         const {navigation} = this.props;
         let profile = navigation.getParam("profile");
         return profile.teams;
 
     }
 
-    generateTeams(teams){
+    generateTeams(teams) {
 
         teams = new Map();
         teams.set('a', {teamName: "Vollyball"})
@@ -40,13 +41,13 @@ class HomeScreen extends Component {
 
     }
 
-    generateTeamBanner(team, key){
+    generateTeamBanner(team, key) {
 
         return (
 
-                <TouchableOpacity style={styles.teamBanner} key={key}>
-                    <Text style={styles.teamName}>{team.teamName}</Text>
-                </TouchableOpacity>
+            <TouchableOpacity style={styles.teamBanner} key={key}>
+                <Text style={styles.teamName}>{team.teamName}</Text>
+            </TouchableOpacity>
 
         )
 
@@ -68,7 +69,7 @@ class HomeScreen extends Component {
         console.log("join team");
     }
 
-    newTeam(){
+    newTeam() {
 
         const options = ['Create Team', 'Join Team', 'Cancel'];
         const cancelButtonIndex = 2;
@@ -77,11 +78,11 @@ class HomeScreen extends Component {
             1: this.joinTeam,
         }
         this.props.showActionSheetWithOptions({
-            options, cancelButtonIndex//, destructiveButtonIndex
-        },
-        buttonIndex => {
-            if(actionMap[buttonIndex] != null) actionMap[buttonIndex]();
-        })
+                options, cancelButtonIndex//, destructiveButtonIndex
+            },
+            buttonIndex => {
+                if (actionMap[buttonIndex] != null) actionMap[buttonIndex]();
+            })
 
     }
 
@@ -92,34 +93,28 @@ class HomeScreen extends Component {
             <View style={styles.container}>
 
                 <Modal visible={this.state.modalOpen} animationType={'slide'}>
-                    <View style={{height: '60%'}}>
-                            <Ionicons style={styles.closeCreateTeam} name={"close"} size={24} onPress={() => this.setState({modalOpen: false})}/>
+                    <View style={styles.modalContent}>
+                        <Ionicons style={styles.closeCreateTeam} name={"close"} size={24}
+                                  onPress={() => this.setState({modalOpen: false})}/>
+                        <ReviewForm/>
                     </View>
                 </Modal>
 
-                <Text style={
-                    {
-                        fontWeight: 'bold',
-                        fontSize: 30,
-                        top: 5,
-                        alignSelf: 'center'
-                    }
-                }>Select Team</Text>
+                <Text style={styles.titleText}>Select Team</Text>
+                <ScrollView style={styles.teamBannersView}>
+                    {teams.length ? teams : (
+                        <View style={styles.teamBanner} opacity={0.5}>
 
-             <ScrollView style={styles.teamBannersView}>
-                {teams.length ? teams : (
-                    <View style={styles.teamBanner} opacity={0.5}>
+                            <Text style={{
+                                fontSize: 20,
+                                textAlign: 'center'
+                            }}>It appears you're not in any teams. Try joining or creating one!</Text>
 
-                        <Text style={{
-                            fontSize: 20,
-                            textAlign: 'center'
-                        }}>It appears you're not in any teams. Try joining or creating one!</Text>
-
-                    </View>)}
-            </ScrollView>
+                        </View>)}
+                </ScrollView>
 
                 <TouchableOpacity style={styles.newTeamButton} onPress={() => this.newTeam()}>
-                    <Ionicons name={'add'} size={35} style={{alignSelf:'center', color: 'gold'}}/>
+                    <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
                 </TouchableOpacity>
 
             </View>

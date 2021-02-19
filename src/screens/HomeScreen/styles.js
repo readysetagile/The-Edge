@@ -3,9 +3,8 @@ import Colors from '../styles'
 export default StyleSheet.create({
     container: {
         backgroundColor: Colors.background,
-        height: '100%',
-        justifyContent: 'flex-start',
-        flex: 1
+        flex: 1,
+        padding: 20
     },
     text: {
         fontSize: 20,
@@ -45,9 +44,33 @@ export default StyleSheet.create({
         },
         shadowOpacity: 0.6
     },
+    titleText:{
+        fontWeight: 'bold',
+        fontSize: 30,
+        top: 5,
+        alignSelf: 'center'
+    },
     closeCreateTeam:{
         left: 20,
         top:40
-    }
+    },
+    modalContent:{
+        flex: 1
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 6,
+    },
+    inputView: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        padding: 10,
+        fontSize: 18,
+        borderRadius: 6,
+        marginTop: 10
+    },
 
 });
