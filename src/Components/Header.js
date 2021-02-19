@@ -1,14 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, View, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 
-export default function Header({navigation, title, onPressAdd}){
-
-    const openMenu = () => {
-        console.log(1);
-        console.log(navigation.navigate("Login"));
-    }
-
+export default function Header({title, onPressAdd}) {
     return (
 
         <View style={styles.header}>
@@ -17,8 +11,7 @@ export default function Header({navigation, title, onPressAdd}){
                 <Ionicons name="add" size={30} style={{color: '#0000ff'}}/>
             </TouchableOpacity>
             <View style={styles.header}>
-
-            <Text style={styles.headerText}>{title}</Text>
+                <Text style={styles.headerText}>{title}</Text>
             </View>
         </View>
 
@@ -26,20 +19,20 @@ export default function Header({navigation, title, onPressAdd}){
 }
 
 const styles = StyleSheet.create({
-    header:{
+    header: {
         width: '100%',
         height: '100%',
         flexDirection: 'row-reverse',
         alignItems: 'center',
         justifyContent: 'center'
     },
-    headerText:{
+    headerText: {
         fontWeight: 'bold',
         fontSize: 20,
         color: '#333',
         letterSpacing: 1
     },
-    iconTouch:{
+    iconTouch: {
         position: 'absolute',
         left: 10,
         zIndex: 1

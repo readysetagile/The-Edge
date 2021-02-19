@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Image, ScrollView, Text, View, Alert} from 'react-native';
+import {Alert, Image, ScrollView, Text, View} from 'react-native';
 import styles from './styles';
 import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
@@ -43,9 +43,9 @@ export default class ProfileScreen extends Component {
 
     alertEdit(profile, txt) {
 
-        Alert.alert(txt+" "+profile.username, `Are you sure you want to ${txt.toLowerCase()} this account? This process cannot be undone`, [
+        Alert.alert(txt + " " + profile.username, `Are you sure you want to ${txt.toLowerCase()} this account? This process cannot be undone`, [
             {
-                text:"Yes",
+                text: "Yes",
                 onPress: () => this.deleteProfile(profile)
             },
             {
@@ -55,7 +55,7 @@ export default class ProfileScreen extends Component {
 
     }
 
-    deleteProfile(profile, index){
+    deleteProfile(profile, index) {
 
         profile.delete();
         this.state.accounts.splice(index, 1);
@@ -63,8 +63,8 @@ export default class ProfileScreen extends Component {
 
     }
 
-    toggleProfile(profile, index){
-       profile.setEnabled(!profile.isEnabled)
+    toggleProfile(profile, index) {
+        profile.setEnabled(!profile.isEnabled)
     }
 
     async generateProfileImage(profile, index) {
@@ -83,7 +83,9 @@ export default class ProfileScreen extends Component {
                         <MenuOption onSelect={() => this.alertEdit(profile, "Delete")}>
                             <Text style={{color: 'red'}}>Delete</Text>
                         </MenuOption>
-                        <MenuOption onSelect={() => {this.toggleProfile(profile, index)}} text={profile.isDisabled ? "Enable" : "Disable"}/>
+                        <MenuOption onSelect={() => {
+                            this.toggleProfile(profile, index)
+                        }} text={profile.isDisabled ? "Enable" : "Disable"}/>
                     </MenuOptions>
 
                 </Menu>
