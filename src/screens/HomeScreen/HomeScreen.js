@@ -56,6 +56,12 @@ export default class HomeScreen extends Component {
 
     }
 
+    newTeam(){
+
+
+
+    }
+
     render() {
 
         let teams = this.state.teams;
@@ -82,6 +88,14 @@ export default class HomeScreen extends Component {
                     </View>)}
             </ScrollView>
 
+                <TouchableOpacity style={styles.newTeamButton} onPress={() => this.newTeam()}>
+                    <Text style={{
+                        alignSelf: 'center',
+                        color: 'gold',
+                        fontSize: 30,
+                        fontWeight: 'bold'
+                    }}>+</Text>
+                </TouchableOpacity>
 
             </View>
         );

@@ -34,7 +34,7 @@ const screens = {
         screen: HomeScreen,
         navigationOptions: () => {
             return {
-                headerTitle: () => <Header title={"Teams"}/>
+                headerTitle: "Teams"
             }
         }
     }

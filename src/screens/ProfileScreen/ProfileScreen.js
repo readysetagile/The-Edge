@@ -52,7 +52,6 @@ export default class ProfileScreen extends Component {
             actions: [NavigationActions.navigate({ routeName: 'HomeScreen', params: {profile: profile} })],
 
         });
-        console.log(profile);
         navigation.dispatch(resetAction);
     }
 

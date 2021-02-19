@@ -38,7 +38,6 @@ export default class CreateProfileScreen extends Component{
             }
             let result = await ImagePicker.launchImageLibraryAsync(options);
             if (!result.cancelled) {
-                console.log(result);
                 this.setState({image: result});
 
             }

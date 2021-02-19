@@ -27,6 +27,23 @@ export default StyleSheet.create({
     teamName:{
         fontSize: 30,
         alignSelf: 'center'
+    },
+    newTeamButton:{
+        backgroundColor:Colors.mainButton,
+        position: 'absolute',
+        height: 50,
+        width: 50,
+        borderRadius: 200,
+        bottom: 50,
+        right: 50,
+        justifyContent: 'center',
+        alignSelf: 'flex-end',
+        shadowColor: 'black',
+        shadowOffset: {
+            width: -3,
+            height: 5
+        },
+        shadowOpacity: 0.6
     }
 
 });

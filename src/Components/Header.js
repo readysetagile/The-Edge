@@ -5,8 +5,6 @@ import {Ionicons} from "@expo/vector-icons";
 export default function Header({navigation, title, onPressAdd}){
 
     const openMenu = () => {
-        console.log(1);
-        console.log(navigation.navigate("Login"));
     }
 
     return (
