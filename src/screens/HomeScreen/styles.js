@@ -1,23 +1,32 @@
 import {StyleSheet} from 'react-native';
-
+import Colors from '../styles'
 export default StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center'
-    },
-    input: {
-        height: 48,
-        borderRadius: 5,
-        overflow: 'hidden',
-        backgroundColor: 'white',
-        marginTop: 10,
-        marginBottom: 10,
-        marginLeft: 30,
-        marginRight: 30,
-        paddingLeft: 16
+        backgroundColor: Colors.background,
+        height: '100%',
+        justifyContent: 'flex-start',
+        flex: 1
     },
     text: {
         fontSize: 20,
         alignSelf: 'center'
+    },
+
+    teamBannersView:{
+        width: '95%',
+        alignSelf: 'center',
+        height: '100%',
+        flex: 1
+    },
+    teamBanner:{
+        backgroundColor: 'gold',
+        padding: 10,
+        marginTop: 10,
+        borderRadius: 10,
+    },
+    teamName:{
+        fontSize: 30,
+        alignSelf: 'center'
     }
+
 });
