@@ -6,6 +6,7 @@ import {TouchableOpacity} from "react-native";
 import {firebase} from '../../firebase/config';
 import Edge, {createUUID} from '../../firebase/index'
 import * as ImagePicker from 'expo-image-picker';
+import {NavigationActions, StackActions} from "react-navigation";
 
 
 export default class CreateProfileScreen extends Component{
@@ -54,11 +55,14 @@ export default class CreateProfileScreen extends Component{
             Alert.alert("Invalid Username");
             return;
         }
-        await user.addProfile(this.state.uuid, this.state.username);
+        let profile = await user.addProfile(this.state.uuid, this.state.username);
         const {navigation} = this.props;
-        navigation.pop();//TODO navigate to new account home page
-
-
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'HomeScreen' })],
+            params: {profile: profile}
+        });
+        navigation.dispatch(resetAction);
     }
 
     async uploadProfilePicture(){

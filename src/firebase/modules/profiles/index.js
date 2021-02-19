@@ -22,8 +22,6 @@ class Profile{
         this.#reference = firebase.database().ref("users/"+this.accountUUID+"/profiles");
     }
 
-
-
     /**
      * Adds the default user to the database
      * @param profileUUID a uuid to assign to the profile

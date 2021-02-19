@@ -3,6 +3,7 @@ import {Image, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import Edge, {createUUID} from "../../firebase";
 import {firebase} from "../../firebase/config";
+import {NavigationActions, StackActions} from "react-navigation";
 
 export default class ProfileScreen extends Component {
 
@@ -44,8 +45,15 @@ export default class ProfileScreen extends Component {
 
     enterProfile(profile){
 
-        //navigation.navigate("screen", profile)
+        const {navigation} = this.props;
 
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({ routeName: 'HomeScreen', params: {profile: profile} })],
+
+        });
+        console.log(profile);
+        navigation.dispatch(resetAction);
     }
 
     async componentDidMount(){

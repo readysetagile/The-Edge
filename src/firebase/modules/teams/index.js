@@ -40,7 +40,7 @@ module.exports.Teams = class Teams {
                 this.#reference.on('value', snap => {
                     if (snap.val() != null) {
                         this.teams = new Map(Object.entries(snap.val()));
-                        resolve(new Team(this.accounts.get(uuid)));
+                        resolve(new Team(this.teams.get(uuid)));
                     }
                 });
             });
