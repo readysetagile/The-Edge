@@ -1,6 +1,7 @@
 const DEFAULTPROFILE = require("./model");
-const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";
+const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";//TODO: change this to something original
 import {firebase} from "../../config";
+import {Team} from '../teams/Team';
 
 class Profile{
 
@@ -15,9 +16,13 @@ class Profile{
         this.profileUUID = profileObject.id;
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
-        this.teams = profileObject.teams;
+        this._teams = new Map(Object.entries(profileObject.teams)
+            .filter(i => i[0] !== "_")
+            .map(i => [i[0], new Team(i[1])]))
         this.#reference = firebase.database().ref("users/"+this.accountUUID+"/profiles");
     }
+
+
 
     /**
      * Adds the default user to the database
@@ -117,6 +122,11 @@ class Profile{
         await firebase.database().ref('users/'+accountUUID+"/profiles").update(obj);
         return new Profile(profileObj);
 
+    }
+
+
+    get teams() {
+        return this._teams;
     }
 
     set username(value) {

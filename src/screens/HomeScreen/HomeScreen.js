@@ -9,6 +9,12 @@ export default class HomeScreen extends Component {
         super(props);
     }
 
+    getTeams(){
+        const {navigation} = this.props;
+        let profile = navigation.getParam("profile");
+
+    }
+
     render() {
         return (
             <View>

@@ -1,6 +1,8 @@
 module.exports = {
 
     id: "",
+    teamCode: "",
+    teamName: "",
     modules: {
         teamQuestions: {
             required: true,
