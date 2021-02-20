@@ -8,7 +8,6 @@ module.exports.Team = class Team {
     #reference
 
     constructor(teamObject) {
-        console.log(teamObject, 123);
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
