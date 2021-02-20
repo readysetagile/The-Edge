@@ -6,9 +6,10 @@ const DEFAULTTEAM = require('./model');
 module.exports.Team = class Team {
 
     #reference
+
     constructor(teamObject) {
         console.log(teamObject, 123);
-        if(teamObject) {
+        if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
             this.members = teamObject.members ? new Map(Object.entries(teamObject.members)) : new Map();
@@ -21,13 +22,13 @@ module.exports.Team = class Team {
     }
 
 
-    addMember(profile){
+    addMember(profile) {
         this.members.set(profile.id, profile);
         profile.addTeam(this);
         this.#reference.update({members: this.members})
     }
 
-    static async createTeam(name, sport, ref){
+    static async createTeam(name, sport, ref) {
 
         let obj = Object.assign({}, DEFAULTTEAM);
         obj.teamName = name;

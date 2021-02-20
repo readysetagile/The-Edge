@@ -3,19 +3,19 @@ import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
 
-    background:{
+    background: {
         alignItems: 'center',
         justifyContent: 'center',
         width: '100%',
         height: '100%',
         backgroundColor: Colors.background,
     },
-    avatar:{
-        borderRadius: 100/2,
+    avatar: {
+        borderRadius: 100 / 2,
         width: 100,
         height: 100
     },
-    contentView:{
+    contentView: {
         height: '70%'
     },
     inputView: {

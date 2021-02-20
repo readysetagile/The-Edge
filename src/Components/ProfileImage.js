@@ -3,7 +3,7 @@ import {View} from "react-native";
 
 const ProfileImage = (props) => {
     const {children, style} = props;
-    return(
+    return (
         <View {...this.props} style={style}></View>
     )
 }

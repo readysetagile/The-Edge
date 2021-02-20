@@ -1,9 +1,8 @@
-
 module.exports = {
     id: "",
     username: "",
     avatar: "",
-    accountUUID:"",
+    accountUUID: "",
     teams: {
         _: 0
     },

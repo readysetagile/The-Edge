@@ -4,7 +4,6 @@ import styles from './styles';
 import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
 import {NavigationActions, StackActions} from "react-navigation";
-import {createUUID} from "../../firebase/Util";
 
 export default class ProfileScreen extends Component {
 
@@ -23,13 +22,13 @@ export default class ProfileScreen extends Component {
         return user.profiles;
     }
 
-    editProfile(profile){
+    editProfile(profile) {
         console.log(profile)
     }
 
-     async generateProfileImage(profile, index){
+    async generateProfileImage(profile, index) {
         let profileImage = await profile.getProfilePicture();
-        if(profileImage == null) profileImage = profile.avatar;
+        if (profileImage == null) profileImage = profile.avatar;
         return (
             <View key={index} profile={profile} style={styles.item}>
 
@@ -44,22 +43,22 @@ export default class ProfileScreen extends Component {
         );
     }
 
-    enterProfile(profile){
+    enterProfile(profile) {
 
         const {navigation} = this.props;
 
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'HomeScreen', params: {profile: profile} })],
+            actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
 
         });
         navigation.dispatch(resetAction);
     }
 
-    async componentDidMount(){
-        try{
+    async componentDidMount() {
+        try {
             let profiles = await this.getProfiles();
-            if(profiles != null) {
+            if (profiles != null) {
                 await new Promise(async resolve => {
                     let accArr = await Array.from(profiles.values()).filter(i => i != null);
                     let prom = await Promise.all(accArr.map(async (i, j) => {
@@ -71,7 +70,7 @@ export default class ProfileScreen extends Component {
                     this.setState({accounts: r});
                 });
             }
-        }catch(err){
+        } catch (err) {
             console.error(err);
         }
     }
@@ -90,7 +89,7 @@ export default class ProfileScreen extends Component {
 
                 <ScrollView>
                     <View style={styles.profileContainer}>
-                            {this.state.accounts}
+                        {this.state.accounts}
                     </View>
                 </ScrollView>
 

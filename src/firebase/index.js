@@ -1,23 +1,23 @@
 import {Users} from "./modules/users";
 import {Teams} from "./modules/teams";
 
-class Edge{
+class Edge {
 
     constructor() {
         this.initialize();
     }
 
 
-    initDB(){
+    initDB() {
         this.users = new Users();
         this.teams = new Teams();
     }
 
-     initialize() {
-         this.initDB();
-     }
+    initialize() {
+        this.initDB();
+    }
 
- }
+}
 
 export default new Edge();
- export {Edge}
+export {Edge}

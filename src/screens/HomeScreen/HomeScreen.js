@@ -56,7 +56,7 @@ class HomeScreen extends Component {
 
     }
 
-    enterTeam(){
+    enterTeam() {
 
         const {navigation} = this.props;
         navigation.navigate("Dashboard");
@@ -88,15 +88,15 @@ class HomeScreen extends Component {
 
     }
 
-     addTeam = async (teamInfo) => {
+    addTeam = async (teamInfo) => {
 
         let team = await Edge.teams.create(teamInfo.teamName, teamInfo.sport);
         let profile = this.props.navigation.getParam('profile');
-         team.addMember(profile);
-         let teams = this.state.teams;
-         teams.push(this.generateTeamBanner(team, teams.length));
-         this.setState({modalOpen: false});
-         await this.setState({teams: [...teams]});
+        team.addMember(profile);
+        let teams = this.state.teams;
+        teams.push(this.generateTeamBanner(team, teams.length));
+        this.setState({modalOpen: false});
+        await this.setState({teams: [...teams]});
     }
 
     render() {

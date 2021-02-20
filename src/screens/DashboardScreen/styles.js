@@ -1,5 +1,6 @@
 import {StyleSheet} from "react-native";
 import Colors from '../styles';
+
 export default StyleSheet.create({
     container: {
         flex: 1,
@@ -38,7 +39,7 @@ export default StyleSheet.create({
         backgroundColor: 'violet'
     },
     imageStyle: {
-        height: 100, 
+        height: 100,
         width: 100
     },
     titleText: {

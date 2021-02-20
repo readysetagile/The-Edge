@@ -11,7 +11,7 @@ module.exports = {
         schedule: {},
         drills: {}
     },
-    members:{
+    members: {
         _: 0
     }//map of member objects {memberID => memberObject}
 

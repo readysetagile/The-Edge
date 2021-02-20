@@ -1,9 +1,9 @@
 module.exports = {
 
-    settings:{
+    settings: {
         rememberLogin: false
     },
-    userData:{
+    userData: {
         id: "",
         email: "",
         isVerified: false,
