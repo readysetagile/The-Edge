@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native';
 import Colors from '../styles'
+
 export default StyleSheet.create({
     container: {
         backgroundColor: Colors.background,
@@ -11,24 +12,24 @@ export default StyleSheet.create({
         alignSelf: 'center'
     },
 
-    teamBannersView:{
+    teamBannersView: {
         width: '95%',
         alignSelf: 'center',
         height: '100%',
         flex: 1
     },
-    teamBanner:{
+    teamBanner: {
         backgroundColor: 'gold',
         padding: 10,
         marginTop: 10,
         borderRadius: 10,
     },
-    teamName:{
+    teamName: {
         fontSize: 30,
         alignSelf: 'center'
     },
-    newTeamButton:{
-        backgroundColor:Colors.mainButton,
+    newTeamButton: {
+        backgroundColor: Colors.mainButton,
         position: 'absolute',
         height: 50,
         width: 50,
@@ -44,17 +45,17 @@ export default StyleSheet.create({
         },
         shadowOpacity: 0.6
     },
-    titleText:{
+    titleText: {
         fontWeight: 'bold',
         fontSize: 30,
         top: 5,
         alignSelf: 'center'
     },
-    closeCreateTeam:{
+    closeCreateTeam: {
         left: 20,
-        top:40
+        top: 40
     },
-    modalContent:{
+    modalContent: {
         flex: 1
     },
     input: {
@@ -72,7 +73,7 @@ export default StyleSheet.create({
         borderRadius: 6,
         marginTop: 10
     },
-    errorText:{
+    errorText: {
         color: 'crimson',
         fontWeight: 'bold',
         marginBottom: 10,

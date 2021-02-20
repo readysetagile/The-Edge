@@ -7,6 +7,7 @@ const DEFAULTUSER = require("./model");
 module.exports.Users = class Users {
 
     #reference;
+
     constructor() {
         this.#reference = firebase.database().ref("users");
 
@@ -40,7 +41,7 @@ module.exports.Users = class Users {
      * @returns {Promise<User>}
      */
     async get(uuid) {
-        if(this.accounts == null) {
+        if (this.accounts == null) {
             return await new Promise(resolve => {
                 this.#reference.on('value', snap => {
                     if (snap.val() != null) {
@@ -49,9 +50,9 @@ module.exports.Users = class Users {
                     }
                 });
             });
-        }else{
+        } else {
             let userObject = this.accounts.get(uuid);
-            if(userObject == null) return null;
+            if (userObject == null) return null;
             return new User(userObject);
         }
 

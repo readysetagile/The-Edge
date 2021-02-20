@@ -18,5 +18,4 @@ if (!firebase.apps.length) {
 } else firebase.app();
 
 
-
 export {firebase};

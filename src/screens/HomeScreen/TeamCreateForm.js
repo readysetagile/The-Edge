@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {Formik} from 'formik';
-import {Button, TextInput, View, Text} from 'react-native';
+import {Text, TextInput, View} from 'react-native';
 import styles from "./styles";
 import * as yup from 'yup';
 import FlatButton from "../../Components/SubmitButton";
@@ -19,12 +19,12 @@ const TeamSchema = yup.object({
 
 })
 
-export default function TeamCreateForm({addTeam}){
+export default function TeamCreateForm({addTeam}) {
 
-        return(
-            <View style={{flex: 1, padding: 20, top: 30}}>
+    return (
+        <View style={{flex: 1, padding: 20, top: 30}}>
 
-                <Formik
+            <Formik
                 initialValues={{teamName: '', sport: ''}}
                 validationSchema={TeamSchema}
                 onSubmit={(values, actions) => {
@@ -32,37 +32,37 @@ export default function TeamCreateForm({addTeam}){
                     addTeam(values);
                 }}>
 
-                    {(props) => (
+                {(props) => (
 
-                        <View>
-                            <Text style={styles.titleText}>Team Info</Text>
-                                <TextInput
-                                    style={styles.inputView}
-                                    placeholder='Team Name'
-                                    onChangeText={props.handleChange('teamName')}
-                                    value={props.values.title}
-                                    onBlur={props.handleBlur('teamName')}//realtime validation onBlur
-                                />
-                                <Text style={styles.errorText}>{props.touched.teamName && props.errors.teamName}</Text>
+                    <View>
+                        <Text style={styles.titleText}>Team Info</Text>
+                        <TextInput
+                            style={styles.inputView}
+                            placeholder='Team Name'
+                            onChangeText={props.handleChange('teamName')}
+                            value={props.values.title}
+                            onBlur={props.handleBlur('teamName')}//realtime validation onBlur
+                        />
+                        <Text style={styles.errorText}>{props.touched.teamName && props.errors.teamName}</Text>
 
-                                <TextInput
-                                    style={styles.inputView}
-                                    placeholder='Sport/Activity'
-                                    onChangeText={props.handleChange('sport')}
-                                    value={props.values.body}
-                                    onBlur={props.handleBlur('sport')}
-                                />
-                            <Text style={styles.errorText}>{props.touched.sport && props.errors.sport}</Text>
+                        <TextInput
+                            style={styles.inputView}
+                            placeholder='Sport/Activity'
+                            onChangeText={props.handleChange('sport')}
+                            value={props.values.body}
+                            onBlur={props.handleBlur('sport')}
+                        />
+                        <Text style={styles.errorText}>{props.touched.sport && props.errors.sport}</Text>
 
-                            <FlatButton text="Submit" onPress={props.handleSubmit}/>
+                        <FlatButton text="Submit" onPress={props.handleSubmit}/>
 
-                        </View>
+                    </View>
 
-                    )}
+                )}
 
-                </Formik>
+            </Formik>
 
-            </View>
-        )
+        </View>
+    )
 
 }

@@ -1,6 +1,6 @@
 import {firebase} from './config';
 
-module.exports.UserAuthentication = class UserAuthentication{
+module.exports.UserAuthentication = class UserAuthentication {
 
 
     /**
@@ -19,7 +19,7 @@ module.exports.UserAuthentication = class UserAuthentication{
      *     message: error message<p>
      * }
      */
-    static async signUserIn(email, password){
+    static async signUserIn(email, password) {
 
         return await new Promise(resolve => {
             const responseData = {};
@@ -31,11 +31,11 @@ module.exports.UserAuthentication = class UserAuthentication{
                     responseData.credentials = userCredential.user;
                     resolve(responseData);
                 }).catch((err) => {
-                    responseData.confirmed = false;
-                    responseData.code = err.code;
-                    responseData.message = err.message;
-                    resolve(responseData);
-                });
+                responseData.confirmed = false;
+                responseData.code = err.code;
+                responseData.message = err.message;
+                resolve(responseData);
+            });
         });
 
     }
@@ -45,17 +45,17 @@ module.exports.UserAuthentication = class UserAuthentication{
      * @param name the name of the user to check
      * @returns {Promise<boolean>} a boolean of if it exists (false) or not (true)
      */
-    static async isUnknownUsername(name){
+    static async isUnknownUsername(name) {
 
-        const reference = firebase.database().ref("users/"+name);
+        const reference = firebase.database().ref("users/" + name);
         return await new Promise((resolve) => {
-             reference.once('value', snap => {
-                 resolve(snap)
+            reference.once('value', snap => {
+                resolve(snap)
             }).catch(() => {
                 resolve(null)
             });
         });
-     }
+    }
 
     /**
      * Creates a new user account if it is a ble to
@@ -74,7 +74,7 @@ module.exports.UserAuthentication = class UserAuthentication{
      *     message: error message<p>
      * }
      * */
-    static async createAccount(email, password, displayName){
+    static async createAccount(email, password, displayName) {
 
         const responseData = {};
         return await new Promise(resolve => {
@@ -108,7 +108,7 @@ module.exports.UserAuthentication = class UserAuthentication{
      *     message: error message<p>
      * }
      */
-    static async signInWithEmailAndPassword(email, password){
+    static async signInWithEmailAndPassword(email, password) {
         const responseData = {}
         return await new Promise(resolve => {
             firebase.auth().signInWithEmailAndPassword(email, password).then(userCreds => {

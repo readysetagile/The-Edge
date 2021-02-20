@@ -7,6 +7,7 @@ module.exports.Teams = class Teams {
 
     #reference;
     teams;
+
     constructor() {
         this.#reference = firebase.database().ref("teams");
     }
@@ -19,7 +20,7 @@ module.exports.Teams = class Teams {
      */
     async create(name, sport) {
         let team = await Team.createTeam(name, sport, this.#reference);
-        if(this.teams == null){
+        if (this.teams == null) {
             this.teams = new Map();
         }
         this.teams.set(team.id, team);
@@ -32,7 +33,7 @@ module.exports.Teams = class Teams {
      * @returns {Promise<Team>}
      */
     async get(uuid) {
-        if(this.teams == null) {
+        if (this.teams == null) {
             return await new Promise(resolve => {
                 this.#reference.on('value', snap => {
                     let val = snap.val();
@@ -42,9 +43,9 @@ module.exports.Teams = class Teams {
                     }
                 });
             });
-        }else{
+        } else {
             let teamObject = this.teams.get(uuid);
-            if(teamObject == null) return null;
+            if (teamObject == null) return null;
             return new Team(teamObject);
         }
 
