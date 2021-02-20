@@ -81,7 +81,7 @@ export default class LoginScreen extends Component {
 
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Profiles' })],
+            actions: [NavigationActions.navigate({routeName: 'Profiles'})],
         });
         navigation.dispatch(resetAction);
     }
@@ -102,7 +102,7 @@ export default class LoginScreen extends Component {
 
     }
 
-    createAccount(){
+    createAccount () {
         const {navigation} = this.props;
         navigation.navigate("Create_Account");
     }
@@ -170,7 +170,7 @@ export default class LoginScreen extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => {
-                    this.createAccount()
+                    this.createAccount();
                 }}>
                     <Text style={styles.loginText}>Signup</Text>
                 </TouchableOpacity>
