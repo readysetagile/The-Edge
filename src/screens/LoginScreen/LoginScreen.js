@@ -21,7 +21,7 @@ export default class LoginScreen extends Component {
         rememberMe: false
     };
 
-    constructor(props) {
+    constructor (props) {
         super(props);
         this.accInfo = {
             email: "",
@@ -29,7 +29,7 @@ export default class LoginScreen extends Component {
         };
     }
 
-    checkEmail(email) {
+    checkEmail (email) {
         const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
         return re.test(email);
     }
@@ -40,7 +40,6 @@ export default class LoginScreen extends Component {
      * @returns {Promise<void>}
      */
     onSignIn = async () => {
-
 
         const email = this.accInfo.email.trim();
         const pass = this.accInfo.password;
@@ -62,7 +61,7 @@ export default class LoginScreen extends Component {
 
     };
 
-    updateState(emailPassed, password) {
+    updateState (emailPassed, password) {
         this.setState({
             email: {
                 hide: emailPassed,
@@ -76,7 +75,7 @@ export default class LoginScreen extends Component {
 
     }
 
-    sendToHomePage() {
+    sendToHomePage () {
         const {navigation} = this.props;
 
         const resetAction = StackActions.reset({
@@ -92,7 +91,7 @@ export default class LoginScreen extends Component {
      * it will send them to the home (profile) page
      * @returns {null}
      */
-    componentDidMount() {
+    componentDidMount () {
         const that = this;
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -102,7 +101,7 @@ export default class LoginScreen extends Component {
 
     }
 
-    createAccount() {
+    createAccount () {
         const {navigation} = this.props;
         navigation.navigate("Create_Account");
     }
@@ -111,12 +110,10 @@ export default class LoginScreen extends Component {
         this.setState({rememberMe: !this.state.rememberMe});
     };
 
-    render() {
-        //firebase.auth().signOut();
-
+    render () {
         return (
             <View style={styles.container}>
-                <Image source={require("../../assets/iPhoneApp.png")}/>
+                <Image source={require("../../assets/iPhoneApp.png")} />
                 <Text style={styles.logo}>The Edge</Text>
                 <View style={styles.inputView}>
                     <TextInput

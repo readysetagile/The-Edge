@@ -3,21 +3,21 @@ import {Teams} from "./modules/teams";
 
 class Edge {
 
-    constructor() {
+    constructor () {
         this.initialize();
     }
 
 
-    initDB() {
+    initDB () {
         this.users = new Users();
         this.teams = new Teams();
     }
 
-    initialize() {
+    initialize () {
         this.initDB();
     }
 
 }
 
 export default new Edge();
-export {Edge}
+export {Edge};
