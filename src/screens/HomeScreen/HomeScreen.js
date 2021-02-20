@@ -42,11 +42,9 @@ class HomeScreen extends Component {
     generateTeamBanner(team, key) {
 
         return (
-
-            <TouchableOpacity style={styles.teamBanner} key={key}>
+            <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam()}>
                 <Text style={styles.teamName}>{team.teamName}</Text>
             </TouchableOpacity>
-
         )
 
     }
@@ -56,6 +54,12 @@ class HomeScreen extends Component {
         let teams = await this.getTeams();
         console.log(teams, 'teams');
         this.generateTeams(teams);
+
+    }
+
+    enterTeam(){
+
+        
 
     }
 
