@@ -72,5 +72,11 @@ export default StyleSheet.create({
         borderRadius: 6,
         marginTop: 10
     },
-
+    errorText:{
+        color: 'crimson',
+        fontWeight: 'bold',
+        marginBottom: 10,
+        marginTop: 6,
+        textAlign: 'center'
+    }
 });

@@ -4,5 +4,7 @@ module.exports = {
     username: "",
     avatar: "",
     accountUUID:"",
-    teams: new Map(),//map of team ids to the team objects
+    teams: {
+        0: 0
+    },
 }

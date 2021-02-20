@@ -3,6 +3,7 @@ module.exports = {
     id: "",
     teamCode: "",
     teamName: "",
+    sport: "",
     modules: {
         teamQuestions: {
             required: true,

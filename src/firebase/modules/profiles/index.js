@@ -1,7 +1,6 @@
 const DEFAULTPROFILE = require("./model");
 const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";//TODO: change this to something original
 import {firebase} from "../../config";
-import {Team} from '../teams/Team';
 
 class Profile{
 
@@ -16,9 +15,7 @@ class Profile{
         this.profileUUID = profileObject.id;
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
-        this._teams = new Map(Object.entries(profileObject.teams)
-            .filter(i => i[0] !== "_")
-            .map(i => [i[0], new Team(i[1])]))
+        this._teams = profileObject.teams;
         this.#reference = firebase.database().ref("users/"+this.accountUUID+"/profiles");
     }
 
@@ -33,6 +30,7 @@ class Profile{
         let obj = Object.assign({}, DEFAULTPROFILE);
         obj.id = profileUUID;
         obj.username = profileUsername;
+        obj.teams = new Map();
         return await this.#reference.update({profileUUID: obj});
     }
 
@@ -62,6 +60,13 @@ class Profile{
         let ref = firebase.database().ref('users/'+accountUUID+"/profiles/"+profileUUID);
         if(path) ref = ref.child(path);
         return ref.update(value);
+    }
+
+    addTeam(team){
+        this._teams.set(team.id, 0);
+        let obj = {};
+        obj[team.id] = 0;//TODO figure out how to use arrays with firebase
+        this.#reference.child(this.profileUUID+'/teams').push(obj)
     }
 
     async getProfilePicture(){
@@ -122,11 +127,6 @@ class Profile{
 
     }
 
-
-    get teams() {
-        return this._teams;
-    }
-
     set username(value) {
         this._username = value;
         this.update({username: value}).catch(console.error);
@@ -145,6 +145,11 @@ class Profile{
          if(!this._avatar)
              return DEFAULTAVATR;
         return this._avatar;
+    }
+
+
+    get teams() {
+        return Object.keys(this._teams).filter(i => i !== 0);
     }
 }
 export {DEFAULTAVATR}

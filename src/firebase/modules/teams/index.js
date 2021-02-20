@@ -1,31 +1,28 @@
 import {firebase} from "../../config";
 import {Team} from "./Team";
-import {createUUID} from "../../Util";
 
 const DEFAULTTEAM = require("./model");
 
 module.exports.Teams = class Teams {
 
     #reference;
+    teams;
     constructor() {
         this.#reference = firebase.database().ref("teams");
     }
 
     /**
      * Adds a default team to the database
-     * @returns {User} returns the new user account created
+     * @returns {Team} returns the new team created
      * @param name the name of the team
+     * @param sport the sport the team does
      */
-    async create(name) {
-        let obj = Object.assign({}, DEFAULTTEAM);
-        obj.teamName = name;
-        obj.id = createUUID();
-
-        let team = new Team(obj);
-        let teamObj = {};
-        teamObj[obj.id] = obj;
-        await this.#reference.update(teamObj);
-        this.accounts.set(obj.id, team);
+    async create(name, sport) {
+        let team = await Team.createTeam(name, sport, this.#reference);
+        if(this.teams == null){
+            this.teams = new Map();
+        }
+        this.teams.set(team.id, team);
         return team;
     }
 
