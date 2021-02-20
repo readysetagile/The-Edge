@@ -1,14 +1,15 @@
 import React, {Component} from 'react';
-import {View, Image, Text, TextInput, Platform, Alert} from 'react-native';
+import {Alert, Image, Platform, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {DEFAULTAVATR} from "../../firebase/modules/profiles";
-import {TouchableOpacity} from "react-native";
 import {firebase} from '../../firebase/config';
-import Edge, {createUUID} from '../../firebase/index'
+import Edge from '../../firebase/index'
 import * as ImagePicker from 'expo-image-picker';
+import {NavigationActions, StackActions} from "react-navigation";
+import {createUUID} from "../../firebase/Util";
 
 
-export default class CreateProfileScreen extends Component{
+export default class CreateProfileScreen extends Component {
 
     state = {
         image: null,
@@ -16,9 +17,9 @@ export default class CreateProfileScreen extends Component{
         uuid: createUUID()
     }
 
-    async uploadImage(){
+    async uploadImage() {
 
-        if(Platform.OS !== 'web'){
+        if (Platform.OS !== 'web') {
             const {status} = await ImagePicker.requestMediaLibraryPermissionsAsync();
             return status === 'granted';
         }
@@ -28,7 +29,7 @@ export default class CreateProfileScreen extends Component{
 
     selectImage = async () => {//TODO figure out proper sizes for profile pictures
 
-        if(await this.uploadImage()) {
+        if (await this.uploadImage()) {
             const options = {
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
@@ -37,7 +38,6 @@ export default class CreateProfileScreen extends Component{
             }
             let result = await ImagePicker.launchImageLibraryAsync(options);
             if (!result.cancelled) {
-                console.log(result);
                 this.setState({image: result});
 
             }
@@ -46,23 +46,25 @@ export default class CreateProfileScreen extends Component{
     }
 
 
-    async createProfile(){
+    async createProfile() {
         await this.uploadProfilePicture();
         let user = await Edge.users.get(firebase.auth().currentUser.uid);
 
-        if(!this.state.username){
+        if (!this.state.username) {
             Alert.alert("Invalid Username");
             return;
         }
-        await user.addProfile(this.state.uuid, this.state.username);
+        let profile = await user.addProfile(this.state.uuid, this.state.username);
         const {navigation} = this.props;
-        navigation.pop();//TODO navigate to new account home page
-
-
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
+        });
+        navigation.dispatch(resetAction);
     }
 
-    async uploadProfilePicture(){
-        if(this.state.image) {
+    async uploadProfilePicture() {
+        if (this.state.image) {
 
             let uuid = firebase.auth().currentUser.uid;
             let storage = firebase.storage();
@@ -75,35 +77,36 @@ export default class CreateProfileScreen extends Component{
         }
     }
 
-    render(){
-        return(
+    render() {
+        return (
 
             <View style={styles.background}>
 
 
-                    <TouchableOpacity onPress={() => this.selectImage()}>
-                        <View style={{alignItems: 'center', padding: 40}}>
+                <TouchableOpacity onPress={() => this.selectImage()}>
+                    <View style={{alignItems: 'center', padding: 40}}>
 
-                            <Image style={styles.avatar} source={{uri: (!this.state.image ? DEFAULTAVATR : this.state.image.uri)}}/>
-                            <Text style={{
-                                fontSize: 20,
-                                top: 5
-                            }}>Upload Image</Text>
-                        </View>
-                    </TouchableOpacity>
+                        <Image style={styles.avatar}
+                               source={{uri: (!this.state.image ? DEFAULTAVATR : this.state.image.uri)}}/>
+                        <Text style={{
+                            fontSize: 20,
+                            top: 5
+                        }}>Upload Image</Text>
+                    </View>
+                </TouchableOpacity>
 
-                    <View style={styles.inputView}>
-                        <TextInput
+                <View style={styles.inputView}>
+                    <TextInput
                         style={styles.inputText}
                         placeholder="Username"
                         placeholderTextColor="#003f5c"
                         onChangeText={txt => this.setState({username: txt})}
-                        />
-                    </View>
+                    />
+                </View>
 
-                    <TouchableOpacity onPress={() => this.createProfile()} style={styles.createProfileButton}>
-                        <Text style={{color: 'white', fontSize: 20}}>Create Profile</Text>
-                    </TouchableOpacity>
+                <TouchableOpacity onPress={() => this.createProfile()} style={styles.createProfileButton}>
+                    <Text style={{color: 'white', fontSize: 20}}>Create Profile</Text>
+                </TouchableOpacity>
 
             </View>
 

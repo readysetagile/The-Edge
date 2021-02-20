@@ -3,7 +3,7 @@ import Colors from '../styles';
 
 export default StyleSheet.create({
 
-    background:{
+    background: {
         backgroundColor: Colors.background,
         height: '100%'
     },
@@ -13,17 +13,18 @@ export default StyleSheet.create({
         alignItems: 'flex-start',
         borderRadius: 25,
     },
-    item:{
+    item: {
         width: '50%',
         padding: 20,
     },
-    profilePicture:{
+    profilePicture: {
         width: 50,
         height: 50,
         alignSelf: 'center'
     },
-    text:{
+    text: {
         fontSize: 20,
         alignSelf: 'center',
-    }
+    },
+
 });

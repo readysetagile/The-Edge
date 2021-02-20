@@ -11,9 +11,9 @@ module.exports.User = class User {
     constructor(userObject) {
         this.userData = userObject.userData;
         this.settings = userObject.settings;
-        this.#_profiles = new Map(Object.entries(userObject.profiles)
+        this.#_profiles = userObject.profiles ? new Map(Object.entries(userObject.profiles)
             .filter(i => i[0] !== "_")
-            .map(i => [i[0], new Profile(i[1])]));
+            .map(i => [i[0], new Profile(i[1])])) : new Map();
         this.#reference = firebase.database().ref('users/' + this.userData.id);
 
     }

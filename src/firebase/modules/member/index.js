@@ -1,5 +1,4 @@
-module.exports.Member = class Member{
-
+module.exports.Member = class Member {
 
 
 }

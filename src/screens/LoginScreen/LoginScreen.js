@@ -41,7 +41,6 @@ export default class LoginScreen extends Component {
      */
     onSignIn = async () => {
 
-
         const email = this.accInfo.email.trim();
         const pass = this.accInfo.password;
         const emailPassed = this.checkEmail(email);
@@ -81,7 +80,7 @@ export default class LoginScreen extends Component {
 
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({ routeName: 'Profiles' })],
+            actions: [NavigationActions.navigate({routeName: 'Profiles'})],
         });
         navigation.dispatch(resetAction);
     }
@@ -102,7 +101,7 @@ export default class LoginScreen extends Component {
 
     }
 
-    createAccount(){
+    createAccount () {
         const {navigation} = this.props;
         navigation.navigate("Create_Account");
     }
@@ -112,8 +111,6 @@ export default class LoginScreen extends Component {
     };
 
     render () {
-        //firebase.auth().signOut();
-
         return (
             <View style={styles.container}>
                 <Image source={require("../../assets/iPhoneApp.png")} />
@@ -170,7 +167,7 @@ export default class LoginScreen extends Component {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => {
-                    this.createAccount()
+                    this.createAccount();
                 }}>
                     <Text style={styles.loginText}>Signup</Text>
                 </TouchableOpacity>

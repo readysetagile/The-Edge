@@ -4,13 +4,13 @@ import {View,} from 'react-native';
 import PropTypes from 'prop-types';
 
 const HiddenView = (props) => {
-    const { children, hide, style } = props;
+    const {children, hide, style} = props;
     if (hide) {
         return null;
     }
     return (
         <View {...this.props} style={style}>
-            { children }
+            {children}
         </View>
     );
 };

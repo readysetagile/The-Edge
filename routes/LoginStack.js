@@ -1,6 +1,6 @@
 import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
-import {CreateAccountScreen, LoginScreen, ProfileScreen, CreateProfileScreen} from "../src/screens";
+import {CreateAccountScreen, LoginScreen, ProfileScreen, CreateProfileScreen, HomeScreen, Dashboard} from "../src/screens";
 import Header from '../src/Components/Header';
 import React from 'react';
 
@@ -29,6 +29,17 @@ const screens = {
     },
     Create_Profile:{
         screen: CreateProfileScreen
+    },
+    HomeScreen:{
+        screen: HomeScreen,
+        navigationOptions: () => {
+            return {
+                headerTitle: "Teams"
+            }
+        }
+    },
+    Dashboard:{
+        screen: Dashboard,
     }
 }
 

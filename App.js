@@ -5,6 +5,9 @@ import {AppState} from "react-native";
 import {firebase} from "./src/firebase/config";
 import Edge from "./src/firebase";
 import Login from './routes/LoginStack';
+import {ActionSheetProvider} from '@expo/react-native-action-sheet';
+import { MenuProvider } from 'react-native-popup-menu';
+import {Menu} from "react-native-paper";
 
 // Set the configuration for your app
 
@@ -41,7 +44,11 @@ export default class App extends Component {
 
     render () {
         return (
-            <Login/>
+            <MenuProvider>
+                <ActionSheetProvider>
+                    <Login />
+                </ActionSheetProvider>
+            </MenuProvider>
         );
     }
 }
