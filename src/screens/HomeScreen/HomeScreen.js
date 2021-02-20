@@ -52,14 +52,14 @@ class HomeScreen extends Component {
     async componentDidMount() {
 
         let teams = await this.getTeams();
-        console.log(teams, 'teams');
         this.generateTeams(teams);
 
     }
 
     enterTeam(){
 
-        
+        const {navigation} = this.props;
+        navigation.navigate("Dashboard");
 
     }
 

@@ -2,8 +2,7 @@ import {StyleSheet} from "react-native";
 import Colors from '../styles';
 export default StyleSheet.create({
     container: {
-        height: deviceHeight,
-        width: deviceWidth,
+        flex: 1,
         flexDirection: 'row',
         flexWrap: 'wrap',
         justifyContent: 'center',
@@ -43,13 +42,13 @@ export default StyleSheet.create({
         width: 100
     },
     titleText: {
-        fontWeight: 700,
+        fontWeight: "700",
         marginTop: 5,
         color: 'black',
         fontSize: 25
     },
     buttonsText: {
-        fontWeight: 700,
+        fontWeight: "700",
         marginTop: 10,
         color: 'white',
         fontSize: 20
