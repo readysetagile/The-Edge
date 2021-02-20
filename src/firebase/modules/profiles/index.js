@@ -15,7 +15,7 @@ class Profile{
         this.profileUUID = profileObject.id;
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
-        this._teams = profileObject.teams;
+        this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();
         this.#reference = firebase.database().ref("users/"+this.accountUUID+"/profiles");
     }
 
@@ -30,7 +30,6 @@ class Profile{
         let obj = Object.assign({}, DEFAULTPROFILE);
         obj.id = profileUUID;
         obj.username = profileUsername;
-        obj.teams = new Map();
         return await this.#reference.update({profileUUID: obj});
     }
 
@@ -66,7 +65,7 @@ class Profile{
         this._teams.set(team.id, 0);
         let obj = {};
         obj[team.id] = 0;//TODO figure out how to use arrays with firebase
-        this.#reference.child(this.profileUUID+'/teams').push(obj)
+        this.#reference.child(this.profileUUID+'/teams').update(obj)
     }
 
     async getProfilePicture(){
@@ -149,7 +148,7 @@ class Profile{
 
 
     get teams() {
-        return Object.keys(this._teams).filter(i => i !== 0);
+        return Array.from(this._teams.keys()).filter(i => i !== '_');
     }
 }
 export {DEFAULTAVATR}

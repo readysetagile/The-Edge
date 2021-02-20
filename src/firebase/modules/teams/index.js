@@ -35,8 +35,9 @@ module.exports.Teams = class Teams {
         if(this.teams == null) {
             return await new Promise(resolve => {
                 this.#reference.on('value', snap => {
-                    if (snap.val() != null) {
-                        this.teams = new Map(Object.entries(snap.val()));
+                    let val = snap.val();
+                    if (val != null) {
+                        this.teams = new Map(Object.entries(val));
                         resolve(new Team(this.teams.get(uuid)));
                     }
                 });

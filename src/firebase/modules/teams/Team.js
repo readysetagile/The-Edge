@@ -8,20 +8,22 @@ module.exports.Team = class Team {
     #reference
     constructor(teamObject) {
         console.log(teamObject, 123);
-        this.id = teamObject.id;
-        this.modules = teamObject.modules;
-        this.members = teamObject.members;
-        this.teamCode = teamObject.teamCode;
-        this.teamName = teamObject.teamName;
-        this.sport = teamObject.sport;
-        this.#reference = firebase.database().ref("teams/"+this.id);
+        if(teamObject) {
+            this.id = teamObject.id;
+            this.modules = teamObject.modules;
+            this.members = teamObject.members ? new Map(Object.entries(teamObject.members)) : new Map();
+            this.teamCode = teamObject.teamCode;
+            this.teamName = teamObject.teamName;
+            this.sport = teamObject.sport;
+            this.#reference = firebase.database().ref("teams/" + this.id);
+        }
 
     }
 
 
     addMember(profile){
         this.members.set(profile.id, profile);
-        profile.addTeam(this.id);
+        profile.addTeam(this);
         this.#reference.update({members: this.members})
     }
 
@@ -32,7 +34,6 @@ module.exports.Team = class Team {
         obj.id = createUUID();
         obj.sport = sport;
         obj.teamCode = createUUID('xxxxxx');
-        obj.members.set(0, 0);
         let team = new Team(obj);
         let teamObj = {};
         teamObj[obj.id] = obj;

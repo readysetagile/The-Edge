@@ -5,6 +5,6 @@ module.exports = {
     avatar: "",
     accountUUID:"",
     teams: {
-        0: 0
+        _: 0
     },
 }

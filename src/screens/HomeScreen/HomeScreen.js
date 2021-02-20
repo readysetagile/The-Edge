@@ -22,14 +22,12 @@ class HomeScreen extends Component {
     async getTeams() {
         const {navigation} = this.props;
         let profile = navigation.getParam("profile")
-        console.log(profile.teams, 1);
         let profileTeams = profile.teams;
-        return await Promise.all(profileTeams.map(i => Edge.teams.get(i)));
+        return await Promise.all(profileTeams.map(async i => await Edge.teams.get(i)));
 
     }
 
     generateTeams(teams) {
-        console.log(teams, 'team list');
         let teamBanners = [];
         teams.forEach((i, j) => {
 
@@ -56,6 +54,7 @@ class HomeScreen extends Component {
     async componentDidMount() {
 
         let teams = await this.getTeams();
+        console.log(teams, 'teams');
         this.generateTeams(teams);
 
     }
@@ -89,14 +88,15 @@ class HomeScreen extends Component {
 
         let team = await Edge.teams.create(teamInfo.teamName, teamInfo.sport);
         let profile = this.props.navigation.getParam('profile');
-         console.log(team.addMember);
          team.addMember(profile);
-        this.setState({modalOpen: false});
+         let teams = this.state.teams;
+         teams.push(this.generateTeamBanner(team, teams.length));
+         this.setState({modalOpen: false});
+         await this.setState({teams: [...teams]});
     }
 
     render() {
 
-        let teams = this.state.teams;
         return (
             <View style={styles.container}>
 
@@ -112,7 +112,7 @@ class HomeScreen extends Component {
 
                 <Text style={styles.titleText}>Select Team</Text>
                 <ScrollView style={styles.teamBannersView}>
-                    {teams.length ? teams : (
+                    {this.state.teams.length ? this.state.teams : (
                         <View style={styles.teamBanner} opacity={0.5}>
 
                             <Text style={{
