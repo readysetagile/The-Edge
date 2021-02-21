@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {Alert, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, Text, View} from 'react-native';
 import styles from './styles';
-import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import Edge from "../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
+import CreateAccountForm from './CreateAccountForm';
 
 export default class CreateAccountScreen extends Component {
 
@@ -150,90 +150,11 @@ export default class CreateAccountScreen extends Component {
     render() {
         return (
             <View style={styles.container}>
-
                 <Text style={styles.text}>Create Account</Text>
 
-                <View style={styles.contentContainer}>
-
-                    <View style={styles.prompt}>
-                        <Text style={styles.inputDescription}>Display Name</Text>
-                        <View style={styles.inputView}>
-                            <TextInput style={styles.inputText}
-                                       placeholder="Username"
-                                       placeholderTextColor="white"
-                                       onChangeText={text => this.accInfo.username = text}>{this.accInfo.username}</TextInput>
-
-                        </View>
-                        <HiddenView hide={this.state.username.hide} style={styles.hiddenViewErr}>
-                            <Text style={styles.errorMsg}>{this.state.username.msg}</Text>
-                        </HiddenView>
-                    </View>
-
-                    <View style={styles.prompt}>
-                        <Text style={styles.inputDescription}>Email</Text>
-                        <View style={styles.inputView}>
-                            <TextInput style={styles.inputText}
-                                       placeholder="example@email.com"
-                                       placeholderTextColor="white"
-                                       onChangeText={text => this.accInfo.email = text}>{this.accInfo.email}</TextInput>
-                        </View>
-                        <HiddenView hide={this.state.email.hide} style={styles.hiddenViewErr}>
-                            <Text style={styles.errorMsg}>{this.state.email.msg}</Text>
-                        </HiddenView>
-                    </View>
-
-                    <View style={styles.prompt}>
-                        <Text style={styles.inputDescription}>Password</Text>
-                        <View style={styles.inputView}>
-                            <TextInput style={styles.inputText}
-                                       placeholder="Password"
-                                       secureTextEntry
-                                       placeholderTextColor="white"
-                                       onChangeText={text => this.accInfo.password = text}>{this.accInfo.password}</TextInput>
-                        </View>
-                        <HiddenView hide={this.state.password.hide} style={styles.hiddenViewErr}>
-                            <Text style={styles.errorMsg}>{this.state.password.msg}</Text>
-                        </HiddenView>
-                    </View>
-
-                    <View style={styles.prompt}>
-                        <Text style={styles.inputDescription}>Verify Password</Text>
-                        <View style={styles.inputView}>
-                            <TextInput style={styles.inputText}
-                                       placeholder="Repeat Password"
-                                       secureTextEntry
-                                       onChangeText={text => this.accInfo.verifiedPass = text}
-                                       placeholderTextColor="white">{this.accInfo.verifiedPass}</TextInput>
-                        </View>
-                        <HiddenView hide={this.state.confirmPassword.hide} style={styles.hiddenViewErr}>
-                            <Text style={styles.errorMsg}>{this.state.confirmPassword.msg}</Text>
-                        </HiddenView>
-                    </View>
+                <View style={{width: '80%'}}>
+                    <CreateAccountForm createAccount={(values) => console.log(values)}/>
                 </View>
-
-                <View style={styles.rememberMeView}>
-                    <Text style={{
-                        fontSize: 20,
-                        color: 'white',
-                        padding: 5,
-                        alignSelf: 'center',
-                        textAlign: 'right'
-                    }}>Remember Me?</Text>
-                    <Switch
-                        trackColor={{false: "#767577", true: "#81b0ff"}}
-                        thumbColor={this.state.rememberMe ? "#f5dd4b" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={this.onRememberMe}
-                        value={this.state.rememberMe}
-                        style={{
-                            alignSelf: 'center'
-                        }}
-                    />
-                </View>
-
-                <TouchableOpacity onPress={this.onCreateAccount} style={styles.createAccountButton}>
-                    <Text style={styles.createAccountText}>Create Account</Text>
-                </TouchableOpacity>
 
             </View>
         );
