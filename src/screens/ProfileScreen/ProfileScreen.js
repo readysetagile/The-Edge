@@ -90,12 +90,8 @@ export default class ProfileScreen extends Component {
 
         const {navigation} = this.props;
 
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
+        navigation.navigate("HomeScreen", {profile: profile})
 
-        });
-        navigation.dispatch(resetAction);
     }
 
     async componentDidMount () {

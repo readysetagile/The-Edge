@@ -6,6 +6,7 @@ import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
 import Edge from "../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
+import LoginForm from './LoginForm';
 
 export default class LoginScreen extends Component {
 
@@ -111,60 +112,15 @@ export default class LoginScreen extends Component {
     };
 
     render () {
+        //firebase.auth().signOut();
         return (
             <View style={styles.container}>
                 <Image source={require("../../assets/iPhoneApp.png")} />
                 <Text style={styles.logo}>The Edge</Text>
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.inputText}
-                        placeholder="Email"
-                        placeholderTextColor="#003f5c"
-                        onChangeText={txt => this.accInfo.email = txt}>{this.accInfo.email}</TextInput>
+
+                <View style={{width: '80%'}}>
+                    <LoginForm login={this.onSignIn}/>
                 </View>
-                <HiddenView hide={this.state.email.hide} style={styles.hiddenViewErr}>
-                    <Text style={styles.errorMsg}>{this.state.email.msg}</Text>
-                </HiddenView>
-
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.inputText}
-                        placeholder="Password"
-                        placeholderTextColor="#003f5c"
-                        secureTextEntry
-                        onChangeText={txt => this.accInfo.password = txt}>{this.accInfo.password}</TextInput>
-                </View>
-                <HiddenView hide={this.state.password.hide} style={styles.hiddenViewErr}>
-                    <Text style={styles.errorMsg}>{this.state.password.msg}</Text>
-                </HiddenView>
-
-                <View style={styles.rememberMeView}>
-                    <Text style={{
-                        fontSize: 20,
-                        color: 'white',
-                        padding: 10,
-                        alignSelf: 'center',
-                        textAlign: 'right'
-                    }}>Remember Me?</Text>
-                    <Switch
-                        trackColor={{false: "#767577", true: "#81b0ff"}}
-                        thumbColor={this.state.rememberMe ? "#f5dd4b" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={this.onRememberMe}
-                        value={this.state.rememberMe}
-                        style={{
-                            alignSelf: 'center'
-                        }}
-                    />
-                </View>
-
-                <TouchableOpacity>
-                    <Text style={styles.forgot}>Forgot Password?</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.loginButton} onPress={this.onSignIn}>
-                    <Text style={styles.loginText}>LOGIN</Text>
-                </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => {
                     this.createAccount();
