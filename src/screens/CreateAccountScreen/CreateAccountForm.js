@@ -39,37 +39,37 @@ export default function CreateAccountForm({createAccount}) {
                         <View style={styles.contentContainer}>
 
                             <Text style={styles.inputDescription}>Display Name</Text>
-                                <TextInput style={styles.inputView}
-                                           placeholder="Username"
-                                           placeholderTextColor="white"
-                                           onBlur={props.handleBlur("Username")}
-                                           onChangeText={props.handleChange('Username')}/>
+                            <TextInput style={styles.inputView}
+                                       placeholder="Username"
+                                       placeholderTextColor="white"
+                                       onBlur={props.handleBlur("Username")}
+                                       onChangeText={props.handleChange('Username')}/>
                             <Text style={styles.errorMsg}>{props.touched.Username && props.errors.Username}</Text>
 
                             <Text style={styles.inputDescription}>Email</Text>
-                                <TextInput style={styles.inputView}
-                                           placeholder="example@email.com"
-                                           placeholderTextColor="white"
-                                           onBlur={props.handleBlur("Email")}
-                                           onChangeText={props.handleChange('Email')}/>
+                            <TextInput style={styles.inputView}
+                                       placeholder="example@email.com"
+                                       placeholderTextColor="white"
+                                       onBlur={props.handleBlur("Email")}
+                                       onChangeText={props.handleChange('Email')}/>
                             <Text style={styles.errorMsg}>{props.touched.Email && props.errors.Email}</Text>
 
                             <Text style={styles.inputDescription}>Password</Text>
-                                <TextInput style={styles.inputView}
-                                           placeholder="Password"
-                                           secureTextEntry
-                                           placeholderTextColor="white"
-                                           onBlur={props.handleBlur("Password")}
-                                           onChangeText={props.handleChange('Password')}/>
+                            <TextInput style={styles.inputView}
+                                       placeholder="Password"
+                                       secureTextEntry
+                                       placeholderTextColor="white"
+                                       onBlur={props.handleBlur("Password")}
+                                       onChangeText={props.handleChange('Password')}/>
                             <Text style={styles.errorMsg}>{props.touched.Password && props.errors.Password}</Text>
 
                             <Text style={styles.inputDescription}>Verify Password</Text>
-                                <TextInput style={styles.inputView}
-                                           placeholder="Repeat Password"
-                                           secureTextEntry
-                                           onChangeText={props.handleChange('Verified Password')}
-                                           onBlur={props.handleBlur("Verified Password")}
-                                           placeholderTextColor="white"/>
+                            <TextInput style={styles.inputView}
+                                       placeholder="Repeat Password"
+                                       secureTextEntry
+                                       onChangeText={props.handleChange('Verified Password')}
+                                       onBlur={props.handleBlur("Verified Password")}
+                                       placeholderTextColor="white"/>
                             <Text style={styles.errorMsg}>{props.touched["Verified Password"]
                             && props.errors["Verified Password"]}</Text>
 

@@ -42,23 +42,23 @@ export default class CreateAccountScreen extends Component {
     onCreateAccount = async (values) => {
         const {navigation} = this.props;
 
-            const msg = await UserAuthentication.createAccount(values.Email, values.Password, values.Username);
+        const msg = await UserAuthentication.createAccount(values.Email, values.Password, values.Username);
 
-            if (msg.confirmed) {
-                let uuid = msg.credentials.user.uid;
-                await Edge.users.create(values.Email, values.rememberMe, uuid);
-                this.sendToProfilePage()
-                const resetAction = StackActions.reset({
-                    index: 0,
-                    actions: [NavigationActions.navigate({routeName: 'Profiles'})],
-                });
-                navigation.dispatch(resetAction);
-            } else {
-                Alert.alert(
-                    "Invalid Credentials",
-                    msg.message,
-                );
-            }
+        if (msg.confirmed) {
+            let uuid = msg.credentials.user.uid;
+            await Edge.users.create(values.Email, values.rememberMe, uuid);
+            this.sendToProfilePage()
+            const resetAction = StackActions.reset({
+                index: 0,
+                actions: [NavigationActions.navigate({routeName: 'Profiles'})],
+            });
+            navigation.dispatch(resetAction);
+        } else {
+            Alert.alert(
+                "Invalid Credentials",
+                msg.message,
+            );
+        }
 
 
     };

@@ -26,7 +26,7 @@ export default function LoginForm({login}) {
                     onSubmit={(values, actions) => {
                         actions.resetForm();
                         login(values);
-            }}>
+                    }}>
 
                 {(props) => (
 
