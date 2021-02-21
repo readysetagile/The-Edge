@@ -27,7 +27,6 @@ export default function CreateAccountForm({createAccount}) {
             <Formik initialValues={{Username: '', Email: '', Password: '', "Verified Password": '', rememberMe: false}}
                     validationSchema={CreateAccountSchema}
                     onSubmit={(values, actions) => {
-                        console.log(1)
                         actions.resetForm();
                         createAccount(values);
                     }}>
