@@ -1,7 +1,6 @@
-import {Alert, Image, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import React, {Component} from 'react';
-import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
 import Edge from "../../firebase";
@@ -10,7 +9,7 @@ import LoginForm from './LoginForm';
 
 export default class LoginScreen extends Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.accInfo = {
             email: "",
@@ -38,7 +37,7 @@ export default class LoginScreen extends Component {
 
     };
 
-    sendToHomePage () {
+    sendToHomePage() {
         const {navigation} = this.props;
 
         const resetAction = StackActions.reset({
@@ -53,7 +52,7 @@ export default class LoginScreen extends Component {
      * it will send them to the home (profile) page
      * @returns {null}
      */
-    componentDidMount () {
+    componentDidMount() {
         const that = this;
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -63,16 +62,16 @@ export default class LoginScreen extends Component {
 
     }
 
-    createAccount () {
+    createAccount() {
         const {navigation} = this.props;
         navigation.navigate("Create_Account");
     }
 
-    render () {
+    render() {
         //firebase.auth().signOut();
         return (
             <View style={styles.container}>
-                <Image source={require("../../assets/iPhoneApp.png")} />
+                <Image source={require("../../assets/iPhoneApp.png")}/>
                 <Text style={styles.logo}>The Edge</Text>
 
                 <View style={{width: '80%'}}>
