@@ -8,30 +8,8 @@ import CreateAccountForm from './CreateAccountForm';
 
 export default class CreateAccountScreen extends Component {
 
-    state = {
-        username: {
-            hide: true,
-            msg: ""
-        },
-        email: {
-            hide: true,
-            msg: ""
-        },
-        password: {
-            hide: true,
-            msg: ""
-        },
-        confirmPassword: {
-            hide: true,
-            msg: ""
-        },
-        rememberMe: false
-    };
-
-
     constructor(props) {
         super(props);
-
     }
 
     /**
@@ -40,19 +18,13 @@ export default class CreateAccountScreen extends Component {
      * @returns {Promise<void>}
      */
     onCreateAccount = async (values) => {
-        const {navigation} = this.props;
 
         const msg = await UserAuthentication.createAccount(values.Email, values.Password, values.Username);
 
         if (msg.confirmed) {
             let uuid = msg.credentials.user.uid;
             await Edge.users.create(values.Email, values.rememberMe, uuid);
-            this.sendToProfilePage()
-            const resetAction = StackActions.reset({
-                index: 0,
-                actions: [NavigationActions.navigate({routeName: 'Profiles'})],
-            });
-            navigation.dispatch(resetAction);
+            this.sendToProfilePage();
         } else {
             Alert.alert(
                 "Invalid Credentials",
