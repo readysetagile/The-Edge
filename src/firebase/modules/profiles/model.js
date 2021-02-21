@@ -3,6 +3,7 @@ module.exports = {
     username: "",
     avatar: "",
     accountUUID: "",
+    isParent: false,
     teams: {
         _: 0
     },

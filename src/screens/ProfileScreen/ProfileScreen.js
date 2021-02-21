@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, Image, ScrollView, Text, View, TouchableOpacity} from 'react-native';
+import {Alert, Image, ScrollView, Text, View, TouchableOpacity, TextInput} from 'react-native';
 import styles from './styles';
 import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
@@ -10,7 +10,8 @@ import {NavigationActions, StackActions} from "react-navigation";
 export default class ProfileScreen extends Component {
 
     state = {
-        accounts: []
+        accounts: [],
+        key: 0
     };
 
     menuStyles = {
@@ -64,24 +65,33 @@ export default class ProfileScreen extends Component {
 
     }
 
+    toggleParent(profile){
+
+        profile.isParent = !profile.isParent;
+        this.componentDidMount()
+    }
+
     async generateProfileImage (profile, index) {
         let profileImage = await profile.getProfilePicture();
         if (profileImage == null) profileImage = profile.avatar;
         return (
             <View key={index} profile={profile} style={styles.item}>
 
-                <Menu>
-                    <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => this.enterProfile(profile)}>
+                    <Menu>
+                        <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => this.enterProfile(profile)}>
                             <Image style={styles.profilePicture} source={{uri: profileImage}} />
-                            <Text style={styles.text}>{profile.username}</Text>
-                    </MenuTrigger>
-                    <MenuOptions customStyles={this.menuStyles}>
-                        <MenuOption onSelect={() => this.alertEdit(profile, "Delete")}>
-                            <Text style={{color: 'red'}}>Delete</Text>
-                        </MenuOption>
-                    </MenuOptions>
+                            <Text style={{...styles.text, color: (profile.isParent ? 'gold' : 'black')}}>{profile.username}</Text>
+                        </MenuTrigger>
+                        <MenuOptions customStyles={this.menuStyles}>
+                            <MenuOption onSelect={() => this.toggleParent(profile)}>
+                                <Text style={{color:'maroon'}}>{(profile.isParent ? "Unmark" : "Mark")} as Parent</Text>
+                            </MenuOption>
+                            <MenuOption onSelect={() => this.alertEdit(profile, "Delete")}>
+                                <Text style={{color: 'red'}}>Delete</Text>
+                            </MenuOption>
+                        </MenuOptions>
 
-                </Menu>
+                    </Menu>
             </View>
         );
     }
@@ -121,7 +131,7 @@ export default class ProfileScreen extends Component {
     render () {
 
         return (
-            <View style={styles.background}>
+            <View style={styles.background} key={this.state.key}>
                 <Text style={{
                     fontSize: 20,
                     alignSelf: 'center',

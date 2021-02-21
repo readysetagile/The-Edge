@@ -16,6 +16,7 @@ class Profile {
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
         this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();
+        this._isParent = profileObject.isParent;
         this.#reference = firebase.database().ref("users/" + this.accountUUID + "/profiles");
     }
 
@@ -135,6 +136,17 @@ class Profile {
         await firebase.database().ref('users/' + accountUUID + "/profiles").update(obj);
         return new Profile(profileObj);
 
+    }
+
+
+    set isParent(value) {
+        this._isParent = value;
+        this.update({isParent: value}).catch(console.error);
+    }
+
+
+    get isParent() {
+        return this._isParent;
     }
 
     set username (value) {
