@@ -1,7 +1,7 @@
 const DEFAULTPROFILE = require("./model");
 const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";//TODO: change this to something original
 import {firebase} from "../../config";
-
+import Edge from '../../index';
 class Profile {
 
     #reference;
@@ -13,6 +13,7 @@ class Profile {
     constructor (profileObject) {
         this.accountUUID = profileObject.accountUUID;
         this.profileUUID = profileObject.id;
+        this.account = Edge.users.get(profileObject.accountUUID);
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
         this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();

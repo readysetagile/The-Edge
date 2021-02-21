@@ -13,6 +13,6 @@ module.exports = {
     },
     members: {
         _: 0
-    }//map of member objects {memberID => memberObject}
+    }//map of member objects {profileID => memberObject}
 
 }
