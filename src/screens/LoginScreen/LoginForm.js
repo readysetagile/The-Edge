@@ -24,7 +24,6 @@ export default function LoginForm({login}) {
             <Formik initialValues={{Email: '', Password: '', rememberMe: false}}
                     validationSchema={LoginSchema}
                     onSubmit={(values, actions) => {
-                        console.log(values);
                         actions.resetForm();
                         login(values);
             }}>

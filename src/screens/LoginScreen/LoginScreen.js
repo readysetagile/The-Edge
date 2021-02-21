@@ -10,18 +10,6 @@ import LoginForm from './LoginForm';
 
 export default class LoginScreen extends Component {
 
-    state = {
-        email: {
-            hide: true,
-            msg: ""
-        },
-        password: {
-            hide: true,
-            msg: ""
-        },
-        rememberMe: false
-    };
-
     constructor (props) {
         super(props);
         this.accInfo = {
@@ -30,51 +18,25 @@ export default class LoginScreen extends Component {
         };
     }
 
-    checkEmail (email) {
-        const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-    }
-
     /**
      * Attempts to sign in the user. If failed, this will display an error message
      * @todo make a loading appearance appear when user clicks login so that they know they are being logged in.
      * @returns {Promise<void>}
      */
-    onSignIn = async () => {
+    onSignIn = async (values) => {
 
-        const email = this.accInfo.email.trim();
-        const pass = this.accInfo.password;
-        const emailPassed = this.checkEmail(email);
-
-        this.updateState(emailPassed, pass);
-
-        if (!emailPassed || !pass) {
-            return;
-        }
+        const email = values.Email
+        const pass = values.Password
 
         const data = await UserAuthentication.signUserIn(email, pass);
         if (data.confirmed) {
-            await Edge.users.set(firebase.auth().currentUser.uid, {rememberLogin: this.state.rememberMe}, "settings");
+            await Edge.users.set(firebase.auth().currentUser.uid, {rememberLogin: values.rememberMe}, "settings");
             this.sendToHomePage();
         } else {
             Alert.alert(data.message);
         }
 
     };
-
-    updateState (emailPassed, password) {
-        this.setState({
-            email: {
-                hide: emailPassed,
-                msg: "X Invalid Email"
-            },
-            password: {
-                hide: !!password,
-                msg: "X Invalid Password"
-            }
-        });
-
-    }
 
     sendToHomePage () {
         const {navigation} = this.props;
@@ -85,7 +47,6 @@ export default class LoginScreen extends Component {
         });
         navigation.dispatch(resetAction);
     }
-
 
     /**
      * Before the page fully loads, this will check if the user is logged in according to firebase and if they are
@@ -106,10 +67,6 @@ export default class LoginScreen extends Component {
         const {navigation} = this.props;
         navigation.navigate("Create_Account");
     }
-
-    onRememberMe = () => {
-        this.setState({rememberMe: !this.state.rememberMe});
-    };
 
     render () {
         //firebase.auth().signOut();
