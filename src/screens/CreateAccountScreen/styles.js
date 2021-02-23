@@ -14,18 +14,16 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
+        justifyContent: 'center',
         backgroundColor: Colors.background
     },
     contentContainer: {
         backgroundColor: "#2780f4",
-        height: '70%',
-        width: '80%',
         marginTop: 20,
-        shadowColor: "black",
         alignItems: 'center',
         justifyContent: 'space-evenly',
         borderRadius: 30,
-        flex: 4
+        height: '78%'
     },
     text: {
         fontSize: moderateScale(42),
@@ -34,9 +32,7 @@ export default StyleSheet.create({
         fontWeight: 'bold'
     },
     errorMsg: {
-        color: "red",
-        height: 14,
-        bottom: 5,
+        color: "gold",
         textAlign: 'center',
     },
     hiddenViewErr: {
@@ -46,18 +42,12 @@ export default StyleSheet.create({
         marginBottom: 5
     },
     inputView: {
-        width: '80%',
         backgroundColor: Colors.inputBox,
         borderRadius: 25,
-        justifyContent: 'center',
+        justifyContent: "center",
         padding: 20,
-        flex: .25
-    },
-    prompt: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'space-evenly',
-        width: '100%'
+        color: 'white',
+        width: '80%',
     },
     inputDescription: {
         fontSize: 35,
@@ -65,14 +55,14 @@ export default StyleSheet.create({
         fontWeight: 'bold',
     },
     inputText: {
-        height: 15,
-        color: "white"
+        color: "white",
     },
     createAccountButton: {
         width: "80%",
         backgroundColor: Colors.mainButton,
         borderRadius: 25,
         height: 50,
+        alignSelf: 'center',
         alignItems: "center",
         justifyContent: "center",
         marginTop: 10,
@@ -80,11 +70,12 @@ export default StyleSheet.create({
     },
     createAccountText: {
         color: "white",
-        fontSize: 20
+        fontSize: 20,
     },
     rememberMeView: {
         marginTop: 10,
         flexDirection: 'row',
+        alignSelf: 'center'
     }
 
 });
