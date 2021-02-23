@@ -11,7 +11,7 @@ module.exports.Team = class Team {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
-            this.members = teamObject.members ? teamObject.members : {};
+            this.members = teamObject.members ? new Map(Object.entries(teamObject.members)) : new Map();
             this.teamCode = teamObject.teamCode;
             this.teamName = teamObject.teamName;
             this.sport = teamObject.sport;
@@ -22,8 +22,7 @@ module.exports.Team = class Team {
 
 
     addMember(profile) {
-        console.log(profile, 'prof');
-        this.members[profile.profileUUID] = profile;
+        this.members.set(profile.id, profile);
         profile.addTeam(this);
         this.#reference.update({members: this.members})
     }
@@ -38,7 +37,6 @@ module.exports.Team = class Team {
         let team = new Team(obj);
         let teamObj = {};
         teamObj[obj.id] = obj;
-        console.log(teamObj);
         await ref.update(teamObj);
         return team;
 
