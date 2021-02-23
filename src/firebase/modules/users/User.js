@@ -12,8 +12,7 @@ module.exports.User = class User {
         this.userData = userObject.userData;
         this.settings = userObject.settings;
         this.#_profiles = userObject.profiles ? new Map(Object.entries(userObject.profiles)
-            .filter(i => i[0] !== "_")
-            .map(i => [i[0], new Profile(i[1])])) : new Map();
+            .filter(i => i[0] !== "_")) : new Map();
         this.#reference = firebase.database().ref('users/' + this.userData.id);
 
     }
@@ -30,6 +29,10 @@ module.exports.User = class User {
         this.#reference.update({profiles: this.#_profiles});
     }
 
+    getProfile(profileUUID){
+        return this.#_profiles.get(profileUUID);
+    }
+
     /**
      * Updates the database to the value input
      * @param objectToUpdate the object in the database to update
@@ -39,6 +42,6 @@ module.exports.User = class User {
     }
 
     get profiles() {
-        return this.#_profiles;
+        return Array.from(this.#_profiles, ([key, value]) => new Profile(value));
     }
 }

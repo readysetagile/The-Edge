@@ -45,7 +45,6 @@ export default StyleSheet.create({
         marginTop: 10,
         marginBottom: 5
     },
-
     inputView: {
         width: '80%',
         backgroundColor: Colors.inputBox,

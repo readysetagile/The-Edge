@@ -113,7 +113,7 @@ export default class ProfileScreen extends Component {
             let profiles = await this.getProfiles();
             if (profiles != null) {
                 await new Promise(async resolve => {
-                    let accArr = await Array.from(profiles.values()).filter(i => i != null);
+                    let accArr = Array.from(profiles.values()).filter(i => i != null);
                     let prom = await Promise.all(accArr.map(async (i, j) => {
                         return this.generateProfileImage(i, j);
                     }));

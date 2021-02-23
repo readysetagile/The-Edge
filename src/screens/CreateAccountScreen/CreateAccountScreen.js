@@ -61,7 +61,6 @@ export default class CreateAccountScreen extends Component {
                 let uuid = msg.credentials.user.uid;
                 await Edge.users.create(this.accInfo.email, this.state.rememberMe, uuid);
                 this.sendToProfilePage()
-                navigation.dispatch(resetAction);
             } else {
                 Alert.alert(
                     "Invalid Credentials",

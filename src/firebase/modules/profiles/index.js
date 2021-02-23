@@ -53,8 +53,7 @@ class Profile {
 
         let storage = firebase.storage();
         let ref = storage.ref(this.accountUUID + "/pfp/" + this.profileUUID);
-        return await ref.delete().catch(err => {
-        });
+        return await ref.delete().catch(() => {});
 
     }
 
