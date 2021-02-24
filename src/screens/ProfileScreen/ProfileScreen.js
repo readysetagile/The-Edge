@@ -1,16 +1,23 @@
 import React, {Component} from 'react';
-import {Alert, Image, ScrollView, Text, View} from 'react-native';
+import {Alert, Image, ScrollView, Text, View, Modal, TouchableWithoutFeedback, Keyboard} from 'react-native';
 import styles from './styles';
 import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Colors from '../styles';
+import {Ionicons} from "@expo/vector-icons";
+import InputParentPin from "./ParentPinForm";
+
 
 export default class ProfileScreen extends Component {
 
     state = {
         accounts: [],
-        key: 0
+        modal: {
+            show: false,
+            profile: null,
+            type: '',
+        }
     };
 
     menuStyles = {
@@ -65,9 +72,13 @@ export default class ProfileScreen extends Component {
     }
 
     toggleParent (profile) {
-
-        profile.isParent = !profile.isParent;
-        this.componentDidMount();
+        if(!profile.isParent) {
+            this.setState({modal: {show: true, profile: profile, type: 'create'}});
+        }else{
+            this.setState({modal: {show: true, profile: profile, type: 'enter'}})
+        }
+        // profile.isParent = !profile.isParent;
+        // this.componentDidMount();
     }
 
     async generateProfileImage (profile, index) {
@@ -97,9 +108,16 @@ export default class ProfileScreen extends Component {
 
     enterProfile (profile) {
 
+        if(profile.isParent){
+            return this.setState({modal: {show: true, profile: profile}})
+        }
         const {navigation} = this.props;
-
         navigation.navigate("HomeScreen", {profile: profile});
+
+    }
+
+    enterParentAccount(){
+        this.setState({modal: {show: false}});
 
     }
 
@@ -110,7 +128,7 @@ export default class ProfileScreen extends Component {
                 await new Promise(async resolve => {
                     let accArr = Array.from(profiles.values()).filter(i => i != null);
                     let prom = await Promise.all(accArr.map(async (i, j) => {
-                        return this.generateProfileImage(i, j);
+                        return await this.generateProfileImage(i, j);
                     }));
 
                     resolve(prom);
@@ -124,9 +142,26 @@ export default class ProfileScreen extends Component {
     }
 
     render () {
+        const types = {
+            create: 'Create a 4 digit pin',
+            enter: 'Enter your 4 digit pin to access this profile'
+        }
 
         return (
-            <View style={styles.background} key={this.state.key}>
+            <View style={styles.background}>
+
+                <Modal visible={this.state.modal.show} animationType={'slide'}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={{flex: 1}}>
+                            <Ionicons style={{left: 20, top: 40, zIndex: 3}} name={"close"} size={24}
+                                      onPress={() => this.setState({modal: {show: false}})}/>
+
+                            <InputParentPin profile={this.state.modal.profile} onSubmit={() => this.enterParentAccount()}
+                                            text={types[this.state.modal.type]}/>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+
                 <Text style={{
                     fontSize: 20,
                     alignSelf: 'center',

@@ -5,6 +5,7 @@ import {firebase} from "../../config";
 class Profile {
 
     #reference;
+    #parentPin;
 
     /**
      * Creates a new profile object
@@ -17,6 +18,7 @@ class Profile {
         this._avatar = profileObject.avatar;
         this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();
         this._isParent = profileObject.isParent;
+        this.#parentPin = profileObject.parentPin;
         this.#reference = firebase.database().ref("users/" + this.accountUUID + "/profiles");
     }
 
@@ -90,6 +92,13 @@ class Profile {
                 }).catch(() => resolve(null));
             });
         } else return this._avatar;
+    }
+
+    getParentPin(){
+        if(this.isParent){
+            return this.#parentPin;
+        }
+        return null;
     }
 
     /**
