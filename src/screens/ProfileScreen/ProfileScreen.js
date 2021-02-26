@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, Image, ScrollView, Text, View, Modal, TouchableWithoutFeedback, Keyboard} from 'react-native';
+import {Alert, Image, Keyboard, Modal, ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native';
 import styles from './styles';
 import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
@@ -39,25 +39,25 @@ export default class ProfileScreen extends Component {
 
     };
 
-    constructor (props) {
+    constructor(props) {
         super(props);
     }
 
-    async getProfiles () {
+    async getProfiles() {
         let user = await Edge.users.get(firebase.auth().currentUser.uid);
         if (user == null) return null;
         return user.profiles;
     }
 
-    alertEdit (profile, txt) {
+    alertEdit(profile, txt) {
 
-        Alert.alert(txt + " " + profile.username, `Are you sure you want to ${ txt.toLowerCase() } this account? This process cannot be undone`, [
+        Alert.alert(txt + " " + profile.username, `Are you sure you want to ${txt.toLowerCase()} this account? This process cannot be undone`, [
             {
                 text: "Yes",
                 onPress: () => {
-                    if(profile.isParent){
+                    if (profile.isParent) {
                         this.setState({modal: {show: true, profile: profile, type: "delete"}})
-                    }else this.deleteProfile(profile)
+                    } else this.deleteProfile(profile)
                 }
             },
             {
@@ -67,25 +67,24 @@ export default class ProfileScreen extends Component {
 
     }
 
-    deleteProfile (profile, index) {
+    deleteProfile(profile) {
 
-        if(!profile.isParent) {
+        if (!profile.isParent) {
             profile.delete();
-            this.state.accounts.splice(index, 1);
             this.setState(this.state.accounts);
         }
 
     }
 
-    toggleParent (profile) {
-        if(!profile.isParent) {
+    toggleParent(profile) {
+        if (!profile.isParent) {
             this.setState({modal: {show: true, profile: profile, type: 'create'}});
-        }else{
+        } else {
             this.setState({modal: {show: true, profile: profile, type: 'enter'}})
         }
     }
 
-    async generateProfileImage (profile, index) {
+    async generateProfileImage(profile, index) {
         let profileImage = await profile.getProfilePicture();
         if (profileImage == null) profileImage = profile.avatar;
         return (
@@ -93,8 +92,11 @@ export default class ProfileScreen extends Component {
 
                 <Menu>
                     <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => this.enterProfile(profile)}>
-                        <Image style={styles.profilePicture} source={{uri: profileImage}} />
-                        <Text style={{...styles.text, color: (profile.isParent ? 'gold' : 'black')}}>{profile.username}</Text>
+                        <Image style={styles.profilePicture} source={{uri: profileImage}}/>
+                        <Text style={{
+                            ...styles.text,
+                            color: (profile.isParent ? 'gold' : 'black')
+                        }}>{profile.username}</Text>
                     </MenuTrigger>
                     <MenuOptions customStyles={this.menuStyles}>
                         <MenuOption onSelect={() => this.toggleParent(profile)}>
@@ -110,9 +112,9 @@ export default class ProfileScreen extends Component {
         );
     }
 
-    enterProfile (profile) {
+    enterProfile(profile) {
 
-        if(profile.isParent){
+        if (profile.isParent) {
             return this.setState({modal: {show: true, profile: profile, type: 'enter'}})
         }
         const {navigation} = this.props;
@@ -120,7 +122,7 @@ export default class ProfileScreen extends Component {
     }
 
 
-    parentProfileAction(values){
+    parentProfileAction(values) {
 
         const profile = this.state.modal.profile;
         const type = this.state.modal.type;
@@ -133,53 +135,49 @@ export default class ProfileScreen extends Component {
                 this.updateParentProfileDisplay(profile, values);
                 break;
             case "enter":
-                this.enterProfile(profile);
+                this.enterParentAccount(profile);
                 break;
         }
 
     }
 
-    deleteParentProfile(profile){
+    deleteParentProfile(profile) {
         profile.delete();
     }
 
-    enterParentAccount(profile){
-            const {navigation} = this.props;
-            navigation.navigate("HomeScreen", {profile: profile});
+    enterParentAccount(profile) {
+        const {navigation} = this.props;
+        navigation.navigate("HomeScreen", {profile: profile});
     }
 
-    updateParentProfileDisplay(profile, values){
+    updateParentProfileDisplay(profile, values) {
         profile.isParent = !profile.isParent;
         profile.setParentPin(values.Pin);
         this.componentDidMount();
     }
 
-
-    async componentDidUpdate(){
-        this.componentDidMount()
-    }
-
-    async componentDidMount () {
+     componentDidMount() {
         try {
-            let profiles = await this.getProfiles();
-            if (profiles != null) {
-                await new Promise(async resolve => {
-                    let accArr = Array.from(profiles.values()).filter(i => i != null);
+             new Promise(async resolve => {
+                let profiles = await this.getProfiles();
+                if (profiles != null && profiles.length > 0) {
+                    let accArr = profiles.filter(i => i != null);
                     let prom = await Promise.all(accArr.map(async (i, j) => {
                         return await this.generateProfileImage(i, j);
                     }));
 
                     resolve(prom);
-                }).then(r => {
-                    this.setState({accounts: r});
-                });
-            }
+                } else resolve([]);
+            }).then(r => {
+                this.setState({accounts: r});
+            });
+
         } catch (err) {
             console.error(err);
         }
     }
 
-    render () {
+    render() {
         const types = {
             create: 'Create a 4 digit pin',
             enter: 'Enter your 4 digit pin',
@@ -195,7 +193,8 @@ export default class ProfileScreen extends Component {
                             <Ionicons style={{left: 20, top: 40, zIndex: 3}} name={"close"} size={24}
                                       onPress={() => this.setState({modal: {show: false}})}/>
 
-                            <InputParentPin profile={this.state.modal.profile} onSubmit={(values) => this.parentProfileAction(values)}
+                            <InputParentPin profile={this.state.modal.profile}
+                                            onSubmit={(values) => this.parentProfileAction(values)}
                                             text={types[this.state.modal.type]}/>
                         </View>
                     </TouchableWithoutFeedback>
