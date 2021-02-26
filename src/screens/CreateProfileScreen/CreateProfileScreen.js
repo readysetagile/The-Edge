@@ -49,7 +49,6 @@ export default class CreateProfileScreen extends Component {
     async createProfile() {
         await this.uploadProfilePicture();
         let user = await Edge.users.get(firebase.auth().currentUser.uid);
-
         if (!this.state.username) {
             Alert.alert("Invalid Username");
             return;

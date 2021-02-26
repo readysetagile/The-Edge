@@ -12,12 +12,14 @@ import FlatButton from "../../Components/SubmitButton";
 export default function InputParentPin({profile, text, onSubmit}){
 
     const InputSchema = yup.object({
-        Pin: yup.string().required().min(4)
+        Pin: yup.string().required().min(4).max(4)
             .test('isNumber', "Pin must be a 4 digit number", val => {
-                return !isNaN(parseInt(val));
+                return !/[a-zA-Z]/g.test(val);
             })
             .test('isProfilePin', "This pin does not match this profile's existing pin", val => {
-                return profile.isParent && profile.getParentPin() === val;
+                if(profile.isParent){
+                    return profile.getParentPin() === val;
+                }else return true;
             })
     })
 
@@ -28,9 +30,9 @@ export default function InputParentPin({profile, text, onSubmit}){
             <Formik initialValues={{Pin: ''}}
                     validationSchema={InputSchema}
                     onSubmit={(values, actions) => {
-                actions.resetForm();
-                onSubmit();
-            }}>
+                        onSubmit(values);
+                        actions.resetForm();
+                    }}>
 
                 {(formikProps) => {
                     return(
@@ -43,9 +45,9 @@ export default function InputParentPin({profile, text, onSubmit}){
                                        placeholder="1234"
                                        placeholderTextColor="white"
                                        onBlur={formikProps.handleBlur('Pin')}
-                                       onTextChange={formikProps.handleChange('Pin')}
+                                       onChangeText={formikProps.handleChange('Pin')}
                             />
-                            <Text style={globalStyles.errorText}>{formikProps.touched.Pin && formikProps.errors.Pin}</Text>
+                            <Text style={{...globalStyles.errorText, color: 'white'}}>{formikProps.touched.Pin && formikProps.errors.Pin}</Text>
 
                             <FlatButton text={"Submit"} onPress={formikProps.handleSubmit}/>
 

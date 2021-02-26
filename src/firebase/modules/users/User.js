@@ -20,7 +20,7 @@ module.exports.User = class User {
 
     async addProfile(profileUUID, username) {
         let profile = await Profile.createProfile(this.userData.id, profileUUID, username)
-        this.profiles.set(profileUUID, profile);
+        this.#_profiles.set(profileUUID, profile);
         return profile;
     }
 

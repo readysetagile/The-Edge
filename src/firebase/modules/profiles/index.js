@@ -101,6 +101,13 @@ class Profile {
         return null;
     }
 
+    setParentPin(pin){
+
+        this.#parentPin = pin;
+        this.update({parentPin: pin}).catch(console.error);
+
+    }
+
     /**
      * Updates a value for a user
      * @param path the parent of the value you're trying to update

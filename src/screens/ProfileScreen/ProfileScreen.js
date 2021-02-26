@@ -109,16 +109,31 @@ export default class ProfileScreen extends Component {
     enterProfile (profile) {
 
         if(profile.isParent){
-            return this.setState({modal: {show: true, profile: profile}})
+            return this.setState({modal: {show: true, profile: profile, type: 'enter'}})
         }
         const {navigation} = this.props;
         navigation.navigate("HomeScreen", {profile: profile});
 
     }
 
-    enterParentAccount(){
-        this.setState({modal: {show: false}});
+    enterParentAccount(values){
+        const profile = this.state.modal.profile;
+        const type = this.state.modal.type;
+        this.setState({modal: {show: false, profile: null, type: ""}});
+        if(type === "enter"){
+            const {navigation} = this.props;
+            navigation.navigate("HomeScreen", {profile: profile});
+        }else{
+            profile.isParent = !profile.isParent;
+            profile.setParentPin(values.Pin);
+            this.componentDidMount();
+        }
 
+    }
+
+
+    async componentDidUpdate(){
+        this.componentDidMount()
     }
 
     async componentDidMount () {
@@ -144,7 +159,7 @@ export default class ProfileScreen extends Component {
     render () {
         const types = {
             create: 'Create a 4 digit pin',
-            enter: 'Enter your 4 digit pin to access this profile'
+            enter: 'Enter your 4 digit pin'
         }
 
         return (
@@ -156,7 +171,7 @@ export default class ProfileScreen extends Component {
                             <Ionicons style={{left: 20, top: 40, zIndex: 3}} name={"close"} size={24}
                                       onPress={() => this.setState({modal: {show: false}})}/>
 
-                            <InputParentPin profile={this.state.modal.profile} onSubmit={() => this.enterParentAccount()}
+                            <InputParentPin profile={this.state.modal.profile} onSubmit={(values) => this.enterParentAccount(values)}
                                             text={types[this.state.modal.type]}/>
                         </View>
                     </TouchableWithoutFeedback>
