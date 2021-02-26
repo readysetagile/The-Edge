@@ -54,7 +54,11 @@ export default class ProfileScreen extends Component {
         Alert.alert(txt + " " + profile.username, `Are you sure you want to ${ txt.toLowerCase() } this account? This process cannot be undone`, [
             {
                 text: "Yes",
-                onPress: () => this.deleteProfile(profile)
+                onPress: () => {
+                    if(profile.isParent){
+                        this.setState({modal: {show: true, profile: profile, type: "delete"}})
+                    }else this.deleteProfile(profile)
+                }
             },
             {
                 text: "Cancel",
@@ -65,9 +69,11 @@ export default class ProfileScreen extends Component {
 
     deleteProfile (profile, index) {
 
-        profile.delete();
-        this.state.accounts.splice(index, 1);
-        this.setState(this.state.accounts);
+        if(!profile.isParent) {
+            profile.delete();
+            this.state.accounts.splice(index, 1);
+            this.setState(this.state.accounts);
+        }
 
     }
 
@@ -77,8 +83,6 @@ export default class ProfileScreen extends Component {
         }else{
             this.setState({modal: {show: true, profile: profile, type: 'enter'}})
         }
-        // profile.isParent = !profile.isParent;
-        // this.componentDidMount();
     }
 
     async generateProfileImage (profile, index) {
@@ -113,22 +117,41 @@ export default class ProfileScreen extends Component {
         }
         const {navigation} = this.props;
         navigation.navigate("HomeScreen", {profile: profile});
-
     }
 
-    enterParentAccount(values){
+
+    parentProfileAction(values){
+
         const profile = this.state.modal.profile;
         const type = this.state.modal.type;
         this.setState({modal: {show: false, profile: null, type: ""}});
-        if(type === "enter"){
-            const {navigation} = this.props;
-            navigation.navigate("HomeScreen", {profile: profile});
-        }else{
-            profile.isParent = !profile.isParent;
-            profile.setParentPin(values.Pin);
-            this.componentDidMount();
+        switch (type) {
+            case "delete":
+                this.deleteParentProfile(profile)
+                break;
+            case "create":
+                this.updateParentProfileDisplay(profile, values);
+                break;
+            case "enter":
+                this.enterProfile(profile);
+                break;
         }
 
+    }
+
+    deleteParentProfile(profile){
+        profile.delete();
+    }
+
+    enterParentAccount(profile){
+            const {navigation} = this.props;
+            navigation.navigate("HomeScreen", {profile: profile});
+    }
+
+    updateParentProfileDisplay(profile, values){
+        profile.isParent = !profile.isParent;
+        profile.setParentPin(values.Pin);
+        this.componentDidMount();
     }
 
 
@@ -159,7 +182,8 @@ export default class ProfileScreen extends Component {
     render () {
         const types = {
             create: 'Create a 4 digit pin',
-            enter: 'Enter your 4 digit pin'
+            enter: 'Enter your 4 digit pin',
+            delete: "Enter your 4 digit pin",
         }
 
         return (
@@ -171,7 +195,7 @@ export default class ProfileScreen extends Component {
                             <Ionicons style={{left: 20, top: 40, zIndex: 3}} name={"close"} size={24}
                                       onPress={() => this.setState({modal: {show: false}})}/>
 
-                            <InputParentPin profile={this.state.modal.profile} onSubmit={(values) => this.enterParentAccount(values)}
+                            <InputParentPin profile={this.state.modal.profile} onSubmit={(values) => this.parentProfileAction(values)}
                                             text={types[this.state.modal.type]}/>
                         </View>
                     </TouchableWithoutFeedback>
