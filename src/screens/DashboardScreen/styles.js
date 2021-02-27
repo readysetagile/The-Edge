@@ -10,13 +10,12 @@ export default StyleSheet.create({
         backgroundColor: Colors.background
     },
     buttonStyle: {
-        flex: 1,
         borderRadius: 5,
         marginTop: 5,
         marginBottom: 5,
         marginLeft: 10,
         marginRight: 10,
-        padding: 12,
+        padding: 22,
         alignItems: 'center',
         justifyContent: 'center'
     },
