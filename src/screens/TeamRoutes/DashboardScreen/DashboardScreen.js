@@ -1,9 +1,28 @@
 import {Image, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import React, {Component} from 'react';
-
+import Global from '../../../GlobalData';
+import Edge from "../../../firebase";
+import {firebase} from "../../../firebase/config";
 export default class DashboardScreen extends Component {
+
+    state = {
+        profile: null,
+        team: null
+    }
+
+    constructor(props) {
+        super(props);
+    }
+
+    async componentDidMount() {
+        const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
+        const team = await Edge.teams.get(Global.teamID);
+        this.setState({profile: profile, team: team})
+    }
+
     render() {
+
         return (
             <View style={styles.container}>
                 <Text style={styles.titleText}>COACHING DASHBOARD</Text>

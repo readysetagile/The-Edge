@@ -6,7 +6,7 @@ import {Ionicons} from "@expo/vector-icons";
 import TeamCreateForm from './TeamCreateForm';
 import Edge from "../../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
-
+import Global from '../../../GlobalData';
 
 class HomeScreen extends Component {
 
@@ -43,7 +43,7 @@ class HomeScreen extends Component {
     generateTeamBanner(team, key) {
 
         return (
-            <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam()}>
+            <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam(team)}>
                 <Text style={styles.teamName}>{team.teamName}</Text>
             </TouchableOpacity>
         )
@@ -57,14 +57,20 @@ class HomeScreen extends Component {
         })
     }
 
-    enterTeam() {
+    /**
+     * Navigates the user to the team they clicked on
+     * @param team the Team Object of the team
+     */
+    enterTeam(team) {
 
         const {navigation} = this.props;
+
+        Global.profileID = navigation.getParam('profile').profileUUID
+        Global.teamID = team.id;
         const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({
-                routeName: 'Dashboard',
-                params: {profile: navigation.getParam("profile")}
+                routeName: 'Dashboard'
             })],
         });
         navigation.dispatch(resetAction);

@@ -12,7 +12,7 @@ module.exports.Team = class Team {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
-            this.members = teamObject.members;
+            this.members = new Map(Object.entries(teamObject.members));
             this.teamCode = teamObject.teamCode;
             this.teamName = teamObject.teamName;
             this.sport = teamObject.sport;
@@ -27,7 +27,7 @@ module.exports.Team = class Team {
      * @returns {Member} the member that has been assigned this id
      */
     getMember(id){
-        return this.members.get(id);
+        return this.members.get(id) instanceof Member ? this.members.get(id) : new Member(this.members.get(id));
     }
 
     addMember(profile) {

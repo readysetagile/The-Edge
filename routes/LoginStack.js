@@ -49,7 +49,6 @@ const screens = {
     }
 }
 
-
 const LoginStack = createStackNavigator(screens, {
     defaultNavigationOptions: {
         headerTintColor: '#444',
