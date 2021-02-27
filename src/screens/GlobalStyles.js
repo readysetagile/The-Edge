@@ -1,4 +1,3 @@
-import {StyleSheet} from "react-native-web";
 import colors from "./styles";
 
 export const globalStyles = {
@@ -30,7 +29,7 @@ export const globalStyles = {
         marginTop: 6,
         textAlign: 'center'
     },
-    title:{
+    title: {
         marginBottom: 50,
         color: colors.titleText,
         fontWeight: 'bold',

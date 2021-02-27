@@ -2,13 +2,13 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 
-export default function Header ({title, onPressAdd}) {
+export default function Header({title, onPressAdd}) {
     return (
 
         <View style={styles.header}>
 
             <TouchableOpacity onPress={onPressAdd} style={styles.iconTouch}>
-                <Ionicons name="add" size={30} style={{color: '#0000ff'}} />
+                <Ionicons name="add" size={30} style={{color: '#0000ff'}}/>
             </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>{title}</Text>

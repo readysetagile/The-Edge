@@ -156,9 +156,9 @@ export default class ProfileScreen extends Component {
         this.componentDidMount();
     }
 
-     componentDidMount() {
+    componentDidMount() {
         try {
-             new Promise(async resolve => {
+            new Promise(async resolve => {
                 let profiles = await this.getProfiles();
                 if (profiles != null && profiles.length > 0) {
                     let accArr = profiles.filter(i => i != null);

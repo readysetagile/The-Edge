@@ -1,10 +1,9 @@
-import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
+import {createDrawerNavigator} from 'react-navigation-drawer';
 import {createAppContainer} from 'react-navigation';
-import {View, SafeAreaView, ScrollView} from 'react-native';
 import MemberStack from './MemberStack';
 import LoginStack from "./LoginStack";
 import DashboardStack from "./DashboardStack";
-import React, {Component} from "react";
+import React from "react";
 import colors from "../src/screens/styles";
 
 const DrawerConfig = {
@@ -32,21 +31,20 @@ const DrawerConfig = {
 
 const TeamDrawerNavigation = createDrawerNavigator({
 
-    Dashboard:{
+    Dashboard: {
         screen: DashboardStack,
     },
-    Members:{
+    Members: {
         screen: MemberStack
     },
-    "To My Teams":{
+    "To My Teams": {
         screen: LoginStack
     }
 
 }, DrawerConfig)
 
 
-
-export function openMenu(navigation){
+export function openMenu(navigation) {
     navigation.openDrawer();
 }
 
