@@ -27,7 +27,7 @@ const DrawerConfig = {
             opacity: 1,
         },
     },
-    drawerBackgroundColor: colors.titleText, // sets background color of drawer
+    drawerBackgroundColor: colors.titleText,
 };
 
 const TeamDrawerNavigation = createDrawerNavigator({
