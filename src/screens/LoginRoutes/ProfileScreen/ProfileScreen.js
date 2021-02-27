@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Alert, Image, Keyboard, Modal, ScrollView, Text, TouchableWithoutFeedback, View} from 'react-native';
 import styles from './styles';
-import Edge from "../../firebase";
-import {firebase} from "../../firebase/config";
+import Edge from "../../../firebase";
+import {firebase} from "../../../firebase/config";
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import Colors from '../styles';
+import Colors from '../../styles';
 import {Ionicons} from "@expo/vector-icons";
 import InputParentPin from "./ParentPinForm";
 

@@ -4,7 +4,7 @@ import styles from './styles';
 import {connectActionSheet} from '@expo/react-native-action-sheet'
 import {Ionicons} from "@expo/vector-icons";
 import TeamCreateForm from './TeamCreateForm';
-import Edge from "../../firebase";
+import Edge from "../../../firebase";
 
 
 class HomeScreen extends Component {

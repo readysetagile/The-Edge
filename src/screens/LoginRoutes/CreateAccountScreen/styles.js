@@ -1,5 +1,5 @@
 import {Dimensions, StyleSheet} from 'react-native';
-import Colors from '../styles';
+import Colors from '../../styles';
 
 const {width, height} = Dimensions.get("window");
 const guidelineBaseWidth = 350;

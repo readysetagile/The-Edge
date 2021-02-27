@@ -3,7 +3,7 @@ import {Formik} from 'formik';
 import {Button, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import * as yup from 'yup';
-import {globalStyles} from "../GlobalStyles";
+import {globalStyles} from "../../GlobalStyles";
 const LoginSchema = yup.object({
     Email: yup.string().required()
         .min(1)

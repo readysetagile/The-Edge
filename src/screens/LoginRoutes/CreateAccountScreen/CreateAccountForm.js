@@ -2,7 +2,7 @@ import React from 'react';
 import {Formik} from 'formik';
 import {Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import styles from "./styles";
-import {globalStyles} from "../GlobalStyles";
+import {globalStyles} from "../../GlobalStyles";
 import * as yup from 'yup';
 
 const CreateAccountSchema = yup.object({

@@ -3,9 +3,9 @@ import {Formik} from 'formik';
 import {Text, TextInput, View} from 'react-native';
 import styles from "./styles";
 import * as yup from 'yup';
-import {globalStyles} from '../GlobalStyles';
-import colors from "../styles";
-import FlatButton from "../../Components/SubmitButton";
+import {globalStyles} from '../../GlobalStyles';
+import colors from "../../styles";
+import FlatButton from "../../../Components/SubmitButton";
 
 
 
