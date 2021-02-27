@@ -40,6 +40,11 @@ const screens = {
     },
     Dashboard:{
         screen: TeamDrawer,
+        navigationOptions: () => {
+            return {
+                headerShown: false
+            };
+        }
     }
 }
 
