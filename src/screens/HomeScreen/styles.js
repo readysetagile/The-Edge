@@ -53,7 +53,8 @@ export default StyleSheet.create({
     },
     closeCreateTeam: {
         left: 20,
-        top: 40
+        top: 40,
+        zIndex: 3
     },
     modalContent: {
         flex: 1

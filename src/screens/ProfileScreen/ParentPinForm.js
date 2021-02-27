@@ -47,7 +47,7 @@ export default function InputParentPin({profile, text, onSubmit}){
                                        onBlur={formikProps.handleBlur('Pin')}
                                        onChangeText={formikProps.handleChange('Pin')}
                             />
-                            <Text style={{...globalStyles.errorText, color: 'white'}}>{formikProps.touched.Pin && formikProps.errors.Pin}</Text>
+                            <Text style={globalStyles.errorText}>{formikProps.touched.Pin && formikProps.errors.Pin}</Text>
 
                             <FlatButton text={"Submit"} onPress={formikProps.handleSubmit}/>
 

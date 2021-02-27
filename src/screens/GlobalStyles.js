@@ -24,7 +24,7 @@ export const globalStyles = {
         padding: 20
     },
     errorText: {
-        color: 'crimson',
+        color: 'gold',
         fontWeight: 'bold',
         marginBottom: 10,
         marginTop: 6,
