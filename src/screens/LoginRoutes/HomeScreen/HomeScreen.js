@@ -99,7 +99,9 @@ class HomeScreen extends Component {
 
         let team = await Edge.teams.create(teamInfo["team name"], teamInfo.sport);
         let profile = this.props.navigation.getParam('profile');
+        console.log(1);
         team.addMember(profile);
+        console.log(2);
         let teams = this.state.teams;
         teams.push(this.generateTeamBanner(team, teams.length));
         this.setState({modalOpen: false, teams: [...teams]});

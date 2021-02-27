@@ -1,4 +1,3 @@
-import {firebase} from "../../config";
 
 const DEFAULTMEMBER = require("./model");
 
@@ -18,19 +17,19 @@ module.exports.Member = class Member {
      * Creates a new member object
      * @param profile the profile to make the member off of
      * @param team the team the member will be joining
+     * @param reference to the firebase object
      * @returns {exports.Member} a new member object
      */
-    static createMember(profile, team){
+     static createMember(profile, team, reference){
 
         let obj = Object.assign(DEFAULTMEMBER);
         obj.joinedTimestamp = new Date().getTime();
-        obj.id = profile.id;
+        obj.id = profile.profileUUID;
         let member = {};
         member[obj.id] = obj;
-        firebase.database().ref('teams/'+team.id+"/members").update(member).catch(console.error);
+        reference.update({members: member}).catch(console.error);
         obj.profile = profile;
         return new Member(obj);
-
 
     }
 

@@ -37,9 +37,9 @@ const TeamDrawerNavigation = createDrawerNavigator({
     Members: {
         screen: MemberStack
     },
-    "To My Teams": {
-        screen: LoginStack
-    }
+    // "To My Teams": {
+    //     screen: LoginStack
+    // }
 
 }, DrawerConfig)
 

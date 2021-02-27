@@ -1,5 +1,6 @@
 import {createUUID} from "../../Util";
 import {firebase} from "../../config";
+import {Member} from "../member";
 
 const DEFAULTTEAM = require('./model');
 
@@ -11,7 +12,7 @@ module.exports.Team = class Team {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
-            this.members = teamObject.members ? new Map(Object.entries(teamObject.members)) : new Map();
+            this.members = teamObject.members;
             this.teamCode = teamObject.teamCode;
             this.teamName = teamObject.teamName;
             this.sport = teamObject.sport;
@@ -20,11 +21,19 @@ module.exports.Team = class Team {
 
     }
 
+    /**
+     * Gets a member in the current team
+     * @param id the id of the member (profile id)
+     * @returns {Member} the member that has been assigned this id
+     */
+    getMember(id){
+        return this.members.get(id);
+    }
 
     addMember(profile) {
-        this.members.set(profile.id, profile);
+        let member = Member.createMember(profile, this, this.#reference)
+        this.members.set(member.id, member);
         profile.addTeam(this);
-        this.#reference.update({members: this.members})
     }
 
     /**
@@ -44,6 +53,7 @@ module.exports.Team = class Team {
         let team = new Team(obj);
         let teamObj = {};
         teamObj[obj.id] = obj;
+        console.log(teamObj);
         ref.update(teamObj);
         return team;
 
