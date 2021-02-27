@@ -29,7 +29,7 @@ module.exports.User = class User {
         this.#reference.update({profiles: this.#_profiles});
     }
 
-    getProfile(profileUUID){
+    getProfile(profileUUID) {
         return this.#_profiles.get(profileUUID);
     }
 

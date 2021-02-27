@@ -4,6 +4,7 @@ import {Button, Switch, Text, TextInput, TouchableOpacity, View} from 'react-nat
 import styles from './styles';
 import * as yup from 'yup';
 import {globalStyles} from "../../GlobalStyles";
+
 const LoginSchema = yup.object({
     Email: yup.string().required()
         .min(1)

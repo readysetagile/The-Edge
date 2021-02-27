@@ -50,7 +50,7 @@ class HomeScreen extends Component {
 
     }
 
-     componentDidMount() {
+    componentDidMount() {
 
         this.getTeams().then(teams => {
             this.generateTeams(teams);
@@ -62,7 +62,10 @@ class HomeScreen extends Component {
         const {navigation} = this.props;
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({routeName: 'Dashboard', params: {profile: navigation.getParam("profile")}})],
+            actions: [NavigationActions.navigate({
+                routeName: 'Dashboard',
+                params: {profile: navigation.getParam("profile")}
+            })],
         });
         navigation.dispatch(resetAction);
     }

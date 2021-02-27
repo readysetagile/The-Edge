@@ -2,13 +2,13 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 
-export default function HeaderBurgerNav ({title, onPress}) {
+export default function HeaderBurgerNav({title, onPress}) {
     return (
 
         <View style={styles.header}>
 
             <TouchableOpacity onPress={onPress} style={styles.iconTouch}>
-                <Ionicons name="menu" size={30} style={{color: '#0000ff'}} />
+                <Ionicons name="menu" size={30} style={{color: '#0000ff'}}/>
             </TouchableOpacity>
             <View style={styles.header}>
                 <Text style={styles.headerText}>{title}</Text>

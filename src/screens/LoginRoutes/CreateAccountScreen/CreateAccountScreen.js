@@ -8,7 +8,7 @@ import CreateAccountForm from './CreateAccountForm';
 
 export default class CreateAccountScreen extends Component {
 
-    constructor (props) {
+    constructor(props) {
         super(props);
     }
 
@@ -35,7 +35,7 @@ export default class CreateAccountScreen extends Component {
 
     };
 
-    sendToProfilePage () {
+    sendToProfilePage() {
         const {navigation} = this.props;
 
         const resetAction = StackActions.reset({
@@ -45,13 +45,13 @@ export default class CreateAccountScreen extends Component {
         navigation.dispatch(resetAction);
     }
 
-    render () {
+    render() {
         return (
             <View style={styles.container}>
                 <Text style={styles.text}>Create Account</Text>
 
                 <View style={{width: '80%'}}>
-                    <CreateAccountForm createAccount={(values) => this.onCreateAccount(values)} />
+                    <CreateAccountForm createAccount={(values) => this.onCreateAccount(values)}/>
                 </View>
 
             </View>

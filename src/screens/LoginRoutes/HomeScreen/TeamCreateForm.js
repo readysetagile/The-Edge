@@ -1,7 +1,6 @@
 import React from 'react';
 import {Formik} from 'formik';
 import {Text, TextInput, View} from 'react-native';
-import styles from "./styles";
 import * as yup from 'yup';
 import FlatButton from "../../../Components/SubmitButton";
 import {globalStyles} from "../../GlobalStyles";
@@ -46,7 +45,8 @@ export default function TeamCreateForm({addTeam}) {
                             value={props.values.title}
                             onBlur={props.handleBlur('team name')}
                         />
-                        <Text style={globalStyles.errorText}>{props.touched["team name"] && props.errors["team name"]}</Text>
+                        <Text
+                            style={globalStyles.errorText}>{props.touched["team name"] && props.errors["team name"]}</Text>
 
                         <TextInput
                             style={globalStyles.inputView}
