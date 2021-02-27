@@ -30,8 +30,8 @@ export default function InputParentPin({profile, text, onSubmit}){
             <Formik initialValues={{Pin: ''}}
                     validationSchema={InputSchema}
                     onSubmit={(values, actions) => {
-                        onSubmit(values);
                         actions.resetForm();
+                        onSubmit(values);
                     }}>
 
                 {(formikProps) => {

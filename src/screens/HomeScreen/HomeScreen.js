@@ -49,11 +49,11 @@ class HomeScreen extends Component {
 
     }
 
-    async componentDidMount() {
+     componentDidMount() {
 
-        let teams = await this.getTeams();
-        this.generateTeams(teams);
-
+        this.getTeams().then(teams => {
+            this.generateTeams(teams);
+        })
     }
 
     enterTeam() {
