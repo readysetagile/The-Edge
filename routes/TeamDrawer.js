@@ -51,26 +51,3 @@ export function openMenu(navigation){
 }
 
 export default createAppContainer(TeamDrawerNavigation);
-
-class DrawerStyles extends Component{
-
-    render(){
-
-        console.log(this.props);
-        return(
-
-            <View style={{flex: 1, padding: 20}}>
-                <ScrollView>
-                    <SafeAreaView forceInset={{top: 'always', horizontal: 'never'}}>
-
-                        <DrawerItems {...this.props}/>
-
-                    </SafeAreaView>
-                </ScrollView>
-            </View>
-
-        )
-
-    }
-
-}
