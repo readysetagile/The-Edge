@@ -2,11 +2,14 @@ import React from 'react'
 import { createStackNavigator } from 'react-navigation-stack';
 import {Dashboard} from "../src/screens";
 import HeaderBurgerNav from '../src/Components/HeaderBurgerNav';
+import {openMenu} from "./TeamDrawer";
 const screens = {
     Dashboard: {
         screen: Dashboard,
-        navigationOptions:{
-            headerTitle:() => <HeaderBurgerNav/>
+        navigationOptions: ({navigation}) => {
+            return{
+                headerTitle: () => <HeaderBurgerNav onPress={() => openMenu(navigation)}/>
+            }
         }
     }
 }

@@ -62,7 +62,7 @@ class HomeScreen extends Component {
         const {navigation} = this.props;
         const resetAction = StackActions.reset({
             index: 0,
-            actions: [NavigationActions.navigate({routeName: 'Dashboard'})],
+            actions: [NavigationActions.navigate({routeName: 'Dashboard', params: {profile: navigation.getParam("profile")}})],
         });
         navigation.dispatch(resetAction);
     }

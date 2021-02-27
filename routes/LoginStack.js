@@ -4,17 +4,9 @@ import {CreateAccountScreen, LoginScreen, ProfileScreen, CreateProfileScreen, Ho
 import Header from '../src/Components/Header';
 import React from 'react';
 import TeamDrawer from "./TeamDrawer";
-import HeaderBurgerNav from "../src/Components/HeaderBurgerNav";
-
 
 const onAddProfile = (navigation) => {
     navigation.navigate("Create_Profile");
-}
-
-const openMenu = (navigation) => {
-    if(!navigation.isDrawerOpen)
-    navigation.openDrawer();
-    else navigation.closeDrawer();
 }
 
 const screens = {
@@ -48,11 +40,6 @@ const screens = {
     },
     Dashboard:{
         screen: TeamDrawer,
-        navigationOptions: ({navigation}) => {
-            return{
-                headerTitle: () => <HeaderBurgerNav onPress={() => openMenu(navigation)}/>
-            }
-        }
     }
 }
 
