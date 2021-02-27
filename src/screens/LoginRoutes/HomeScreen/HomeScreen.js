@@ -102,8 +102,8 @@ class HomeScreen extends Component {
         team.addMember(profile);
         let teams = this.state.teams;
         teams.push(this.generateTeamBanner(team, teams.length));
-        this.setState({modalOpen: false});
-        await this.setState({teams: [...teams]});
+        this.setState({modalOpen: false, teams: [...teams]});
+
     }
 
     render() {

@@ -27,7 +27,14 @@ module.exports.Team = class Team {
         this.#reference.update({members: this.members})
     }
 
-    static async createTeam(name, sport, ref) {
+    /**
+     * Creates a new team
+     * @param name the name of the team
+     * @param sport the sport the team plays
+     * @param ref the reference object to the team
+     * @returns {exports.Team}
+     */
+    static createTeam(name, sport, ref) {
 
         let obj = Object.assign({}, DEFAULTTEAM);
         obj.teamName = name;
@@ -37,7 +44,7 @@ module.exports.Team = class Team {
         let team = new Team(obj);
         let teamObj = {};
         teamObj[obj.id] = obj;
-        await ref.update(teamObj);
+        ref.update(teamObj);
         return team;
 
     }
