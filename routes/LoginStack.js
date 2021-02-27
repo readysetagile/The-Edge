@@ -3,6 +3,7 @@ import {createAppContainer} from 'react-navigation';
 import {CreateAccountScreen, LoginScreen, ProfileScreen, CreateProfileScreen, HomeScreen, Dashboard} from "../src/screens";
 import Header from '../src/Components/Header';
 import React from 'react';
+import TeamDrawer from "./TeamDrawer";
 
 
 const onAddProfile = (navigation) => {
@@ -39,7 +40,7 @@ const screens = {
         }
     },
     Dashboard:{
-        screen: Dashboard,
+        screen: TeamDrawer,
     }
 }
 

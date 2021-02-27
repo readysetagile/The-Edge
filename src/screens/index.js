@@ -4,3 +4,4 @@ export {default as CreateAccountScreen} from './LoginRoutes/CreateAccountScreen/
 export {default as ProfileScreen} from './LoginRoutes/ProfileScreen/ProfileScreen'
 export {default as CreateProfileScreen} from './LoginRoutes/CreateProfileScreen/CreateProfileScreen'
 export {default as Dashboard} from './TeamRoutes/DashboardScreen/DashboardScreen'
+export {default as Members} from './TeamRoutes/Members/MemberScreen';

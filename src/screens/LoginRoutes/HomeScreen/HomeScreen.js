@@ -5,6 +5,7 @@ import {connectActionSheet} from '@expo/react-native-action-sheet'
 import {Ionicons} from "@expo/vector-icons";
 import TeamCreateForm from './TeamCreateForm';
 import Edge from "../../../firebase";
+import {NavigationActions, StackActions} from "react-navigation";
 
 
 class HomeScreen extends Component {
@@ -59,8 +60,11 @@ class HomeScreen extends Component {
     enterTeam() {
 
         const {navigation} = this.props;
-        navigation.navigate("Dashboard");
-
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({routeName: 'Dashboard'})],
+        });
+        navigation.dispatch(resetAction);
     }
 
     createTeam = () => {

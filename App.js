@@ -7,6 +7,7 @@ import Edge from "./src/firebase";
 import Login from './routes/LoginStack';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import { MenuProvider } from 'react-native-popup-menu';
+import Navigator from './routes/TeamDrawer'
 // Set the configuration for your app
 
 export default class App extends Component {
@@ -45,7 +46,11 @@ export default class App extends Component {
 
             <MenuProvider>
                 <ActionSheetProvider>
-                    <Login />
+                    <Login>
+                        <Navigator name={"Teams"}/>
+                    </Login>
+                    {/*<Navigator>*/}
+                    {/*</Navigator>*/}
                 </ActionSheetProvider>
             </MenuProvider>
         );
