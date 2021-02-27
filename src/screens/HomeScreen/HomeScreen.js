@@ -90,7 +90,7 @@ class HomeScreen extends Component {
 
     addTeam = async (teamInfo) => {
 
-        let team = await Edge.teams.create(teamInfo.teamName, teamInfo.sport);
+        let team = await Edge.teams.create(teamInfo["team name"], teamInfo.sport);
         let profile = this.props.navigation.getParam('profile');
         team.addMember(profile);
         let teams = this.state.teams;
