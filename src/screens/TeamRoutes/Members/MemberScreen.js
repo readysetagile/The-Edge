@@ -1,5 +1,14 @@
 import React, {Component, useState} from "react";
-import {Text, View, TouchableOpacity, Image, ScrollView, TextInput} from 'react-native';
+import {
+    Text,
+    View,
+    TouchableOpacity,
+    Image,
+    ScrollView,
+    TextInput,
+    TouchableWithoutFeedback,
+    Keyboard, Modal
+} from 'react-native';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
 import Global from "../../../GlobalData";
@@ -7,6 +16,9 @@ import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
+import styles from "../../LoginRoutes/HomeScreen/styles";
+import TeamCreateForm from "../../LoginRoutes/HomeScreen/TeamCreateForm";
+import InviteForm from "./InviteForm";
 
 
 export default class MemberPage extends Component {
@@ -15,7 +27,8 @@ export default class MemberPage extends Component {
         profile: null,
         team: null,
         members:[],
-        hiddenMembers:{}
+        hiddenMembers:{},
+        modalOpen: false
     }
 
     constructor(props) {
@@ -66,7 +79,7 @@ export default class MemberPage extends Component {
     }
 
     inviteMembers(){
-
+        this.setState({modalOpen: true})
     }
 
     filterMembersByName(name){
@@ -90,10 +103,25 @@ export default class MemberPage extends Component {
     }
 
 
+    updateInvite(values){
+
+    }
+
     render() {
 
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
+
+
+                <Modal visible={this.state.modalOpen} animationType={'slide'}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={globalStyles.modalContent}>
+                            <Ionicons style={globalStyles.closeModal(3)} name={"close"} size={24}
+                                      onPress={() => this.setState({modalOpen: false})}/>
+                            <InviteForm team={this.state.team} onSubmit={(values) => this.updateInvite(values)}/>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
 
                 <View style={{backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
                     flexDirection: 'row', justifyContent: 'space-between', borderRadius: 10}}>

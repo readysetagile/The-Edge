@@ -61,5 +61,25 @@ export const globalStyles = {
         },
         shadowOpacity: 0.6
     },
+    modalContent: {
+        flex: 1
+    },
+    closeModal: function(zIndex=3) {
+        return{
+            left: 20,
+            top: 40,
+            zIndex: zIndex
+        }
+    },
+    modalView: function(color=colors.background){
+        return{
+            flex: 1,
+            padding: 20,
+            top: 30,
+            backgroundColor: color
+        }
+
+    },
+
 
 }

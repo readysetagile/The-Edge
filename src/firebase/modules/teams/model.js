@@ -1,9 +1,12 @@
 module.exports = {
 
     id: "",
-    teamCode: "",
     teamName: "",
     sport: "",
+    inviteData:{
+        teamCode: "",
+        acceptNewMembers: true
+    },
     modules: {
         teamQuestions: {
             required: true,

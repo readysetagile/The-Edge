@@ -14,9 +14,10 @@ module.exports.Team = class Team {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
             this.members = new Map(Object.entries(teamObject.members));
-            this.teamCode = teamObject.teamCode;
+            this.teamCode = teamObject.inviteData.teamCode;
             this.teamName = teamObject.teamName;
             this.sport = teamObject.sport;
+            this.inviteData = teamObject.inviteData;
             this.#reference = firebase.database().ref("teams/" + this.id);
         }
 
@@ -52,7 +53,7 @@ module.exports.Team = class Team {
         obj.teamName = name;
         obj.id = createUUID();
         obj.sport = sport;
-        obj.teamCode = createUUID('xxxxxx');
+        obj.inviteData.teamCode = createUUID('xxxxxx');
         let team = new Team(obj);
         let teamObj = {};
         teamObj[obj.id] = obj;
