@@ -24,10 +24,11 @@ export default class DashboardScreen extends Component {
 
     render() {
 
+        const {navigation} = this.props;
         return (
             <View style={styles.container}>
                 <Text style={styles.titleText}>COACHING DASHBOARD</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("Members")}>
                     <View style={[styles.buttonStyle, styles.coachingColor]}>
                         <Image
                             source={{uri: 'https://grid.gograph.com/softball-vector-clipart_gg91304766.jpg'}}
