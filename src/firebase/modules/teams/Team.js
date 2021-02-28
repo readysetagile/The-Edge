@@ -30,8 +30,8 @@ module.exports.Team = class Team {
         return this.members.get(id) instanceof Member ? this.members.get(id) : new Member(this.members.get(id));
     }
 
-    addMember(profile) {
-        let member = Member.createMember(profile, this, this.#reference)
+    async addMember(profile) {
+        let member = await Member.createMember(profile, this, this.#reference)
         this.members.set(member.id, member);
         profile.addTeam(this);
     }

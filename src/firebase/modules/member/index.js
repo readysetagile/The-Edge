@@ -1,3 +1,5 @@
+import {firebase} from "../../config";
+import Edge from "../../index";
 
 const DEFAULTMEMBER = require("./model");
 
@@ -10,6 +12,7 @@ module.exports.Member = class Member {
         this.teamAnswers = memberObj.teamAnswers;
         this.userNotes = memberObj.userNotes;
         this.permissions = memberObj.permissions;
+        //this.profile = user.getProfile(this.id);
     }
 
 
@@ -20,11 +23,12 @@ module.exports.Member = class Member {
      * @param reference to the firebase object
      * @returns {exports.Member} a new member object
      */
-     static createMember(profile, team, reference){
-
+     static async createMember(profile, team, reference){
         let obj = Object.assign(DEFAULTMEMBER);
         obj.joinedTimestamp = new Date().getTime();
         obj.id = profile.profileUUID;
+        obj.username = profile.username;
+        obj.accountID = firebase.auth().currentUser.uid;
         let member = {};
         member[obj.id] = obj;
         reference.update({members: member}).catch(console.error);
