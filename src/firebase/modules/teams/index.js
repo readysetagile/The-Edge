@@ -27,9 +27,9 @@ module.exports.Teams = class Teams {
         return team;
     }
 
-    async getAllTeams(){
+    async getAllTeams() {
 
-        if(this.teams == null){
+        if (this.teams == null) {
 
             return await new Promise(resolve => {
                 this.#reference.on('value', snap => {
@@ -41,7 +41,7 @@ module.exports.Teams = class Teams {
                 });
             });
 
-        }else return this.teams;
+        } else return this.teams;
 
     }
 

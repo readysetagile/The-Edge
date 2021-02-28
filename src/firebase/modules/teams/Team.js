@@ -9,6 +9,7 @@ module.exports.Team = class Team {
 
     #reference
     _teamCode
+
     constructor(teamObject) {
         if (teamObject) {
             this.id = teamObject.id;
@@ -28,7 +29,7 @@ module.exports.Team = class Team {
      * @param id the id of the member (profile id)
      * @returns {Member} the member that has been assigned this id
      */
-    async getMember(id){
+    async getMember(id) {
         let member = this.members.get(id);
         let profile = (await Edge.users.get(member.accountID)).getProfile(id);
         return this.members.get(id) instanceof Member ? this.members.get(id) : new Member(this.members.get(id), profile);
@@ -40,7 +41,7 @@ module.exports.Team = class Team {
         profile.addTeam(this);
     }
 
-    toggleTeamJoining(value){
+    toggleTeamJoining(value) {
         this.inviteData.acceptNewMembers = value;
         this.#reference.child("inviteData").update({acceptNewMembers: value})
     }

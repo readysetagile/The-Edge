@@ -6,6 +6,7 @@ const DEFAULTMEMBER = require("./model");
 module.exports.Member = class Member {
 
     profile;
+
     constructor(memberObj, profile) {
 
         this.id = memberObj.id;
@@ -29,7 +30,7 @@ module.exports.Member = class Member {
      * @param reference to the firebase object
      * @returns {exports.Member} a new member object
      */
-     static async createMember(profile, team, reference){
+    static async createMember(profile, team, reference) {
         let obj = Object.assign(DEFAULTMEMBER);
         obj.joinedTimestamp = new Date().getTime();
         obj.id = profile.profileUUID;

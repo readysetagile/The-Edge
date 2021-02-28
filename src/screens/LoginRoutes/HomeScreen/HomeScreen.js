@@ -10,7 +10,6 @@ import Edge from "../../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
 import Global from '../../../GlobalData';
 import {globalStyles} from "../../GlobalStyles";
-import {Team} from "../../../firebase/modules/teams/Team";
 
 class HomeScreen extends Component {
 
@@ -94,13 +93,13 @@ class HomeScreen extends Component {
         this.setState({modalOpen: false})
         let team = null;
         let code = values["team code"]
-        for(let [K, V] of Edge.teams.teams){
-            if(V.inviteData.teamCode === code){
+        for (let [K, V] of Edge.teams.teams) {
+            if (V.inviteData.teamCode === code) {
                 team = await Edge.teams.get(V.id);
                 break;
             }
         }
-        if(team != null){
+        if (team != null) {
             let profile = this.props.navigation.getParam('profile');
 
             team.addMember(profile);

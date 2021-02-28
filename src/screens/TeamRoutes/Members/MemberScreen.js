@@ -1,13 +1,14 @@
-import React, {Component, useState} from "react";
+import React, {Component} from "react";
 import {
-    Text,
-    View,
-    TouchableOpacity,
     Image,
+    Keyboard,
+    Modal,
     ScrollView,
+    Text,
     TextInput,
+    TouchableOpacity,
     TouchableWithoutFeedback,
-    Keyboard, Modal
+    View
 } from 'react-native';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
@@ -24,8 +25,8 @@ export default class MemberPage extends Component {
     state = {
         profile: null,
         team: null,
-        members:[],
-        hiddenMembers:{},
+        members: [],
+        hiddenMembers: {},
         modalOpen: false
     }
 
@@ -33,7 +34,7 @@ export default class MemberPage extends Component {
         super(props);
         Edge.teams.get(Global.teamID).then(r => {
             //We need to reload the render
-            firebase.database().ref("teams/"+r.id+"/members").on('value', snapshot => {
+            firebase.database().ref("teams/" + r.id + "/members").on('value', snapshot => {
                 this.componentDidMount();
             })
         })
@@ -49,11 +50,11 @@ export default class MemberPage extends Component {
 
     }
 
-    async generateMembers(members){
+    async generateMembers(members) {
 
         let memArr = [];
         let indx = 0;
-        for(let [K, V] of members){
+        for (let [K, V] of members) {
             let member = await this.state.team.getMember(K)
             let memBox = await this.generateMemberBox(member, indx);
             memArr.push(memBox)
@@ -63,40 +64,48 @@ export default class MemberPage extends Component {
 
     }
 
-    async generateMemberBox(member, index){
+    async generateMemberBox(member, index) {
 
         let profileImage = await member.profile.getProfilePicture();
         if (profileImage == null) profileImage = member.profile.avatar;
-        return(
+        return (
             <HiddenView hide={this.state.hiddenMembers[member.id]}
-                        key={index} style={{marginBottom: 10, borderRadius: 3, borderColor: 'lightgrey', borderWidth: 1, padding: 10}}>
+                        key={index} style={{
+                marginBottom: 10,
+                borderRadius: 3,
+                borderColor: 'lightgrey',
+                borderWidth: 1,
+                padding: 10
+            }}>
                 <TouchableOpacity style={{flexDirection: 'row'}}>
-                        <Image style={globalStyles.avatar(50)}
-                               source={{uri: profileImage}}/>
-                        <Text style={{alignSelf: 'center', padding: 10, fontSize: 20, fontWeight: 'bold'}}>
-                            {member.username}
-                        </Text>
+                    <Image style={globalStyles.avatar(50)}
+                           source={{uri: profileImage}}/>
+                    <Text style={{alignSelf: 'center', padding: 10, fontSize: 20, fontWeight: 'bold'}}>
+                        {member.username}
+                    </Text>
 
                 </TouchableOpacity>
             </HiddenView>
         );
     }
 
-    inviteMembers(){
+    inviteMembers() {
         this.setState({modalOpen: true})
     }
 
-    filterMembersByName(name){
+    filterMembersByName(name) {
 
         let members = this.state.team.members;
         let hiddenMembers = this.state.hiddenMembers;
         name = name.trim();
-        if(name) {
+        if (name) {
             for (let [K, V] of members) {
                 hiddenMembers[K] = !V.username.toLowerCase().includes(name.toLowerCase());
             }
-        }else{
-            Object.keys(hiddenMembers).forEach(function(key){ hiddenMembers[key] = false });
+        } else {
+            Object.keys(hiddenMembers).forEach(function (key) {
+                hiddenMembers[key] = false
+            });
         }
 
         this.setState({hiddenMembers: hiddenMembers});
@@ -106,7 +115,7 @@ export default class MemberPage extends Component {
     }
 
 
-    updateInvite(values){
+    updateInvite(values) {
 
         this.setState({modalOpen: false});
         this.state.team.teamCode = values["Team Code"];
@@ -129,17 +138,19 @@ export default class MemberPage extends Component {
                     </TouchableWithoutFeedback>
                 </Modal>
 
-                <View style={{backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
+                <View style={{
+                    backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
                     flexDirection: 'row', justifyContent: 'space-between',
-                    borderRadius: 10}}>
+                    borderRadius: 10
+                }}>
 
                     <Text style={{fontSize: 15, alignSelf: 'center'}}>{this.state.members.length} Members</Text>
 
                     <View style={{width: '30%', borderRadius: 5, borderWidth: 2, borderColor: 'gray', padding: 5}}>
                         <TextInput
-                                   placeholderTextColor={'#003f5c'}
-                                   placeholder='Search 🔎'
-                                   onChangeText={(val) => this.filterMembersByName(val)}>
+                            placeholderTextColor={'#003f5c'}
+                            placeholder='Search 🔎'
+                            onChangeText={(val) => this.filterMembersByName(val)}>
                         </TextInput>
                     </View>
 

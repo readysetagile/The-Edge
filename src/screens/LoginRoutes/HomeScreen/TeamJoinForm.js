@@ -13,7 +13,7 @@ export default function TeamCreateForm({onSubmit}) {
         "team code": yup.string().required().min(5)
             .test('testValidCode', "Invalid Code or the team is not accepting new members", async value => {
                 const teams = await Edge.teams.getAllTeams();
-                if(teams != null) {
+                if (teams != null) {
                     for (let [K, V] of teams) {
                         if (V.inviteData?.acceptNewMembers && V.inviteData?.teamCode === value) {
                             return true;

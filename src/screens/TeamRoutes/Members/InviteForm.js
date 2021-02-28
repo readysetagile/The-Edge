@@ -1,5 +1,5 @@
 import React from 'react'
-import {View, Text, TextInput, Switch, TouchableOpacity, Clipboard, Alert} from "react-native";
+import {Alert, Clipboard, Switch, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import {Formik} from 'formik';
 import {Ionicons} from "@expo/vector-icons";
@@ -13,17 +13,20 @@ const InviteSchema = yup.object({
     "Enable Joining": yup.boolean().required()
 })
 
-export default function InviteForm({onSubmit, team}){
+export default function InviteForm({onSubmit, team}) {
 
     const shuffleTeamCode = (props) => {
         let id = createUUID('xxxxxx');
         props.setFieldValue("Team Code", id);
     }
 
-    return(
+    return (
         <View style={globalStyles.modalView()}>
 
-            <Formik initialValues={{"Team Code": team.inviteData.teamCode, "Enable Joining": team.inviteData.acceptNewMembers}}
+            <Formik initialValues={{
+                "Team Code": team.inviteData.teamCode,
+                "Enable Joining": team.inviteData.acceptNewMembers
+            }}
                     validationSchema={InviteSchema}
                     onSubmit={(values, actions) => {
                         actions.resetForm();
@@ -44,15 +47,23 @@ export default function InviteForm({onSubmit, team}){
                                 </View>
                             </TouchableOpacity>
 
-                            <TextInput style={{...globalStyles.inputView, fontSize: 20, width: '40%', height: '70%', padding: 10}}
-                                        placeholderTextColor={'#003f5c'}
-                                        value={props.values["Team Code"]}
-                                        onChangeText={props.handleChange("Team Code")}
-                                        onBlur={props.handleBlur("Team Code")}
+                            <TextInput style={{
+                                ...globalStyles.inputView,
+                                fontSize: 20,
+                                width: '40%',
+                                height: '70%',
+                                padding: 10
+                            }}
+                                       placeholderTextColor={'#003f5c'}
+                                       value={props.values["Team Code"]}
+                                       onChangeText={props.handleChange("Team Code")}
+                                       onBlur={props.handleBlur("Team Code")}
                             />
-                            <Ionicons style={{top: 10, color: 'yellow'}} name={'shuffle'} size={30} onPress={() => shuffleTeamCode(props)}/>
+                            <Ionicons style={{top: 10, color: 'yellow'}} name={'shuffle'} size={30}
+                                      onPress={() => shuffleTeamCode(props)}/>
                         </View>
-                        <Text style={globalStyles.errorText}>{props.touched["Team Code"] && props.errors["Team Code"]}</Text>
+                        <Text
+                            style={globalStyles.errorText}>{props.touched["Team Code"] && props.errors["Team Code"]}</Text>
 
                         <View style={{...styles.alignInRow}}>
 

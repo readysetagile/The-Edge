@@ -5,7 +5,6 @@ import {DEFAULTAVATR} from "../../../firebase/modules/profiles";
 import {firebase} from '../../../firebase/config';
 import Edge from '../../../firebase'
 import * as ImagePicker from 'expo-image-picker';
-import {NavigationActions, StackActions} from "react-navigation";
 import {createUUID} from "../../../firebase/Util";
 import {globalStyles} from "../../GlobalStyles";
 

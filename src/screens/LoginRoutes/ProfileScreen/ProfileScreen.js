@@ -158,7 +158,7 @@ export default class ProfileScreen extends Component {
     }
 
 
-    loadProfiles(){
+    loadProfiles() {
         try {
             new Promise(async resolve => {
                 let profiles = await this.getProfiles();

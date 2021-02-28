@@ -4,6 +4,7 @@ import React, {Component} from 'react';
 import Global from '../../../GlobalData';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
+
 export default class DashboardScreen extends Component {
 
     state = {
