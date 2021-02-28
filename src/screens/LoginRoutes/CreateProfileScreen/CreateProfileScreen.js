@@ -7,6 +7,7 @@ import Edge from '../../../firebase'
 import * as ImagePicker from 'expo-image-picker';
 import {NavigationActions, StackActions} from "react-navigation";
 import {createUUID} from "../../../firebase/Util";
+import {globalStyles} from "../../GlobalStyles";
 
 
 export default class CreateProfileScreen extends Component {
@@ -85,7 +86,7 @@ export default class CreateProfileScreen extends Component {
                 <TouchableOpacity onPress={() => this.selectImage()}>
                     <View style={{alignItems: 'center', padding: 40}}>
 
-                        <Image style={styles.avatar}
+                        <Image style={globalStyles.avatar(100)}
                                source={{uri: (!this.state.image ? DEFAULTAVATR : this.state.image.uri)}}/>
                         <Text style={{
                             fontSize: 20,

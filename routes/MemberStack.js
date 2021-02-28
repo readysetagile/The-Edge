@@ -9,7 +9,7 @@ const screens = {
         screen: Members,
         navigationOptions: ({navigation}) => {
             return {
-                headerTitle: () => <HeaderBurgerNav onPress={() => openMenu(navigation)}/>
+                headerTitle: () => <HeaderBurgerNav title="Member List" onPress={() => openMenu(navigation)}/>
             }
         }
     }

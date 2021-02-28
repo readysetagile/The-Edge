@@ -1,20 +1,27 @@
 import {firebase} from "../../config";
 import Edge from "../../index";
+import {Profile} from "../profiles";
 
 const DEFAULTMEMBER = require("./model");
 
 module.exports.Member = class Member {
 
-    constructor(memberObj) {
+    profile;
+    constructor(memberObj, profile) {
 
         this.id = memberObj.id;
         this.joinedTimestamp = memberObj.joinedTimestamp;
         this.teamAnswers = memberObj.teamAnswers;
         this.userNotes = memberObj.userNotes;
+        this.username = memberObj.username;
         this.permissions = memberObj.permissions;
-        //this.profile = user.getProfile(this.id);
+        this._profile = profile;
     }
 
+
+    get profile() {
+        return new Profile(this._profile);
+    }
 
     /**
      * Creates a new member object
@@ -33,7 +40,7 @@ module.exports.Member = class Member {
         member[obj.id] = obj;
         reference.update({members: member}).catch(console.error);
         obj.profile = profile;
-        return new Member(obj);
+        return new Member(obj, profile);
 
     }
 

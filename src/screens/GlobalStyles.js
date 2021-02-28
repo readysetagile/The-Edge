@@ -36,7 +36,7 @@ export const globalStyles = {
         fontSize: 30,
         alignSelf: 'center'
     },
-    avatar: function(size) {
+    avatar: function(size=100) {
         return{
             borderRadius: size / 2,
             width: size,
