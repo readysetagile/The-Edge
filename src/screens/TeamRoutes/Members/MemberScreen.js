@@ -1,13 +1,12 @@
-import React, {Component} from "react";
-import {Text, View, TouchableOpacity, Image, ScrollView} from 'react-native';
+import React, {Component, useState} from "react";
+import {Text, View, TouchableOpacity, Image, ScrollView, TextInput} from 'react-native';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
 import Global from "../../../GlobalData";
-import {Team} from "../../../firebase/modules/teams/Team";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
-import styles from "../../LoginRoutes/CreateProfileScreen/styles";
-import {DEFAULTAVATR} from "../../../firebase/modules/profiles";
+import {Ionicons} from "@expo/vector-icons";
+import HiddenView from "../../../Components/HiddenView";
 
 
 export default class MemberPage extends Component {
@@ -15,7 +14,8 @@ export default class MemberPage extends Component {
     state = {
         profile: null,
         team: null,
-        members:[]
+        members:[],
+        hiddenMembers:{}
     }
 
     constructor(props) {
@@ -26,8 +26,9 @@ export default class MemberPage extends Component {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
         this.setState({profile: profile, team: team})
-        let members = await this.generateMembers(team.members)
-        this.setState({members: members});
+        let teamMebers = team.members;
+        let members = await this.generateMembers(teamMebers)
+        this.setState({members: members})
 
     }
 
@@ -50,9 +51,9 @@ export default class MemberPage extends Component {
         let profileImage = await member.profile.getProfilePicture();
         if (profileImage == null) profileImage = member.profile.avatar;
         return(
-            <View key={index} style={{marginBottom: 10, borderRadius: 3, borderColor: 'lightgrey', borderWidth: 1, padding: 10}}>
+            <HiddenView hide={this.state.hiddenMembers[member.id]}
+                        key={index} style={{marginBottom: 10, borderRadius: 3, borderColor: 'lightgrey', borderWidth: 1, padding: 10}}>
                 <TouchableOpacity style={{flexDirection: 'row'}}>
-
                         <Image style={globalStyles.avatar(50)}
                                source={{uri: profileImage}}/>
                         <Text style={{alignSelf: 'center', padding: 10, fontSize: 20, fontWeight: 'bold'}}>
@@ -60,8 +61,32 @@ export default class MemberPage extends Component {
                         </Text>
 
                 </TouchableOpacity>
-            </View>
+            </HiddenView>
         );
+    }
+
+    inviteMembers(){
+
+    }
+
+    filterMembersByName(name){
+
+        let members = this.state.team.members;
+        let hiddenMembers = this.state.hiddenMembers;
+        if(name) {
+            for (let [K, V] of members) {
+                if (!V.username.toLowerCase().includes(name.toLowerCase())) {
+                    hiddenMembers[K] = true;
+                }else hiddenMembers[K] = false;
+            }
+        }else{
+            Object.keys(hiddenMembers).forEach(function(key){ hiddenMembers[key] = false });
+        }
+
+        this.setState({hiddenMembers: hiddenMembers});
+        this.componentDidMount()
+
+
     }
 
 
@@ -69,9 +94,30 @@ export default class MemberPage extends Component {
 
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
+
+                <View style={{backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
+                    flexDirection: 'row', justifyContent: 'space-between', borderRadius: 10}}>
+
+                    <Text style={{fontSize: 15, alignSelf: 'center'}}>{this.state.members.length} Members</Text>
+
+                    <View style={{width: '30%', borderRadius: 5, borderWidth: 2, borderColor: 'gray', padding: 5}}>
+                        <TextInput
+                                   placeholderTextColor={'#003f5c'}
+                                   placeholder='Search 🔎'
+                                   onChangeText={(val) => this.filterMembersByName(val)}>
+                        </TextInput>
+                    </View>
+
+                </View>
+
                 <ScrollView>
                     {this.state.members}
                 </ScrollView>
+
+                <TouchableOpacity style={globalStyles.newButton} onPress={() => this.inviteMembers()}>
+                    <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
+                </TouchableOpacity>
+
             </View>
         )
 

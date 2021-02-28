@@ -7,6 +7,7 @@ import TeamCreateForm from './TeamCreateForm';
 import Edge from "../../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
 import Global from '../../../GlobalData';
+import {globalStyles} from "../../GlobalStyles";
 
 class HomeScreen extends Component {
 
@@ -105,9 +106,7 @@ class HomeScreen extends Component {
 
         let team = await Edge.teams.create(teamInfo["team name"], teamInfo.sport);
         let profile = this.props.navigation.getParam('profile');
-        console.log(1);
         team.addMember(profile);
-        console.log(2);
         let teams = this.state.teams;
         teams.push(this.generateTeamBanner(team, teams.length));
         this.setState({modalOpen: false, teams: [...teams]});
@@ -143,7 +142,7 @@ class HomeScreen extends Component {
                     )}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.newTeamButton} onPress={() => this.newTeam()}>
+                <TouchableOpacity style={globalStyles.newButton} onPress={() => this.newTeam()}>
                     <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
                 </TouchableOpacity>
 

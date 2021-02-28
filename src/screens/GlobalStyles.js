@@ -1,4 +1,5 @@
 import colors from "./styles";
+import Colors from "./styles";
 
 export const globalStyles = {
 
@@ -42,6 +43,23 @@ export const globalStyles = {
             width: size,
             height: size
         }
-    }
+    },
+    newButton: {
+        backgroundColor: Colors.mainButton,
+        position: 'absolute',
+        height: 50,
+        width: 50,
+        borderRadius: 200,
+        bottom: 50,
+        right: 50,
+        justifyContent: 'center',
+        alignSelf: 'flex-end',
+        shadowColor: 'black',
+        shadowOffset: {
+            width: -3,
+            height: 5
+        },
+        shadowOpacity: 0.6
+    },
 
 }

@@ -56,7 +56,6 @@ module.exports.Team = class Team {
         let team = new Team(obj);
         let teamObj = {};
         teamObj[obj.id] = obj;
-        console.log(teamObj);
         ref.update(teamObj);
         return team;
 
