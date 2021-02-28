@@ -31,20 +31,22 @@ export default class MemberPage extends Component {
 
     constructor(props) {
         super(props);
-
-
+        Edge.teams.get(Global.teamID).then(r => {
+            //We need to reload the render
+            firebase.database().ref("teams/"+r.id+"/members").on('value', snapshot => {
+                this.componentDidMount();
+            })
+        })
     }
 
     async componentDidMount() {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
         this.setState({profile: profile, team: team})
-        let teamMebers = team.members;
-        let members = await this.generateMembers(teamMebers)
+        let teamMembers = team.members;
+        let members = await this.generateMembers(teamMembers)
         this.setState({members: members})
-        firebase.database().ref("teams/"+team.id+"/members").on('value', snapshot => {
-            this.componentDidMount()
-        })
+
 
     }
 
