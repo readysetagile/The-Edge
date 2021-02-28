@@ -3,7 +3,7 @@ module.exports = {
     id: "",
     teamName: "",
     sport: "",
-    inviteData:{
+    inviteData: {
         teamCode: "",
         acceptNewMembers: true
     },

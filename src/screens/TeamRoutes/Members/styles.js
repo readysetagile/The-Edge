@@ -1,11 +1,11 @@
 import {StyleSheet} from "react-native";
 
 export default StyleSheet.create({
-    alignInRow:{
+    alignInRow: {
         flexDirection: 'row',
         justifyContent: 'space-between'
     },
-    textItem:{
+    textItem: {
         fontSize: 30,
         color: 'white',
         fontWeight: 'bold',

@@ -37,8 +37,8 @@ export const globalStyles = {
         fontSize: 30,
         alignSelf: 'center'
     },
-    avatar: function(size=100) {
-        return{
+    avatar: function (size = 100) {
+        return {
             borderRadius: size / 2,
             width: size,
             height: size
@@ -61,27 +61,27 @@ export const globalStyles = {
         },
         shadowOpacity: 0.6
     },
-    shadow: function(width, height, color='black') {
-      return{
-          shadowColor: color,
-          shadowOffset: {
-              width: width,
-              height: height
-          }
-      }
+    shadow: function (width, height, color = 'black') {
+        return {
+            shadowColor: color,
+            shadowOffset: {
+                width: width,
+                height: height
+            }
+        }
     },
     modalContent: {
         flex: 1
     },
-    closeModal: function(zIndex=3) {
-        return{
+    closeModal: function (zIndex = 3) {
+        return {
             left: 20,
             top: 40,
             zIndex: zIndex
         }
     },
-    modalView: function(color=colors.background){
-        return{
+    modalView: function (color = colors.background) {
+        return {
             flex: 1,
             padding: 20,
             top: 30,
