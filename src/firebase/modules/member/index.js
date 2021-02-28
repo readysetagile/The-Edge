@@ -38,7 +38,7 @@ module.exports.Member = class Member {
         obj.accountID = firebase.auth().currentUser.uid;
         let member = {};
         member[obj.id] = obj;
-        reference.update({members: member}).catch(console.error);
+        reference.child("members").update(member).catch(console.error);
         obj.profile = profile;
         return new Member(obj, profile);
 

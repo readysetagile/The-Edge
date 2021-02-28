@@ -4,6 +4,7 @@ import MemberStack from './MemberStack';
 import DashboardStack from "./DashboardStack";
 import React from "react";
 import colors from "../src/screens/styles";
+import LoginStack from "./LoginStack";
 
 const DrawerConfig = {
     intialRouteName: 'Home',
@@ -36,7 +37,7 @@ const TeamDrawerNavigation = createDrawerNavigator({
     Members: {
         screen: MemberStack
     },
-    // "To My Teams": {
+    // Back: {
     //     screen: LoginStack
     // }
 

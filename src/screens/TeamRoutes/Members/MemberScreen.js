@@ -31,6 +31,8 @@ export default class MemberPage extends Component {
 
     constructor(props) {
         super(props);
+
+
     }
 
     async componentDidMount() {
@@ -40,6 +42,9 @@ export default class MemberPage extends Component {
         let teamMebers = team.members;
         let members = await this.generateMembers(teamMebers)
         this.setState({members: members})
+        firebase.database().ref("teams/"+team.id+"/members").on('value', snapshot => {
+            this.componentDidMount()
+        })
 
     }
 

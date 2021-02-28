@@ -28,6 +28,24 @@ module.exports.Teams = class Teams {
         return team;
     }
 
+    async getAllTeams(){
+
+        if(this.teams == null){
+
+            return await new Promise(resolve => {
+                this.#reference.on('value', snap => {
+                    let val = snap.val();
+                    if (val != null) {
+                        this.teams = new Map(Object.entries(val));
+                        resolve(this.teams);
+                    }
+                });
+            });
+
+        }else return this.teams;
+
+    }
+
     /**
      * Gets a team by its uuid
      * @param uuid the uuid assigned to the user account
