@@ -8,13 +8,13 @@ const DEFAULTTEAM = require('./model');
 module.exports.Team = class Team {
 
     #reference
-
+    _teamCode
     constructor(teamObject) {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
             this.members = new Map(Object.entries(teamObject.members));
-            this.teamCode = teamObject.inviteData.teamCode;
+            this._teamCode = teamObject.inviteData.teamCode;
             this.teamName = teamObject.teamName;
             this.sport = teamObject.sport;
             this.inviteData = teamObject.inviteData;
@@ -38,6 +38,18 @@ module.exports.Team = class Team {
         let member = await Member.createMember(profile, this, this.#reference)
         this.members.set(member.id, member);
         profile.addTeam(this);
+    }
+
+    toggleTeamJoining(value){
+        this.inviteData.acceptNewMembers = value;
+        this.#reference.child("inviteData").update({acceptNewMembers: value})
+    }
+
+
+    set teamCode(value) {
+        this._teamCode = value;
+        this.inviteData.teamCode = value;
+        this.#reference.child("inviteData").update({teamCode: value})
     }
 
     /**

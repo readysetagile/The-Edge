@@ -6,7 +6,12 @@ import {Ionicons} from "@expo/vector-icons";
 import {createUUID} from "../../../firebase/Util";
 import styles from './styles'
 import FlatButton from "../../../Components/SubmitButton";
+import * as yup from 'yup';
 
+const InviteSchema = yup.object({
+    "Team Code": yup.string().required().min(5),
+    "Enable Joining": yup.boolean().required()
+})
 
 export default function InviteForm({onSubmit, team}){
 
@@ -19,6 +24,7 @@ export default function InviteForm({onSubmit, team}){
         <View style={globalStyles.modalView()}>
 
             <Formik initialValues={{"Team Code": team.inviteData.teamCode, "Enable Joining": team.inviteData.acceptNewMembers}}
+                    validationSchema={InviteSchema}
                     onSubmit={(values, actions) => {
                         actions.resetForm();
                         onSubmit(values);
@@ -37,9 +43,10 @@ export default function InviteForm({onSubmit, team}){
                                     <Text style={styles.textItem}>Team Code: </Text>
                                 </View>
                             </TouchableOpacity>
+
                             <TextInput style={{...globalStyles.inputView, fontSize: 20, width: '40%', height: '70%', padding: 10}}
                                         placeholderTextColor={'#003f5c'}
-                                        placeholder={props.values["Team Code"]}
+                                        value={props.values["Team Code"]}
                                         onChangeText={props.handleChange("Team Code")}
                                         onBlur={props.handleBlur("Team Code")}
                             />
@@ -61,7 +68,7 @@ export default function InviteForm({onSubmit, team}){
 
                         </View>
 
-                        <FlatButton text={"Save"} style={{marginTop: 40}}/>
+                        <FlatButton text={"Save"} style={{marginTop: 40}} onPress={props.handleSubmit}/>
 
                     </View>
 

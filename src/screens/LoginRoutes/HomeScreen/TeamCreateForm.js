@@ -4,7 +4,6 @@ import {Text, TextInput, View} from 'react-native';
 import * as yup from 'yup';
 import FlatButton from "../../../Components/SubmitButton";
 import {globalStyles} from "../../GlobalStyles";
-import colors from "../../styles";
 
 const TeamSchema = yup.object({
 

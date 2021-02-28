@@ -16,8 +16,6 @@ import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
-import styles from "../../LoginRoutes/HomeScreen/styles";
-import TeamCreateForm from "../../LoginRoutes/HomeScreen/TeamCreateForm";
 import InviteForm from "./InviteForm";
 
 
@@ -105,13 +103,16 @@ export default class MemberPage extends Component {
 
     updateInvite(values){
 
+        this.setState({modalOpen: false});
+        this.state.team.teamCode = values["Team Code"];
+        this.state.team.toggleTeamJoining(values["Enable Joining"])
+
     }
 
     render() {
 
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
-
 
                 <Modal visible={this.state.modalOpen} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
