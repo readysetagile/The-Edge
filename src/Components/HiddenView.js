@@ -26,7 +26,7 @@ HiddenView.propTypes = {
             PropTypes.element,
         ])),
     ]).isRequired,
-    style: ViewPropTypes.style,
+    style: PropTypes.object,
     hide: PropTypes.bool,
 };
 
