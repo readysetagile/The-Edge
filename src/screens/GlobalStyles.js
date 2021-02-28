@@ -61,6 +61,15 @@ export const globalStyles = {
         },
         shadowOpacity: 0.6
     },
+    shadow: function(width, height, color='black') {
+      return{
+          shadowColor: color,
+          shadowOffset: {
+              width: width,
+              height: height
+          }
+      }
+    },
     modalContent: {
         flex: 1
     },
