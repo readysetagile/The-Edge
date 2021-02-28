@@ -56,11 +56,12 @@ export default class CreateProfileScreen extends Component {
         }
         let profile = await user.addProfile(this.state.uuid, this.state.username);
         const {navigation} = this.props;
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
-        });
-        navigation.dispatch(resetAction);
+        navigation.pop();
+        // const resetAction = StackActions.reset({
+        //     index: 0,
+        //     actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
+        // });
+        navigation.navigate("HomeScreen", {profile: profile});
     }
 
     async uploadProfilePicture() {

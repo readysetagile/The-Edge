@@ -84,6 +84,7 @@ export default class ProfileScreen extends Component {
         }
     }
 
+
     async generateProfileImage(profile, index) {
         let profileImage = await profile.getProfilePicture();
         if (profileImage == null) profileImage = profile.avatar;
@@ -156,7 +157,8 @@ export default class ProfileScreen extends Component {
         this.componentDidMount();
     }
 
-    componentDidMount() {
+
+    loadProfiles(){
         try {
             new Promise(async resolve => {
                 let profiles = await this.getProfiles();
@@ -175,6 +177,17 @@ export default class ProfileScreen extends Component {
         } catch (err) {
             console.error(err);
         }
+    }
+
+    componentDidMount() {
+        this.loadProfiles();
+        this.focusListener = this.props.navigation.addListener('willFocus', () => {
+            this.loadProfiles();
+        });
+    }
+
+    componentWillUnmount() {
+        this.focusListener?.remove();
     }
 
     render() {

@@ -1,5 +1,4 @@
 import {firebase} from "../../config";
-import Edge from "../../index";
 import {Profile} from "../profiles";
 
 const DEFAULTMEMBER = require("./model");

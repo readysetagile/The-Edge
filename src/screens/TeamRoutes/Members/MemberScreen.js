@@ -47,7 +47,6 @@ export default class MemberPage extends Component {
         let members = await this.generateMembers(teamMembers)
         this.setState({members: members})
 
-
     }
 
     async generateMembers(members){
@@ -91,11 +90,10 @@ export default class MemberPage extends Component {
 
         let members = this.state.team.members;
         let hiddenMembers = this.state.hiddenMembers;
+        name = name.trim();
         if(name) {
             for (let [K, V] of members) {
-                if (!V.username.toLowerCase().includes(name.toLowerCase())) {
-                    hiddenMembers[K] = true;
-                }else hiddenMembers[K] = false;
+                hiddenMembers[K] = !V.username.toLowerCase().includes(name.toLowerCase());
             }
         }else{
             Object.keys(hiddenMembers).forEach(function(key){ hiddenMembers[key] = false });
