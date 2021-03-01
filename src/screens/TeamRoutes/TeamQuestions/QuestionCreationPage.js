@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {ScrollView, TextInput, TouchableOpacity, View} from "react-native";
+import {ScrollView, TextInput, TouchableOpacity, View, Text} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {createUUID} from "../../../firebase/Util";
+import HiddenView from "../../../Components/HiddenView";
 
 class QuestionCreationPage extends Component {
 
@@ -17,9 +18,15 @@ class QuestionCreationPage extends Component {
     Example Object of question Info:
     {
         type: "shortAnswer",
-
+        question: "What is 2+2?",
+        content: [JSX Elements]
     }
      */
+
+    constructor(props) {
+        super(props);
+        this.generateNewQuestion.bind(this)
+    }
 
     updateQuestion(questionUUID, path, value) {
 
@@ -35,10 +42,48 @@ class QuestionCreationPage extends Component {
 
     }
 
-    generateNewQuestion(uuid) {
+    updateCardType(cardUUID, type){
 
+        console.log(type);
+        switch (type) {
+            case "shortAnswer":{
+                console.log(1);
+                let obj = this.state.questionInfo[cardUUID];
+                obj.content = [this.generateShortAnswerInput()];
+                this.setState({questionInfo: obj})
+                this.setState({questions: [...this.state.questions]})
+                this.forceUpdate()
+
+            }
+        }
+
+    }
+
+    generateShortAnswerInput = (uuid) => {
+
+        console.log(uuid, 'uuidd');
+        console.log(this.state.questionInfo[uuid]?.type);
+        return(
+            <View>
+                <TextInput
+                style={{
+                    padding: 10,
+                    marginTop: 10,
+                    borderBottomWidth: 1,
+                    borderColor: 'grey',
+                    fontSize: 10,
+                }}
+                placeholder={"Short Answer Text"}
+                placeholderTextColor={"grey"}/>
+            </View>
+        )
+
+    }
+
+    generateNewQuestion() {
+        const uuid = createUUID('xxxxx')
         return (
-            <View style={{backgroundColor: 'white', padding: 50}} key={uuid}>
+            <View style={{backgroundColor: 'white', padding: 50, marginTop: 5, borderWidth: 2, borderColor: 'black'}} key={uuid}>
                 <TextInput
                     style={{
                         padding: 15,
@@ -60,8 +105,15 @@ class QuestionCreationPage extends Component {
                                 items={[
                                     {label: "Short Answer", value: "shortAnswer"}
                                 ]} onChangeItem={item => {
-                    this.updateQuestion(uuid, "type", item.value)
+                    this.updateQuestion(uuid, "type", item.value);
+                    this.updateCardType(uuid, item.value)
+                    console.log(this.state.questionInfo[uuid].content.length, 12)
+
                 }}/>
+
+                <HiddenView hide={this.state.questionInfo[uuid] ? !this.state.questionInfo[uuid].content.length : false}>
+                    {() => this.generateShortAnswerInput(uuid)}
+                </HiddenView>
 
             </View>
         )
@@ -70,7 +122,7 @@ class QuestionCreationPage extends Component {
 
     addQuestion() {
 
-        let question = this.generateNewQuestion(createUUID("xxxxx"));
+        let question = this.generateNewQuestion();
         this.setState({questions: [...this.state.questions, question]})
 
     }
