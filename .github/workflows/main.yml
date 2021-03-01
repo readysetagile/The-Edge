@@ -1,0 +1,32 @@
+name: Expo Publish
+ 
+on:
+  workflow_dispatch:
+  inputs:
+    expo_user:
+      description: 'Expo user name'
+      required: true
+      default: 'TheEdge'
+    expo_password:
+      description: 'Expo Password'
+      required: true
+      default: 'reactiscool"
+
+jobs:
+  publish:
+    name: Install and Publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+      
+
+      # Runs a single command using the runners shell
+      - name: Run a one-line script
+        run: echo Hello, world!
+
+      # Runs a set of commands using the runners shell
+      - name: Run a multi-line script
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
