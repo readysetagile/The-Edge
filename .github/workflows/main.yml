@@ -22,5 +22,5 @@ jobs:
             expo-version: 4.x
             expo-username: ${{ github.event.inputs.expo_user}}
             expo_password: ${{ github.event.inputs.expo_password}}
-      - run: yarn Install
+      - run: yarn install
       - run: expo publish
