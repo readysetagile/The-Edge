@@ -7,13 +7,26 @@ import {createUUID} from "../../../firebase/Util";
 import styles from './styles'
 import FlatButton from "../../../Components/SubmitButton";
 import * as yup from 'yup';
+import Edge from "../../../firebase";
 
 const InviteSchema = yup.object({
-    "Team Code": yup.string().required().min(5),
+    "Team Code": yup.string().required().min(5)
+        .test('testValidCode', "This code is already in use", async value => {
+            const teams = await Edge.teams.getAllTeams();
+            if (teams != null) {
+                for (let [K, V] of teams) {
+                    if (V.inviteData?.teamCode === value) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }),
     "Enable Joining": yup.boolean().required()
 })
 
 export default function InviteForm({onSubmit, team}) {
+
 
     const shuffleTeamCode = (props) => {
         let id = createUUID('xxxxxx');
