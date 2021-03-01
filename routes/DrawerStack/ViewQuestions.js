@@ -1,15 +1,15 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation-stack';
-import {QuestionCreationPage} from "../../src/screens";
+import {HomeScreen, QuestionCreationPage} from "../../src/screens";
 import HeaderBurgerNav from "../../src/Components/HeaderBurgerNav";
 import {openMenu} from "../../src/firebase/Util";
 
 const screens = {
-    Questions: {
+    ViewQuestions: {
         screen: QuestionCreationPage,
         // navigationOptions: ({navigation}) => {
         //     return {
-        //         headerTitle: () => <HeaderBurgerNav title="Questions" onPress={() => openMenu(navigation)}/>
+        //         headerTitle: () => <HeaderBurgerNav title="View Questions" onPress={() => openMenu(navigation)}/>
         //     }
         // }
     }
