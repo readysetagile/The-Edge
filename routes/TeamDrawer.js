@@ -1,7 +1,8 @@
 import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
 import {createAppContainer, NavigationActions, StackActions} from 'react-navigation';
-import MemberStack from './MemberStack';
-import DashboardStack from "./DashboardStack";
+import MemberStack from './DrawerStack/MemberStack';
+import DashboardStack from "./DrawerStack/DashboardStack";
+import QuestionStack from './DrawerStack/QuestionCreation'
 import React from "react";
 import colors from "../src/screens/styles";
 import GlobalData from '../src/GlobalData'
@@ -9,6 +10,9 @@ import {Button, SafeAreaView, ScrollView} from "react-native";
 import Edge from "../src/firebase";
 import {firebase} from '../src/firebase/config'
 import {Profile} from "../src/firebase/modules/profiles";
+import {Members, QuestionCreationPage} from "../src/screens";
+import HeaderBurgerNav from "../src/Components/HeaderBurgerNav";
+import {openMenu} from "../src/firebase/Util";
 
 
 const navigateToHome = ({navigation}) => {
@@ -62,6 +66,9 @@ const TeamDrawerNavigation = createDrawerNavigator({
     },
     Members: {
         screen: MemberStack
+    },
+    Questions:{
+        screen: QuestionStack
     }
 
 }, DrawerConfig)
