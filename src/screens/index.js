@@ -6,3 +6,4 @@ export {default as CreateProfileScreen} from './LoginRoutes/CreateProfileScreen/
 export {default as Dashboard} from './TeamRoutes/DashboardScreen/DashboardScreen'
 export {default as Members} from './TeamRoutes/Members/MemberScreen';
 export {default as QuestionCreationPage} from './TeamRoutes/TeamQuestions/QuestionCreationPage';
+export {default as ViewQuestions} from './TeamRoutes/TeamQuestions/ViewQuestions';
