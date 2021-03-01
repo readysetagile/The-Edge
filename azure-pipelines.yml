@@ -16,6 +16,7 @@ steps:
   displayName: 'Install Node.js'
 
 - script: |
+    npm install
     npm install -g expo-cli
-    expo start
+    expo start --tunnel
   displayName: 'npm install and build'
