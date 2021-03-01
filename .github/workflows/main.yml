@@ -2,15 +2,15 @@ name: Expo Publish
 
 on:
   workflow_dispatch:
-  inputs:
-    expo_user:
-      description: 'Expo user name'
-      required: true
-      default: 'TheEdge'
-    expo_password:
-      description: 'Expo Password'
-      required: true
-      default: 'reactiscool'
+    inputs:
+      expo_user:
+        description: 'Expo user name'
+        required: true
+        default: 'TheEdge'
+      expo_password:
+        description: 'Expo Password'
+        required: true
+        default: 'reactiscool'
 jobs:
   publish:
     name: Install and Publish
