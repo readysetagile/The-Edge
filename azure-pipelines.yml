@@ -18,5 +18,5 @@ steps:
 - script: |
     npm install -g expo-cli
     npm install
-    npm start --tunnel
+    expo start --tunnel
   displayName: 'npm install and build'
