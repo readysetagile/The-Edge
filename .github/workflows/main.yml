@@ -10,7 +10,7 @@ on:
     expo_password:
       description: 'Expo Password'
       required: true
-      default: 'reactiscool"
+      default: 'reactiscool'
 jobs:
   publish:
     name: Install and Publish
