@@ -7,11 +7,7 @@ import Edge from "./src/firebase";
 import Login from './routes/LoginStack';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import { MenuProvider } from 'react-native-popup-menu';
-import DrawerNav from './routes/TeamDrawer'
-import TabNav from './routes/QuestionTabs'
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import {HomeScreen} from "./src/screens";
-
+import Navigator from './routes/TeamDrawer'
 // Set the configuration for your app
 
 export default class App extends Component {
@@ -51,9 +47,8 @@ export default class App extends Component {
             <MenuProvider>
                 <ActionSheetProvider>
                     <Login>
-                        <DrawerNav>
-                            <TabNav/>
-                        </DrawerNav>
+                        <Navigator>
+                        </Navigator>
                     </Login>
                 </ActionSheetProvider>
             </MenuProvider>

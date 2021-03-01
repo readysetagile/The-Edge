@@ -7,11 +7,11 @@ import {openMenu} from "../../src/firebase/Util";
 const screens = {
     Questions: {
         screen: QuestionCreationPage,
-        // navigationOptions: ({navigation}) => {
-        //     return {
-        //         headerTitle: () => <HeaderBurgerNav title="Questions" onPress={() => openMenu(navigation)}/>
-        //     }
-        // }
+        navigationOptions: ({navigation}) => {
+            return {
+                headerTitle: () => <HeaderBurgerNav title="Questions" onPress={() => openMenu(navigation)}/>
+            }
+        }
     }
 }
 

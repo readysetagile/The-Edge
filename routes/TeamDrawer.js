@@ -13,7 +13,6 @@ import {Profile} from "../src/firebase/modules/profiles";
 import {Members, QuestionCreationPage} from "../src/screens";
 import HeaderBurgerNav from "../src/Components/HeaderBurgerNav";
 import {openMenu} from "../src/firebase/Util";
-import QuestionTabs from "./QuestionTabs";
 
 
 const navigateToHome = ({navigation}) => {
@@ -69,7 +68,7 @@ const TeamDrawerNavigation = createDrawerNavigator({
         screen: MemberStack
     },
     Questions:{
-        screen: QuestionTabs
+        screen: QuestionStack
     }
 
 }, DrawerConfig)
