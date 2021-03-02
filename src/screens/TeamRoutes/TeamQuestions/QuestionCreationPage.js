@@ -10,6 +10,7 @@ import HiddenView from "../../../Components/HiddenView";
 class QuestionCreationPage extends Component {
 
     state = {
+        showItem: false,
         questions: [],
         questionInfo: {}
     }
@@ -25,7 +26,6 @@ class QuestionCreationPage extends Component {
 
     constructor(props) {
         super(props);
-        this.generateNewQuestion.bind(this)
     }
 
     updateQuestion(questionUUID, path, value) {
@@ -34,96 +34,61 @@ class QuestionCreationPage extends Component {
         if (questions[questionUUID])
             questions[questionUUID][path] = value;
         else {
-            let obj = {};
-            obj[path] = value;
-            questions[questionUUID] = obj;
+            questions[questionUUID] = {[path]: value};
         }
         this.setState({questionInfo: questions})
 
     }
 
-    updateCardType(cardUUID, type){
+    generateShortAnswerInput() {
 
-        console.log(type);
-        switch (type) {
-            case "shortAnswer":{
-                console.log(1);
-                let obj = this.state.questionInfo[cardUUID];
-                obj.content = [this.generateShortAnswerInput()];
-                this.setState({questionInfo: obj})
-                this.setState({questions: [...this.state.questions]})
-                this.forceUpdate()
-
-            }
-        }
-
-    }
-
-    generateShortAnswerInput = (uuid) => {
-
-        console.log(uuid, 'uuidd');
-        console.log(this.state.questionInfo[uuid]?.type);
-        return(
+        return (
             <View>
                 <TextInput
-                style={{
-                    padding: 10,
-                    marginTop: 10,
-                    borderBottomWidth: 1,
-                    borderColor: 'grey',
-                    fontSize: 10,
-                }}
-                placeholder={"Short Answer Text"}
-                placeholderTextColor={"grey"}/>
+                    style={{
+                        padding: 10,
+                        marginTop: 10,
+                        borderBottomWidth: 1,
+                        borderColor: 'grey',
+                        fontSize: 10,
+                    }}
+                    placeholder={"Short Answer Text"}
+                    placeholderTextColor={"grey"}/>
             </View>
         )
 
     }
 
-    generateNewQuestion() {
-        const uuid = createUUID('xxxxx')
+    generateLongAnswerInput(){
         return (
-            <View style={{backgroundColor: 'white', padding: 50, marginTop: 5, borderWidth: 2, borderColor: 'black'}} key={uuid}>
+            <View>
                 <TextInput
                     style={{
-                        padding: 15,
-                        marginBottom: 5,
-                        borderBottomWidth: 2,
+                        padding: 10,
+                        marginTop: 10,
+                        borderBottomWidth: 1,
                         borderColor: 'grey',
-                        backgroundColor: 'lightgrey',
+                        fontSize: 10,
                     }}
                     multiline={true}
-                    fontSize={20}
-                    placeholder={"Question"}
-                    placeholderTextColor={"grey"}
-                    onChangeText={val => {
-                        this.updateQuestion(uuid, 'question', val)
-                    }}
-                />
-
-                <DropDownPicker placeholder={"Select a question type"}
-                                items={[
-                                    {label: "Short Answer", value: "shortAnswer"}
-                                ]} onChangeItem={item => {
-                    this.updateQuestion(uuid, "type", item.value);
-                    this.updateCardType(uuid, item.value)
-                    console.log(this.state.questionInfo[uuid].content.length, 12)
-
-                }}/>
-
-                <HiddenView hide={this.state.questionInfo[uuid] ? !this.state.questionInfo[uuid].content.length : false}>
-                    {() => this.generateShortAnswerInput(uuid)}
-                </HiddenView>
-
+                    placeholder={"Short Answer Text"}
+                    placeholderTextColor={"grey"}/>
             </View>
         )
-
     }
+
 
     addQuestion() {
 
-        let question = this.generateNewQuestion();
-        this.setState({questions: [...this.state.questions, question]})
+        let newObj = {
+            type: null,
+            question: "Question " + Object.keys(this.state.questionInfo).length,
+            hideContent: true,
+            content: null
+        }
+
+        this.setState({questionInfo: {...this.state.questionInfo, [createUUID('xxxx')]: newObj}})
+
 
     }
 
@@ -135,7 +100,59 @@ class QuestionCreationPage extends Component {
                     this.scrollView = ref
                 }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
 
-                    {this.state.questions}
+                    {
+                        Object.entries(this.state.questionInfo).map(question => {
+
+                            let values = question[1];
+                            return (
+                                <View style={{
+                                    backgroundColor: 'white',
+                                    padding: 50,
+                                    marginTop: 5,
+                                    borderWidth: 2,
+                                    borderColor: 'black'
+                                }} key={question[0]}>
+                                    <TextInput
+                                        style={{
+                                            padding: 15,
+                                            marginBottom: 5,
+                                            borderBottomWidth: 2,
+                                            borderColor: 'grey',
+                                            backgroundColor: 'lightgrey',
+                                        }}
+                                        value={question.question}
+                                        multiline={true}
+                                        fontSize={20}
+                                        placeholder={"Question"}
+                                        placeholderTextColor={"grey"}
+                                        onChangeText={value => {
+                                            this.updateQuestion(question[0], 'question', value)
+                                        }}
+
+                                    />
+
+                                    <DropDownPicker placeholder={"Select a question type"}
+                                                    items={[
+                                                        {label: "Short Answer", value: "shortAnswer"},
+                                                        {label: "Long Answer", value: "longAnswer"}
+                                                    ]} onChangeItem={item => {
+                                        this.updateQuestion(question[0], 'type', item.value)
+                                    }}/>
+
+                                    <HiddenView hide={values.type !== 'shortAnswer'}>
+                                        {this.generateShortAnswerInput()}
+                                    </HiddenView>
+
+                                    <HiddenView hide={values.type !== 'longAnswer'}>
+                                        {this.generateLongAnswerInput()}
+                                    </HiddenView>
+
+                                </View>
+                            )
+
+
+                        })
+                    }
 
                 </ScrollView>
 
