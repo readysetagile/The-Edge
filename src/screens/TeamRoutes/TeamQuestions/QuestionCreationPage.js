@@ -12,17 +12,12 @@ class QuestionCreationPage extends Component {
     state = {
         showItem: false,
         questions: [],
-        questionInfo: {}
+        questionInfo: {},
+        shortAnswer: {},
+        longAnswer: {},
+        multipleChoice: []
     }
 
-    /*
-    Example Object of question Info:
-    {
-        type: "shortAnswer",
-        question: "What is 2+2?",
-        content: [JSX Elements]
-    }
-     */
 
     constructor(props) {
         super(props);
@@ -59,7 +54,7 @@ class QuestionCreationPage extends Component {
 
     }
 
-    generateLongAnswerInput(){
+    generateLongAnswerInput() {
         return (
             <View>
                 <TextInput
@@ -77,6 +72,39 @@ class QuestionCreationPage extends Component {
         )
     }
 
+    generateMultipleChoice(choices) {
+
+        return (
+
+            <View>
+
+                {choices?.map((choice, index) => (
+
+                    <View style={{flexDirection: 'row', marginTop: 10}}>
+
+                        <Ionicons name={choice.isFilled ? "ellipse" : "ellipse-outline"} size={15} style={{alignSelf: 'center'}}/>
+                        <TextInput style={{borderBottomWidth: 3, borderColor: 'blue', padding: 10, width: '100%'}}
+                                   placeholder={"Option " + (index+1)}
+                                   placeholderTextColor={"grey"}
+                                   multiline={true}/>
+                    </View>
+
+                ))}
+
+                <View style={{flexDirection: 'row', marginTop: 10}}>
+
+                    <Ionicons name={"ellipse-outline"} size={15} style={{alignSelf: 'center'}}/>
+                    <TextInput style={{borderBottomWidth: 3, borderColor: 'lightblue', padding: 10, width: '100%'}}
+                               placeholder={"Add Option"}
+                               placeholderTextColor={"grey"}
+                               multiline={true}/>
+                </View>
+
+            </View>
+
+        )
+
+    }
 
     addQuestion() {
 
@@ -84,11 +112,13 @@ class QuestionCreationPage extends Component {
             type: null,
             question: "Question " + Object.keys(this.state.questionInfo).length,
             hideContent: true,
-            content: null
+            content: null,
+            multipleChoice: [{
+                isFilled: false
+            }]
         }
 
         this.setState({questionInfo: {...this.state.questionInfo, [createUUID('xxxx')]: newObj}})
-
 
     }
 
@@ -134,7 +164,8 @@ class QuestionCreationPage extends Component {
                                     <DropDownPicker placeholder={"Select a question type"}
                                                     items={[
                                                         {label: "Short Answer", value: "shortAnswer"},
-                                                        {label: "Long Answer", value: "longAnswer"}
+                                                        {label: "Long Answer", value: "longAnswer"},
+                                                        {label: "Multiple Choice", value: "multipleChoice"}
                                                     ]} onChangeItem={item => {
                                         this.updateQuestion(question[0], 'type', item.value)
                                     }}/>
@@ -145,6 +176,10 @@ class QuestionCreationPage extends Component {
 
                                     <HiddenView hide={values.type !== 'longAnswer'}>
                                         {this.generateLongAnswerInput()}
+                                    </HiddenView>
+
+                                    <HiddenView hide={values.type !== 'multipleChoice'}>
+                                        {this.generateMultipleChoice(values.multipleChoice)}
                                     </HiddenView>
 
                                 </View>
