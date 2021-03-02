@@ -12,10 +12,7 @@ class QuestionCreationPage extends Component {
     state = {
         showItem: false,
         questions: [],
-        questionInfo: {},
-        shortAnswer: {},
-        longAnswer: {},
-        multipleChoice: []
+        questionInfo:[]
     }
 
 
@@ -72,7 +69,7 @@ class QuestionCreationPage extends Component {
         )
     }
 
-    generateMultipleChoice(choices) {
+    generateMultipleChoice(choices, uuid) {
 
         return (
 
@@ -80,25 +77,50 @@ class QuestionCreationPage extends Component {
 
                 {choices?.map((choice, index) => (
 
-                    <View style={{flexDirection: 'row', marginTop: 10}}>
+                    <View style={{flexDirection: 'row', marginTop: 10}} key={index}>
 
                         <Ionicons name={choice.isFilled ? "ellipse" : "ellipse-outline"} size={15} style={{alignSelf: 'center'}}/>
                         <TextInput style={{borderBottomWidth: 3, borderColor: 'blue', padding: 10, width: '100%'}}
                                    placeholder={"Option " + (index+1)}
                                    placeholderTextColor={"grey"}
-                                   multiline={true}/>
+                                   multiline={true}
+                                   value={choice.option}
+                                    onChangeText={(val) => {
+                                        let question = this.state.questionInfo[uuid];
+                                        let mc = question.multipleChoice
+                                        mc[index].option = val;
+                                        this.updateQuestion(uuid, "multipleChoice", mc)
+                                    }}/>
+
+                        <Ionicons name={"remove-circle-outline"} size={15} style={{alignSelf: 'center'}} onPress={() => {
+                            if(index > 0 || choices.length > 1) {
+                                let question = this.state.questionInfo[uuid];
+                                let multiChoices = question.multipleChoice;
+                                multiChoices.splice(index, 1)
+                                question.multipleChoice = multiChoices;
+                                this.updateQuestion(uuid, "multipleChoice", multiChoices);
+                            }
+                        }}/>
+
                     </View>
 
                 ))}
 
-                <View style={{flexDirection: 'row', marginTop: 10}}>
+                <TouchableOpacity onPress={() => this.updateQuestion(uuid, "multipleChoice", [...choices, {isFilled: false}])}>
 
-                    <Ionicons name={"ellipse-outline"} size={15} style={{alignSelf: 'center'}}/>
-                    <TextInput style={{borderBottomWidth: 3, borderColor: 'lightblue', padding: 10, width: '100%'}}
-                               placeholder={"Add Option"}
-                               placeholderTextColor={"grey"}
-                               multiline={true}/>
-                </View>
+                    <View style={{flexDirection: 'row', marginTop: 10}}>
+
+                        <Ionicons name={"ellipse-outline"} size={15} style={{alignSelf: 'center'}}/>
+                        <TextInput style={{borderBottomWidth: 3, borderColor: 'lightblue', padding: 10, width: '100%'}}
+                                   placeholder={"Add Option"}
+                                   placeholderTextColor={"grey"}
+                                   editable={false}
+                                   onTouchStart={() => this.updateQuestion(uuid, "multipleChoice", [...choices, {isFilled: false}])}
+                                   />
+
+                    </View>
+                </TouchableOpacity>
+
 
             </View>
 
@@ -114,7 +136,8 @@ class QuestionCreationPage extends Component {
             hideContent: true,
             content: null,
             multipleChoice: [{
-                isFilled: false
+                isFilled: false,
+                option: ""
             }]
         }
 
@@ -131,7 +154,7 @@ class QuestionCreationPage extends Component {
                 }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
 
                     {
-                        Object.entries(this.state.questionInfo).map(question => {
+                        Object.entries(this.state.questionInfo).map((question, index) => {
 
                             let values = question[1];
                             return (
@@ -153,7 +176,7 @@ class QuestionCreationPage extends Component {
                                         value={question.question}
                                         multiline={true}
                                         fontSize={20}
-                                        placeholder={"Question"}
+                                        placeholder={"Question " + (index+1)}
                                         placeholderTextColor={"grey"}
                                         onChangeText={value => {
                                             this.updateQuestion(question[0], 'question', value)
@@ -179,7 +202,7 @@ class QuestionCreationPage extends Component {
                                     </HiddenView>
 
                                     <HiddenView hide={values.type !== 'multipleChoice'}>
-                                        {this.generateMultipleChoice(values.multipleChoice)}
+                                        {this.generateMultipleChoice(values.multipleChoice, question[0])}
                                     </HiddenView>
 
                                 </View>
