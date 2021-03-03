@@ -13,8 +13,6 @@ import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-men
 class QuestionCreationPage extends Component {
 
     state = {
-        showItem: false,
-        questions: [],
         questionInfo: {}
     }
 
@@ -32,6 +30,8 @@ class QuestionCreationPage extends Component {
             questions[questionUUID] = {[path]: value};
         }
         this.setState({questionInfo: questions})
+        this.props.navigation.setParams({questionInfo: questions});
+
 
     }
 
@@ -72,6 +72,12 @@ class QuestionCreationPage extends Component {
                     placeholderTextColor={"grey"}/>
             </View>
         )
+    }
+
+    componentWillUnmount() {
+
+
+
     }
 
     generateMultipleChoice(choices, uuid) {
@@ -204,8 +210,6 @@ class QuestionCreationPage extends Component {
         let newObj = {
             type: null,
             question: "Question " + Object.keys(this.state.questionInfo).length,
-            hideContent: true,
-            content: null,
             multipleChoice: [{
                 isFilled: false,
                 option: ""
@@ -215,7 +219,9 @@ class QuestionCreationPage extends Component {
             isDisabled: false
         }
 
-        this.setState({questionInfo: {...this.state.questionInfo, [createUUID('xxxx')]: newObj}})
+        const uuid = createUUID('xxxx');
+        this.setState({questionInfo: {...this.state.questionInfo, [uuid]: newObj}})
+        this.props.navigation.setParams({questionInfo: {...this.state.questionInfo, [uuid]: newObj}});
 
     }
 

@@ -16,7 +16,7 @@ const screens = {
                         <HeaderBurgerNav title="Questions" onPress={() => openMenu(navigation)}/>
                         <Ionicons name={'eye-outline'} size={25} color={'blue'} style={{alignSelf: 'center', right: 35}}
                         onPress={() => {
-                            navigation.navigate("ViewQuestions")
+                            navigation.navigate("ViewQuestions", {data: navigation.getParam("questionInfo")})
                         }}/>
                     </View>
                 )
