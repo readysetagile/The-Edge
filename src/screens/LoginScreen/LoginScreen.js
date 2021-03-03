@@ -1,27 +1,15 @@
-import {Alert, Image, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import React, {Component} from 'react';
-import HiddenView from "../../Components/HiddenView";
 import {UserAuthentication} from "../../firebase/UserAuthentication";
 import {firebase} from "../../firebase/config";
 import Edge from "../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
+import LoginForm from './LoginForm';
 
 export default class LoginScreen extends Component {
 
-    state = {
-        email: {
-            hide: true,
-            msg: ""
-        },
-        password: {
-            hide: true,
-            msg: ""
-        },
-        rememberMe: false
-    };
-
-    constructor (props) {
+    constructor(props) {
         super(props);
         this.accInfo = {
             email: "",
@@ -29,31 +17,19 @@ export default class LoginScreen extends Component {
         };
     }
 
-    checkEmail (email) {
-        const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        return re.test(email);
-    }
-
     /**
      * Attempts to sign in the user. If failed, this will display an error message
      * @todo make a loading appearance appear when user clicks login so that they know they are being logged in.
      * @returns {Promise<void>}
      */
-    onSignIn = async () => {
+    onSignIn = async (values) => {
 
-        const email = this.accInfo.email.trim();
-        const pass = this.accInfo.password;
-        const emailPassed = this.checkEmail(email);
-
-        this.updateState(emailPassed, pass);
-
-        if (!emailPassed || !pass) {
-            return;
-        }
+        const email = values.Email
+        const pass = values.Password
 
         const data = await UserAuthentication.signUserIn(email, pass);
         if (data.confirmed) {
-            await Edge.users.set(firebase.auth().currentUser.uid, {rememberLogin: this.state.rememberMe}, "settings");
+            await Edge.users.set(firebase.auth().currentUser.uid, {rememberLogin: values.rememberMe}, "settings");
             this.sendToHomePage();
         } else {
             Alert.alert(data.message);
@@ -61,21 +37,7 @@ export default class LoginScreen extends Component {
 
     };
 
-    updateState (emailPassed, password) {
-        this.setState({
-            email: {
-                hide: emailPassed,
-                msg: "X Invalid Email"
-            },
-            password: {
-                hide: !!password,
-                msg: "X Invalid Password"
-            }
-        });
-
-    }
-
-    sendToHomePage () {
+    sendToHomePage() {
         const {navigation} = this.props;
 
         const resetAction = StackActions.reset({
@@ -85,13 +47,12 @@ export default class LoginScreen extends Component {
         navigation.dispatch(resetAction);
     }
 
-
     /**
      * Before the page fully loads, this will check if the user is logged in according to firebase and if they are
      * it will send them to the home (profile) page
      * @returns {null}
      */
-    componentDidMount () {
+    componentDidMount() {
         const that = this;
         firebase.auth().onAuthStateChanged(function (user) {
             if (user) {
@@ -101,70 +62,21 @@ export default class LoginScreen extends Component {
 
     }
 
-    createAccount () {
+    createAccount() {
         const {navigation} = this.props;
         navigation.navigate("Create_Account");
     }
 
-    onRememberMe = () => {
-        this.setState({rememberMe: !this.state.rememberMe});
-    };
-
-    render () {
+    render() {
+        //firebase.auth().signOut();
         return (
             <View style={styles.container}>
-                <Image source={require("../../assets/iPhoneApp.png")} />
+                <Image source={require("../../assets/iPhoneApp.png")}/>
                 <Text style={styles.logo}>The Edge</Text>
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.inputText}
-                        placeholder="Email"
-                        placeholderTextColor="#003f5c"
-                        onChangeText={txt => this.accInfo.email = txt}>{this.accInfo.email}</TextInput>
+
+                <View style={{width: '80%'}}>
+                    <LoginForm login={this.onSignIn}/>
                 </View>
-                <HiddenView hide={this.state.email.hide} style={styles.hiddenViewErr}>
-                    <Text style={styles.errorMsg}>{this.state.email.msg}</Text>
-                </HiddenView>
-
-                <View style={styles.inputView}>
-                    <TextInput
-                        style={styles.inputText}
-                        placeholder="Password"
-                        placeholderTextColor="#003f5c"
-                        secureTextEntry
-                        onChangeText={txt => this.accInfo.password = txt}>{this.accInfo.password}</TextInput>
-                </View>
-                <HiddenView hide={this.state.password.hide} style={styles.hiddenViewErr}>
-                    <Text style={styles.errorMsg}>{this.state.password.msg}</Text>
-                </HiddenView>
-
-                <View style={styles.rememberMeView}>
-                    <Text style={{
-                        fontSize: 20,
-                        color: 'white',
-                        padding: 10,
-                        alignSelf: 'center',
-                        textAlign: 'right'
-                    }}>Remember Me?</Text>
-                    <Switch
-                        trackColor={{false: "#767577", true: "#81b0ff"}}
-                        thumbColor={this.state.rememberMe ? "#f5dd4b" : "#f4f3f4"}
-                        ios_backgroundColor="#3e3e3e"
-                        onValueChange={this.onRememberMe}
-                        value={this.state.rememberMe}
-                        style={{
-                            alignSelf: 'center'
-                        }}
-                    />
-                </View>
-
-                <TouchableOpacity>
-                    <Text style={styles.forgot}>Forgot Password?</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.loginButton} onPress={this.onSignIn}>
-                    <Text style={styles.loginText}>LOGIN</Text>
-                </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => {
                     this.createAccount();

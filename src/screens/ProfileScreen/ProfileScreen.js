@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
-import {Alert, Image, ScrollView, Text, View, TouchableOpacity} from 'react-native';
+import {Alert, Image, ScrollView, Text, View} from 'react-native';
 import styles from './styles';
 import Edge from "../../firebase";
 import {firebase} from "../../firebase/config";
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import Colors from '../styles';
-import {NavigationActions, StackActions} from "react-navigation";
 
 export default class ProfileScreen extends Component {
 
@@ -32,19 +31,19 @@ export default class ProfileScreen extends Component {
 
     };
 
-    constructor (props) {
+    constructor(props) {
         super(props);
     }
 
-    async getProfiles () {
+    async getProfiles() {
         let user = await Edge.users.get(firebase.auth().currentUser.uid);
         if (user == null) return null;
         return user.profiles;
     }
 
-    alertEdit (profile, txt) {
+    alertEdit(profile, txt) {
 
-        Alert.alert(txt + " " + profile.username, `Are you sure you want to ${ txt.toLowerCase() } this account? This process cannot be undone`, [
+        Alert.alert(txt + " " + profile.username, `Are you sure you want to ${txt.toLowerCase()} this account? This process cannot be undone`, [
             {
                 text: "Yes",
                 onPress: () => this.deleteProfile(profile)
@@ -56,7 +55,7 @@ export default class ProfileScreen extends Component {
 
     }
 
-    deleteProfile (profile, index) {
+    deleteProfile(profile, index) {
 
         profile.delete();
         this.state.accounts.splice(index, 1);
@@ -64,7 +63,7 @@ export default class ProfileScreen extends Component {
 
     }
 
-    async generateProfileImage (profile, index) {
+    async generateProfileImage(profile, index) {
         let profileImage = await profile.getProfilePicture();
         if (profileImage == null) profileImage = profile.avatar;
         return (
@@ -72,8 +71,8 @@ export default class ProfileScreen extends Component {
 
                 <Menu>
                     <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => this.enterProfile(profile)}>
-                            <Image style={styles.profilePicture} source={{uri: profileImage}} />
-                            <Text style={styles.text}>{profile.username}</Text>
+                        <Image style={styles.profilePicture} source={{uri: profileImage}}/>
+                        <Text style={styles.text}>{profile.username}</Text>
                     </MenuTrigger>
                     <MenuOptions customStyles={this.menuStyles}>
                         <MenuOption onSelect={() => this.alertEdit(profile, "Delete")}>
@@ -86,19 +85,15 @@ export default class ProfileScreen extends Component {
         );
     }
 
-    enterProfile (profile) {
+    enterProfile(profile) {
 
         const {navigation} = this.props;
 
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
+        navigation.navigate("HomeScreen", {profile: profile})
 
-        });
-        navigation.dispatch(resetAction);
     }
 
-    async componentDidMount () {
+    async componentDidMount() {
         try {
             let profiles = await this.getProfiles();
             if (profiles != null) {
@@ -118,7 +113,7 @@ export default class ProfileScreen extends Component {
         }
     }
 
-    render () {
+    render() {
 
         return (
             <View style={styles.background}>
