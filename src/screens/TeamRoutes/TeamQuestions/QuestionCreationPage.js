@@ -16,7 +16,7 @@ class QuestionCreationPage extends Component {
     state = {
         showItem: false,
         questions: [],
-        questionInfo:[]
+        questionInfo:{}
     }
 
 
@@ -204,25 +204,34 @@ class QuestionCreationPage extends Component {
                 option: ""
             }],
             required: false,
-            optionsOpened: false
+            optionsOpened: false,
+            isDisabled: false
         }
 
         this.setState({questionInfo: {...this.state.questionInfo, [createUUID('xxxx')]: newObj}})
 
     }
 
-    generateCardOptions(choice, uuid, index){
+    deleteQuestion(uuid){
+
+        let questions = this.state.questionInfo;
+        delete questions[uuid];
+        this.setState({questionInfo: questions})
+
+    }
+
+    generateCardOptions(choice, uuid){
 
         return(
 
                 <Menu opened={choice.optionsOpened} onBackdropPress={() => this.updateQuestion(uuid, 'optionsOpened', false)}>
-                    <MenuTrigger onPress={() => console.log(1)}>
+                    <MenuTrigger>
                     </MenuTrigger>
                     <MenuOptions >
-                        <MenuOption onSelect={() => console.log(2)}>
-                            <Text style={{color: 'maroon'}}>Disable</Text>
+                        <MenuOption onSelect={() => this.updateQuestion(uuid, "isDisabled", !choice.isDisabled)}>
+                            <Text style={{color: 'maroon'}}>{choice.isDisabled ? "Enable" : "Disable"}</Text>
                         </MenuOption>
-                        <MenuOption onSelect={() => console.log(3)}>
+                        <MenuOption onSelect={() => this.deleteQuestion(uuid)}>
                             <Text style={{color: 'red'}}>Delete</Text>
                         </MenuOption>
                     </MenuOptions>
@@ -232,7 +241,6 @@ class QuestionCreationPage extends Component {
         )
 
     }
-
 
     render() {
         return (
@@ -259,33 +267,34 @@ class QuestionCreationPage extends Component {
                                     borderWidth: 3,
                                     borderColor: (values.required ? 'blue' : 'black'),
                                     borderRadius: 5,
-                                    zIndex: Object.keys(this.state.questionInfo).length-index
-                                }} key={uuid}>
+                                    zIndex: Object.keys(this.state.questionInfo).length-index,
+                                }} key={uuid} opacity={values.isDisabled ? .5 : 1}>
 
                                     <Ionicons name={'ellipsis-vertical'} size={25} style={{position: 'absolute', marginTop: 20, right: 5}}
                                               onPress={() => this.updateQuestion(uuid, "optionsOpened", true)}>
                                         {this.generateCardOptions(values, uuid, index)}
                                     </Ionicons>
 
+                                    <View pointerEvents={values.isDisabled ? 'none' : 'auto'} >
 
-                                    <TextInput
-                                        style={{
-                                            padding: 15,
-                                            marginBottom: 5,
-                                            borderBottomWidth: 2,
-                                            borderColor: 'grey',
-                                            backgroundColor: 'lightgrey'
-                                        }}
-                                        value={question.question}
-                                        multiline={true}
-                                        fontSize={20}
-                                        placeholder={"Question " + (index+1)}
-                                        placeholderTextColor={"grey"}
-                                        onChangeText={value => {
-                                            this.updateQuestion(uuid, 'question', value)
-                                        }}
+                                        <TextInput
+                                            style={{
+                                                padding: 15,
+                                                marginBottom: 5,
+                                                borderBottomWidth: 2,
+                                                borderColor: 'grey',
+                                                backgroundColor: 'lightgrey'
+                                            }}
+                                            value={question.question}
+                                            multiline={true}
+                                            fontSize={20}
+                                            placeholder={"Question " + (index+1)}
+                                            placeholderTextColor={"grey"}
+                                            onChangeText={value => {
+                                                this.updateQuestion(uuid, 'question', value)
+                                            }}
 
-                                    />
+                                        />
 
                                         <DropDownPicker placeholder={"Select a question type"}
                                                         items={[
@@ -297,36 +306,38 @@ class QuestionCreationPage extends Component {
                                             this.updateQuestion(uuid, 'type', item.value)
                                         }}/>
 
-                                    <HiddenView hide={values.type !== 'shortAnswer'}>
-                                        {this.generateShortAnswerInput()}
-                                    </HiddenView>
+                                        <HiddenView hide={values.type !== 'shortAnswer'}>
+                                            {this.generateShortAnswerInput()}
+                                        </HiddenView>
 
-                                    <HiddenView hide={values.type !== 'longAnswer'}>
-                                        {this.generateLongAnswerInput()}
-                                    </HiddenView>
+                                        <HiddenView hide={values.type !== 'longAnswer'}>
+                                            {this.generateLongAnswerInput()}
+                                        </HiddenView>
 
-                                    <HiddenView hide={values.type !== 'multipleChoice'}>
-                                        {this.generateMultipleChoice(values.multipleChoice, uuid)}
-                                    </HiddenView>
+                                        <HiddenView hide={values.type !== 'multipleChoice'}>
+                                            {this.generateMultipleChoice(values.multipleChoice, uuid)}
+                                        </HiddenView>
 
-                                    <HiddenView hide={values.type !== 'checkBoxes'}>
-                                        {this.generateCheckBoxes(values.multipleChoice, uuid)}
-                                    </HiddenView>
+                                        <HiddenView hide={values.type !== 'checkBoxes'}>
+                                            {this.generateCheckBoxes(values.multipleChoice, uuid)}
+                                        </HiddenView>
 
-                                    <View style={{
-                                        flexDirection: 'row',
-                                        justifyContent: 'space-between',
-                                        marginTop: 10,
-                                        zIndex: 0
-                                    }}>
-                                        <Text style={{fontSize: 20}}>Required?</Text>
-                                        <Switch
-                                            value={values.required}
-                                            trackColor={{false: "white", true: "#81b0ff"}}
-                                            ios_backgroundColor="#3e3e3e"
-                                            onValueChange={value => this.updateQuestion(uuid, "required", value)}
-                                            style={{alignSelf: 'center'}}
-                                        />
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'space-between',
+                                            marginTop: 10,
+                                            zIndex: 0
+                                        }}>
+                                            <Text style={{fontSize: 20}}>Required?</Text>
+                                            <Switch
+                                                value={values.required}
+                                                trackColor={{false: "white", true: "#81b0ff"}}
+                                                ios_backgroundColor="#3e3e3e"
+                                                onValueChange={value => this.updateQuestion(uuid, "required", value)}
+                                                style={{alignSelf: 'center'}}
+                                            />
+                                        </View>
+
                                     </View>
 
                                 </View>
