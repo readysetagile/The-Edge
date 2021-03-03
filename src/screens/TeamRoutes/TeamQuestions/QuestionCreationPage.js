@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, TextInput, TouchableOpacity, View, Text, Switch, Image} from "react-native";
+import {ScrollView, TextInput, TouchableOpacity, View, Text, Switch} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
@@ -8,7 +8,6 @@ import {createUUID} from "../../../firebase/Util";
 import HiddenView from "../../../Components/HiddenView";
 import CheckBox from 'react-native-check-box'
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import styles from "../../LoginRoutes/ProfileScreen/styles";
 
 
 class QuestionCreationPage extends Component {
@@ -16,7 +15,7 @@ class QuestionCreationPage extends Component {
     state = {
         showItem: false,
         questions: [],
-        questionInfo:{}
+        questionInfo: {}
     }
 
 
@@ -69,7 +68,7 @@ class QuestionCreationPage extends Component {
                     }}
                     editable={false}
                     multiline={true}
-                    placeholder={"Short Answer Text"}
+                    placeholder={"Long Answer Text"}
                     placeholderTextColor={"grey"}/>
             </View>
         )
@@ -85,7 +84,8 @@ class QuestionCreationPage extends Component {
 
                     <View style={{flexDirection: 'row', marginTop: 10}} key={index}>
 
-                        <Ionicons name={choice.isFilled ? "ellipse" : "ellipse-outline"} size={15} style={{alignSelf: 'center'}}/>
+                        <Ionicons name={choice.isFilled ? "ellipse" : "ellipse-outline"} size={15}
+                                  style={{alignSelf: 'center'}}/>
                         {this.generateChoiceOption(choice, uuid, index)}
 
                         {this.generateDeleteSymbol(choices, uuid, index)}
@@ -94,7 +94,8 @@ class QuestionCreationPage extends Component {
 
                 ))}
 
-                <TouchableOpacity onPress={() => this.updateQuestion(uuid, "multipleChoice", [...choices, {isFilled: false}])}>
+                <TouchableOpacity
+                    onPress={() => this.updateQuestion(uuid, "multipleChoice", [...choices, {isFilled: false}])}>
 
                     <View style={{flexDirection: 'row', marginTop: 10}}>
 
@@ -104,7 +105,7 @@ class QuestionCreationPage extends Component {
                                    placeholderTextColor={"grey"}
                                    editable={false}
                                    onTouchStart={() => this.updateQuestion(uuid, "multipleChoice", [...choices, {isFilled: false}])}
-                                   />
+                        />
 
                     </View>
                 </TouchableOpacity>
@@ -116,15 +117,18 @@ class QuestionCreationPage extends Component {
 
     }
 
-    generateDeleteSymbol(choices, uuid, index){
+    generateDeleteSymbol(choices, uuid, index) {
 
-        return(
+        return (
             <Ionicons name={"remove-circle-outline"} size={15} style={{alignSelf: 'center'}} onPress={() => {
-                if(index > 0 || choices.length > 1) {
-                    let question = this.state.questionInfo[uuid];
-                    let multiChoices = question.multipleChoice;
+                let question = this.state.questionInfo[uuid];
+                let multiChoices = question.multipleChoice;
+                if (choices.length > 1) {
                     multiChoices.splice(index, 1)
                     question.multipleChoice = multiChoices;
+                    this.updateQuestion(uuid, "multipleChoice", multiChoices);
+                }else if(multiChoices[index].option){
+                    multiChoices[index].option = ""
                     this.updateQuestion(uuid, "multipleChoice", multiChoices);
                 }
             }}/>
@@ -132,11 +136,11 @@ class QuestionCreationPage extends Component {
 
     }
 
-    generateChoiceOption(choice, uuid, index){
+    generateChoiceOption(choice, uuid, index) {
 
-        return(
+        return (
             <TextInput style={{borderBottomWidth: 3, borderColor: 'blue', padding: 10, width: '100%'}}
-                       placeholder={"Option " + (index+1)}
+                       placeholder={"Option " + (index + 1)}
                        placeholderTextColor={"grey"}
                        multiline={true}
                        value={choice.option}
@@ -150,7 +154,7 @@ class QuestionCreationPage extends Component {
 
     }
 
-    generateCheckBoxes(choices, uuid){
+    generateCheckBoxes(choices, uuid) {
 
         return (
 
@@ -160,7 +164,8 @@ class QuestionCreationPage extends Component {
 
                     <View style={{flexDirection: 'row', marginTop: 10}} key={index}>
 
-                        <CheckBox isChecked={choice.isChecked} onClick={() => {}}/>
+                        <CheckBox isChecked={choice.isChecked} onClick={() => {
+                        }}/>
                         {this.generateChoiceOption(choice, uuid, index)}
 
                         {this.generateDeleteSymbol(choices, uuid, index)}
@@ -169,11 +174,13 @@ class QuestionCreationPage extends Component {
 
                 ))}
 
-                <TouchableOpacity onPress={() => this.updateQuestion(uuid, "multipleChoice", [...choices, {isFilled: false}])}>
+                <TouchableOpacity
+                    onPress={() => this.updateQuestion(uuid, "multipleChoice", [...choices, {isFilled: false}])}>
 
                     <View style={{flexDirection: 'row', marginTop: 10}}>
 
-                        <CheckBox isChecked={false} onClick={() => {}}/>
+                        <CheckBox isChecked={false} onClick={() => {
+                        }}/>
                         <TextInput style={{borderBottomWidth: 3, borderColor: 'lightblue', padding: 10, width: '100%'}}
                                    placeholder={"Add Option"}
                                    placeholderTextColor={"grey"}
@@ -212,7 +219,7 @@ class QuestionCreationPage extends Component {
 
     }
 
-    deleteQuestion(uuid){
+    deleteQuestion(uuid) {
 
         let questions = this.state.questionInfo;
         delete questions[uuid];
@@ -220,23 +227,24 @@ class QuestionCreationPage extends Component {
 
     }
 
-    generateCardOptions(choice, uuid){
+    generateCardOptions(choice, uuid) {
 
-        return(
+        return (
 
-                <Menu opened={choice.optionsOpened} onBackdropPress={() => this.updateQuestion(uuid, 'optionsOpened', false)}>
-                    <MenuTrigger>
-                    </MenuTrigger>
-                    <MenuOptions >
-                        <MenuOption onSelect={() => this.updateQuestion(uuid, "isDisabled", !choice.isDisabled)}>
-                            <Text style={{color: 'maroon'}}>{choice.isDisabled ? "Enable" : "Disable"}</Text>
-                        </MenuOption>
-                        <MenuOption onSelect={() => this.deleteQuestion(uuid)}>
-                            <Text style={{color: 'red'}}>Delete</Text>
-                        </MenuOption>
-                    </MenuOptions>
+            <Menu opened={choice.optionsOpened}
+                  onBackdropPress={() => this.updateQuestion(uuid, 'optionsOpened', false)}>
+                <MenuTrigger>
+                </MenuTrigger>
+                <MenuOptions >
+                    <MenuOption style={{padding: 10}} onSelect={() => this.updateQuestion(uuid, "isDisabled", !choice.isDisabled)}>
+                        <Text style={{color: 'maroon', fontSize: 15}}>{choice.isDisabled ? "Enable" : "Disable"}</Text>
+                    </MenuOption>
+                    <MenuOption style={{padding: 10}} onSelect={() => this.deleteQuestion(uuid)}>
+                        <Text style={{color: 'red', fontSize: 15}}>Delete</Text>
+                    </MenuOption>
+                </MenuOptions>
 
-                </Menu>
+            </Menu>
 
         )
 
@@ -258,24 +266,25 @@ class QuestionCreationPage extends Component {
                             return (
                                 <View
                                     style={{
-                                    backgroundColor: 'white',
-                                    paddingTop: 50,
-                                    paddingLeft: 50,
-                                    paddingRight: 50,
-                                    paddingBottom: 20,
-                                    marginTop: 5,
-                                    borderWidth: 3,
-                                    borderColor: (values.required ? 'blue' : 'black'),
-                                    borderRadius: 5,
-                                    zIndex: Object.keys(this.state.questionInfo).length-index,
-                                }} key={uuid} opacity={values.isDisabled ? .5 : 1}>
+                                        backgroundColor: 'white',
+                                        paddingTop: 50,
+                                        paddingLeft: 50,
+                                        paddingRight: 50,
+                                        paddingBottom: 20,
+                                        marginTop: 5,
+                                        borderWidth: 3,
+                                        borderColor: (values.required ? 'blue' : 'black'),
+                                        borderRadius: 5,
+                                        zIndex: Object.keys(this.state.questionInfo).length - index,
+                                    }} key={uuid} opacity={values.isDisabled ? .5 : 1}>
 
-                                    <Ionicons name={'ellipsis-vertical'} size={25} style={{position: 'absolute', marginTop: 20, right: 5}}
+                                    <Ionicons name={'ellipsis-vertical'} size={25}
+                                              style={{position: 'absolute', marginTop: 20, right: 5}}
                                               onPress={() => this.updateQuestion(uuid, "optionsOpened", true)}>
                                         {this.generateCardOptions(values, uuid, index)}
                                     </Ionicons>
 
-                                    <View pointerEvents={values.isDisabled ? 'none' : 'auto'} >
+                                    <View pointerEvents={values.isDisabled ? 'none' : 'auto'}>
 
                                         <TextInput
                                             style={{
@@ -288,7 +297,7 @@ class QuestionCreationPage extends Component {
                                             value={question.question}
                                             multiline={true}
                                             fontSize={20}
-                                            placeholder={"Question " + (index+1)}
+                                            placeholder={"Question " + (index + 1)}
                                             placeholderTextColor={"grey"}
                                             onChangeText={value => {
                                                 this.updateQuestion(uuid, 'question', value)
