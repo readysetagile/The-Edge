@@ -5,17 +5,20 @@ import {firebase} from "../../config";
 class Profile {
 
     #reference;
+    #parentPin;
 
     /**
      * Creates a new profile object
      * @param profileObject
      */
-    constructor (profileObject) {
+    constructor(profileObject) {
         this.accountUUID = profileObject.accountUUID;
         this.profileUUID = profileObject.id;
         this._username = profileObject.username;
         this._avatar = profileObject.avatar;
         this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();
+        this._isParent = profileObject.isParent;
+        this.#parentPin = profileObject.parentPin;
         this.#reference = firebase.database().ref("users/" + this.accountUUID + "/profiles");
     }
 
@@ -25,7 +28,7 @@ class Profile {
      * @param profileUsername a username to assign to the profile
      * @returns {Promise<any>} returns when the user has been created
      */
-    async create (profileUUID, profileUsername) {
+    async create(profileUUID, profileUsername) {
 
         let obj = Object.assign({}, DEFAULTPROFILE);
         obj.id = profileUUID;
@@ -39,20 +42,20 @@ class Profile {
      * @param value the new value to update it to. This must be an object ex. {username: "Bob"}
      * @returns {Promise<void>}
      */
-    update (value, path = "") {
+    update(value, path = "") {
         path = path.replace(/\./g, "/");
         let ref = this.#reference.child(this.profileUUID);
         if (path) ref = ref.child(path);
         return ref.update(value);
     }
 
-    async delete () {
+    async delete() {
 
         await this.remove();
 
         let storage = firebase.storage();
         let ref = storage.ref(this.accountUUID + "/pfp/" + this.profileUUID);
-        return await ref.delete().catch(err => {
+        return await ref.delete().catch(() => {
         });
 
     }
@@ -65,21 +68,21 @@ class Profile {
      * @param path the location of the value to place it in
      * @returns {Promise<any>} returns when the value is updated
      */
-    static update (accountUUID, profileUUID, value, path = "") {
+    static update(accountUUID, profileUUID, value, path = "") {
         path = path.replace(/\./g, "/");
         let ref = firebase.database().ref('users/' + accountUUID + "/profiles/" + profileUUID);
         if (path) ref = ref.child(path);
         return ref.update(value);
     }
 
-    addTeam (team) {
+    addTeam(team) {
         this._teams.set(team.id, 0);
         let obj = {};
         obj[team.id] = 0;//TODO figure out how to use arrays with firebase
         this.#reference.child(this.profileUUID + '/teams').update(obj);
     }
 
-    async getProfilePicture () {
+    async getProfilePicture() {
         if (!this._avatar) {
             let storage = firebase.storage();
             let ref = storage.ref(this.accountUUID + "/pfp/" + this.profileUUID);
@@ -92,13 +95,27 @@ class Profile {
         } else return this._avatar;
     }
 
+    getParentPin() {
+        if (this.isParent) {
+            return this.#parentPin;
+        }
+        return null;
+    }
+
+    setParentPin(pin) {
+
+        this.#parentPin = pin;
+        this.update({parentPin: pin}).catch(console.error);
+
+    }
+
     /**
      * Updates a value for a user
      * @param path the parent of the value you're trying to update
      * @param value the new value to update it to. This must be an object ex. {username: "Bob"}
      * @returns {Promise<void>}
      */
-    set (value, path = "") {
+    set(value, path = "") {
         path = path.replace(/\./g, "/");
         let ref = this.#reference.child(this.profileUUID);
         if (path) ref = ref.child(path);
@@ -110,7 +127,7 @@ class Profile {
      * @param path the path to remove. If none, this will delete the profile
      * @returns {Promise<any>}
      */
-    remove (path = "") {
+    remove(path = "") {
         path = path.replace(/\./g, "/");
         let reference = this.#reference.child(this.profileUUID);
         if (path) reference = reference.child(path);
@@ -124,7 +141,7 @@ class Profile {
      * @param username the username of the profile
      * @returns {Promise<Profile>}
      */
-    static async createProfile (accountUUID, profileUUID, username) {
+    static async createProfile(accountUUID, profileUUID, username) {
 
         let profileObj = Object.assign({}, DEFAULTPROFILE);
         profileObj.id = profileUUID;
@@ -137,28 +154,39 @@ class Profile {
 
     }
 
-    set username (value) {
+
+    set isParent(value) {
+        this._isParent = value;
+        this.update({isParent: value}).catch(console.error);
+    }
+
+
+    get isParent() {
+        return this._isParent;
+    }
+
+    set username(value) {
         this._username = value;
         this.update({username: value}).catch(console.error);
     }
 
-    set avatar (value) {
+    set avatar(value) {
         this._avatar = value;
         this.update({avatar: value}).catch(console.error);
     }
 
-    get username () {
+    get username() {
         return this._username;
     }
 
-    get avatar () {
+    get avatar() {
         if (!this._avatar)
             return DEFAULTAVATR;
         return this._avatar;
     }
 
 
-    get teams () {
+    get teams() {
         return Array.from(this._teams.keys()).filter(i => i !== '_');
     }
 }

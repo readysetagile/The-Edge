@@ -3,6 +3,7 @@ import {Formik} from 'formik';
 import {Button, Switch, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import * as yup from 'yup';
+import {globalStyles} from "../../GlobalStyles";
 
 const LoginSchema = yup.object({
     Email: yup.string().required()
@@ -33,7 +34,7 @@ export default function LoginForm({login}) {
                     <View>
 
                         <TextInput
-                            style={styles.inputView}
+                            style={globalStyles.inputView}
                             placeholder="Email"
                             placeholderTextColor="#003f5c"
                             onChangeText={props.handleChange('Email')}
@@ -41,7 +42,7 @@ export default function LoginForm({login}) {
                         <Text style={styles.errorText}>{props.touched.Email && props.errors.Email}</Text>
 
                         <TextInput
-                            style={styles.inputView}
+                            style={globalStyles.inputView}
                             placeholder="Password"
                             placeholderTextColor="#003f5c"
                             secureTextEntry

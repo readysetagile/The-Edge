@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Alert, Text, View} from 'react-native';
 import styles from './styles';
-import {UserAuthentication} from "../../firebase/UserAuthentication";
-import Edge from "../../firebase";
+import {UserAuthentication} from "../../../firebase/UserAuthentication";
+import Edge from "../../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
 import CreateAccountForm from './CreateAccountForm';
 

@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-import Colors from '../styles'
+import Colors from '../../styles'
 
 export default StyleSheet.create({
     container: {
@@ -53,7 +53,8 @@ export default StyleSheet.create({
     },
     closeCreateTeam: {
         left: 20,
-        top: 40
+        top: 40,
+        zIndex: 3
     },
     modalContent: {
         flex: 1

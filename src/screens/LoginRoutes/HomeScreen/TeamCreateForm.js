@@ -1,13 +1,14 @@
 import React from 'react';
 import {Formik} from 'formik';
 import {Text, TextInput, View} from 'react-native';
-import styles from "./styles";
 import * as yup from 'yup';
-import FlatButton from "../../Components/SubmitButton";
+import FlatButton from "../../../Components/SubmitButton";
+import {globalStyles} from "../../GlobalStyles";
+import colors from "../../styles";
 
 const TeamSchema = yup.object({
 
-    teamName: yup.string().required().min(1),
+    "team name": yup.string().required().min(1),
     sport: yup.string().required().min(1),
     /* For reference on how to use the test method
     rating: yup.string().required()
@@ -22,10 +23,10 @@ const TeamSchema = yup.object({
 export default function TeamCreateForm({addTeam}) {
 
     return (
-        <View style={{flex: 1, padding: 20, top: 30}}>
+        <View style={{flex: 1, padding: 20, top: 30, backgroundColor: colors.background}}>
 
             <Formik
-                initialValues={{teamName: '', sport: ''}}
+                initialValues={{"team name": '', sport: ''}}
                 validationSchema={TeamSchema}
                 onSubmit={(values, actions) => {
                     actions.resetForm();
@@ -34,25 +35,28 @@ export default function TeamCreateForm({addTeam}) {
 
                 {(props) => (
 
-                    <View>
-                        <Text style={styles.titleText}>Team Info</Text>
+                    <View style={{}}>
+                        <Text style={{...globalStyles.title, marginBottom: 10, fontSize: 50}}>Team Info</Text>
                         <TextInput
-                            style={styles.inputView}
+                            style={globalStyles.inputView}
+                            placeholderTextColor={'#003f5c'}
                             placeholder='Team Name'
-                            onChangeText={props.handleChange('teamName')}
+                            onChangeText={props.handleChange('team name')}
                             value={props.values.title}
-                            onBlur={props.handleBlur('teamName')}//realtime validation onBlur
+                            onBlur={props.handleBlur('team name')}
                         />
-                        <Text style={styles.errorText}>{props.touched.teamName && props.errors.teamName}</Text>
+                        <Text
+                            style={globalStyles.errorText}>{props.touched["team name"] && props.errors["team name"]}</Text>
 
                         <TextInput
-                            style={styles.inputView}
+                            style={globalStyles.inputView}
                             placeholder='Sport/Activity'
+                            placeholderTextColor={'#003f5c'}
                             onChangeText={props.handleChange('sport')}
                             value={props.values.body}
                             onBlur={props.handleBlur('sport')}
                         />
-                        <Text style={styles.errorText}>{props.touched.sport && props.errors.sport}</Text>
+                        <Text style={globalStyles.errorText}>{props.touched.sport && props.errors.sport}</Text>
 
                         <FlatButton text="Submit" onPress={props.handleSubmit}/>
 

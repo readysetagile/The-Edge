@@ -1,9 +1,9 @@
 import {Alert, Image, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import React, {Component} from 'react';
-import {UserAuthentication} from "../../firebase/UserAuthentication";
-import {firebase} from "../../firebase/config";
-import Edge from "../../firebase";
+import {UserAuthentication} from "../../../firebase/UserAuthentication";
+import {firebase} from "../../../firebase/config";
+import Edge from "../../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
 import LoginForm from './LoginForm';
 
@@ -71,7 +71,7 @@ export default class LoginScreen extends Component {
         //firebase.auth().signOut();
         return (
             <View style={styles.container}>
-                <Image source={require("../../assets/iPhoneApp.png")}/>
+                <Image source={require("../../../assets/iPhoneApp.png")}/>
                 <Text style={styles.logo}>The Edge</Text>
 
                 <View style={{width: '80%'}}>

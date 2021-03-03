@@ -4,7 +4,6 @@ import React, {Component} from 'react';
 
 export default class DashboardScreen extends Component {
     render() {
-        const {navigation} = this.props;
         return (
             <View style={styles.container}>
                 <Text style={styles.titleText}>COACHING DASHBOARD</Text>

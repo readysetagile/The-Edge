@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
 import {Alert, Image, Platform, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
-import {DEFAULTAVATR} from "../../firebase/modules/profiles";
-import {firebase} from '../../firebase/config';
-import Edge from '../../firebase/index'
+import {DEFAULTAVATR} from "../../../firebase/modules/profiles";
+import {firebase} from '../../../firebase/config';
+import Edge from '../../../firebase'
 import * as ImagePicker from 'expo-image-picker';
 import {NavigationActions, StackActions} from "react-navigation";
-import {createUUID} from "../../firebase/Util";
+import {createUUID} from "../../../firebase/Util";
 
 
 export default class CreateProfileScreen extends Component {
@@ -49,7 +49,6 @@ export default class CreateProfileScreen extends Component {
     async createProfile() {
         await this.uploadProfilePicture();
         let user = await Edge.users.get(firebase.auth().currentUser.uid);
-
         if (!this.state.username) {
             Alert.alert("Invalid Username");
             return;

@@ -4,7 +4,8 @@ import styles from './styles';
 import {connectActionSheet} from '@expo/react-native-action-sheet'
 import {Ionicons} from "@expo/vector-icons";
 import TeamCreateForm from './TeamCreateForm';
-import Edge from "../../firebase";
+import Edge from "../../../firebase";
+import {NavigationActions, StackActions} from "react-navigation";
 
 
 class HomeScreen extends Component {
@@ -49,18 +50,24 @@ class HomeScreen extends Component {
 
     }
 
-    async componentDidMount() {
+    componentDidMount() {
 
-        let teams = await this.getTeams();
-        this.generateTeams(teams);
-
+        this.getTeams().then(teams => {
+            this.generateTeams(teams);
+        })
     }
 
     enterTeam() {
 
         const {navigation} = this.props;
-        navigation.navigate("Dashboard");
-
+        const resetAction = StackActions.reset({
+            index: 0,
+            actions: [NavigationActions.navigate({
+                routeName: 'Dashboard',
+                params: {profile: navigation.getParam("profile")}
+            })],
+        });
+        navigation.dispatch(resetAction);
     }
 
     createTeam = () => {
@@ -90,7 +97,7 @@ class HomeScreen extends Component {
 
     addTeam = async (teamInfo) => {
 
-        let team = await Edge.teams.create(teamInfo.teamName, teamInfo.sport);
+        let team = await Edge.teams.create(teamInfo["team name"], teamInfo.sport);
         let profile = this.props.navigation.getParam('profile');
         team.addMember(profile);
         let teams = this.state.teams;
