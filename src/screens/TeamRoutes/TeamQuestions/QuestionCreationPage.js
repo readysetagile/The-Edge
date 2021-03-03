@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, TextInput, TouchableOpacity, View, Text, Switch} from "react-native";
+import {ScrollView, TextInput, TouchableOpacity, View, Text, Switch, Image} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
@@ -7,6 +7,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import {createUUID} from "../../../firebase/Util";
 import HiddenView from "../../../Components/HiddenView";
 import CheckBox from 'react-native-check-box'
+import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
+import styles from "../../LoginRoutes/ProfileScreen/styles";
 
 
 class QuestionCreationPage extends Component {
@@ -201,10 +203,33 @@ class QuestionCreationPage extends Component {
                 isFilled: false,
                 option: ""
             }],
-            required: false
+            required: false,
+            optionsOpened: false
         }
 
         this.setState({questionInfo: {...this.state.questionInfo, [createUUID('xxxx')]: newObj}})
+
+    }
+
+    generateCardOptions(choice, uuid, index){
+
+        return(
+
+                <Menu opened={choice.optionsOpened} onBackdropPress={() => this.updateQuestion(uuid, 'optionsOpened', false)}>
+                    <MenuTrigger onPress={() => console.log(1)}>
+                    </MenuTrigger>
+                    <MenuOptions >
+                        <MenuOption onSelect={() => console.log(2)}>
+                            <Text style={{color: 'maroon'}}>Disable</Text>
+                        </MenuOption>
+                        <MenuOption onSelect={() => console.log(3)}>
+                            <Text style={{color: 'red'}}>Delete</Text>
+                        </MenuOption>
+                    </MenuOptions>
+
+                </Menu>
+
+        )
 
     }
 
@@ -220,7 +245,6 @@ class QuestionCreationPage extends Component {
                     {
                         Object.entries(this.state.questionInfo).map((question, index) => {
 
-                            console.log(Object.keys(this.state.questionInfo).length-index)
                             const values = question[1];
                             const uuid = question[0];
                             return (
@@ -232,13 +256,17 @@ class QuestionCreationPage extends Component {
                                     paddingRight: 50,
                                     paddingBottom: 20,
                                     marginTop: 5,
-                                    borderWidth: 2,
+                                    borderWidth: 3,
                                     borderColor: (values.required ? 'blue' : 'black'),
                                     borderRadius: 5,
                                     zIndex: Object.keys(this.state.questionInfo).length-index
                                 }} key={uuid}>
 
-                                    <Ionicons name={'ellipsis-vertical'} size={25} style={{position: 'absolute', marginTop: 20, right: 5}}/>
+                                    <Ionicons name={'ellipsis-vertical'} size={25} style={{position: 'absolute', marginTop: 20, right: 5}}
+                                              onPress={() => this.updateQuestion(uuid, "optionsOpened", true)}>
+                                        {this.generateCardOptions(values, uuid, index)}
+                                    </Ionicons>
+
 
                                     <TextInput
                                         style={{
