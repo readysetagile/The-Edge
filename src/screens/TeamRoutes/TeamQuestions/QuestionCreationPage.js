@@ -220,10 +220,12 @@ class QuestionCreationPage extends Component {
                     {
                         Object.entries(this.state.questionInfo).map((question, index) => {
 
+                            console.log(Object.keys(this.state.questionInfo).length-index)
                             const values = question[1];
                             const uuid = question[0];
                             return (
-                                <View style={{
+                                <View
+                                    style={{
                                     backgroundColor: 'white',
                                     paddingTop: 50,
                                     paddingLeft: 50,
@@ -232,7 +234,8 @@ class QuestionCreationPage extends Component {
                                     marginTop: 5,
                                     borderWidth: 2,
                                     borderColor: (values.required ? 'blue' : 'black'),
-                                    borderRadius: 5
+                                    borderRadius: 5,
+                                    zIndex: Object.keys(this.state.questionInfo).length-index
                                 }} key={uuid}>
 
                                     <Ionicons name={'ellipsis-vertical'} size={25} style={{position: 'absolute', marginTop: 20, right: 5}}/>
@@ -256,15 +259,15 @@ class QuestionCreationPage extends Component {
 
                                     />
 
-                                    <DropDownPicker placeholder={"Select a question type"}
-                                                    items={[
-                                                        {label: "Short Answer", value: "shortAnswer"},
-                                                        {label: "Long Answer", value: "longAnswer"},
-                                                        {label: "Multiple Choice", value: "multipleChoice"},
-                                                        {label: "Check Boxes", value: "checkBoxes"}
-                                                    ]} onChangeItem={item => {
-                                        this.updateQuestion(uuid, 'type', item.value)
-                                    }}/>
+                                        <DropDownPicker placeholder={"Select a question type"}
+                                                        items={[
+                                                            {label: "Short Answer", value: "shortAnswer"},
+                                                            {label: "Long Answer", value: "longAnswer"},
+                                                            {label: "Multiple Choice", value: "multipleChoice"},
+                                                            {label: "Check Boxes", value: "checkBoxes"}
+                                                        ]} onChangeItem={item => {
+                                            this.updateQuestion(uuid, 'type', item.value)
+                                        }}/>
 
                                     <HiddenView hide={values.type !== 'shortAnswer'}>
                                         {this.generateShortAnswerInput()}
@@ -285,7 +288,8 @@ class QuestionCreationPage extends Component {
                                     <View style={{
                                         flexDirection: 'row',
                                         justifyContent: 'space-between',
-                                        marginTop: 10
+                                        marginTop: 10,
+                                        zIndex: 0
                                     }}>
                                         <Text style={{fontSize: 20}}>Required?</Text>
                                         <Switch
