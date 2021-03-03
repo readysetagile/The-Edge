@@ -2,14 +2,14 @@ import React from 'react'
 import {createStackNavigator} from 'react-navigation-stack';
 import {Members} from "../src/screens";
 import HeaderBurgerNav from "../src/Components/HeaderBurgerNav";
-import {openMenu} from "./TeamDrawer";
+import {openMenu} from "../src/firebase/Util";
 
 const screens = {
     Members: {
         screen: Members,
         navigationOptions: ({navigation}) => {
             return {
-                headerTitle: () => <HeaderBurgerNav onPress={() => openMenu(navigation)}/>
+                headerTitle: () => <HeaderBurgerNav title="Member List" onPress={() => openMenu(navigation)}/>
             }
         }
     }

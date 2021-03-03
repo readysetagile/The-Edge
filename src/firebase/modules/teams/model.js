@@ -1,9 +1,12 @@
 module.exports = {
 
     id: "",
-    teamCode: "",
     teamName: "",
     sport: "",
+    inviteData: {
+        teamCode: "",
+        acceptNewMembers: true
+    },
     modules: {
         teamQuestions: {
             required: true,
@@ -11,8 +14,6 @@ module.exports = {
         schedule: {},
         drills: {}
     },
-    members: {
-        _: 0
-    }//map of member objects {memberID => memberObject}
+    members: new Map([['_', 0]])//map of member objects {memberID => memberObject}
 
 }

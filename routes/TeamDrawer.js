@@ -1,13 +1,39 @@
-import {createDrawerNavigator} from 'react-navigation-drawer';
-import {createAppContainer} from 'react-navigation';
+import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
+import {createAppContainer, NavigationActions, StackActions} from 'react-navigation';
 import MemberStack from './MemberStack';
-import LoginStack from "./LoginStack";
 import DashboardStack from "./DashboardStack";
 import React from "react";
 import colors from "../src/screens/styles";
+import GlobalData from '../src/GlobalData'
+import {Button, SafeAreaView, ScrollView} from "react-native";
+import Edge from "../src/firebase";
+import {firebase} from '../src/firebase/config'
+import {Profile} from "../src/firebase/modules/profiles";
+
+
+const navigateToHome = ({navigation}) => {
+    const resetAction = StackActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({routeName: 'Login'})],
+    });
+
+    navigation.dispatch(resetAction);
+    Edge.users.get(firebase.auth().currentUser.uid).then(account => {
+        let prof = account.getProfile(GlobalData.profileID);
+        navigation.navigate("HomeScreen", {profile: new Profile(prof)})
+    })
+}
 
 const DrawerConfig = {
     intialRouteName: 'Home',
+    contentComponent: (props) => (
+        <SafeAreaView style={{flex: 1, borderWidth: 5}}>
+            <ScrollView>
+                <DrawerItems {...props}/>
+                <Button title={"To Teams"} color={"#e91e63"} onPress={() => navigateToHome(props)}/>
+            </ScrollView>
+        </SafeAreaView>
+    ),
     navigationOptions: {
         headerStyle: {
             backgroundColor: '#f4511e',
@@ -36,16 +62,8 @@ const TeamDrawerNavigation = createDrawerNavigator({
     },
     Members: {
         screen: MemberStack
-    },
-    "To My Teams": {
-        screen: LoginStack
     }
 
 }, DrawerConfig)
-
-
-export function openMenu(navigation) {
-    navigation.openDrawer();
-}
 
 export default createAppContainer(TeamDrawerNavigation);

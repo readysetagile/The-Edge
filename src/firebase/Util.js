@@ -12,3 +12,8 @@ export function createUUID(string) {
     });
     return uuid;
 }
+
+
+export function openMenu(navigation) {
+    navigation.openDrawer();
+}

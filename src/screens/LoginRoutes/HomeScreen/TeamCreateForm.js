@@ -4,7 +4,6 @@ import {Text, TextInput, View} from 'react-native';
 import * as yup from 'yup';
 import FlatButton from "../../../Components/SubmitButton";
 import {globalStyles} from "../../GlobalStyles";
-import colors from "../../styles";
 
 const TeamSchema = yup.object({
 
@@ -23,7 +22,7 @@ const TeamSchema = yup.object({
 export default function TeamCreateForm({addTeam}) {
 
     return (
-        <View style={{flex: 1, padding: 20, top: 30, backgroundColor: colors.background}}>
+        <View style={globalStyles.modalView()}>
 
             <Formik
                 initialValues={{"team name": '', sport: ''}}
@@ -35,7 +34,7 @@ export default function TeamCreateForm({addTeam}) {
 
                 {(props) => (
 
-                    <View style={{}}>
+                    <View>
                         <Text style={{...globalStyles.title, marginBottom: 10, fontSize: 50}}>Team Info</Text>
                         <TextInput
                             style={globalStyles.inputView}

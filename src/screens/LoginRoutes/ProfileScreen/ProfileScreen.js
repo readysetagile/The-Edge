@@ -71,7 +71,8 @@ export default class ProfileScreen extends Component {
 
         if (!profile.isParent) {
             profile.delete();
-            this.setState(this.state.accounts);
+            this.componentWillUnmount();
+            this.componentDidMount()
         }
 
     }
@@ -80,9 +81,10 @@ export default class ProfileScreen extends Component {
         if (!profile.isParent) {
             this.setState({modal: {show: true, profile: profile, type: 'create'}});
         } else {
-            this.setState({modal: {show: true, profile: profile, type: 'enter'}})
+            this.setState({modal: {show: true, profile: profile, type: 'unmark'}})
         }
     }
+
 
     async generateProfileImage(profile, index) {
         let profileImage = await profile.getProfilePicture();
@@ -137,6 +139,8 @@ export default class ProfileScreen extends Component {
             case "enter":
                 this.enterParentAccount(profile);
                 break;
+            case "unmark":
+                this.updateParentProfileDisplay(profile, values)
         }
 
     }
@@ -156,7 +160,8 @@ export default class ProfileScreen extends Component {
         this.componentDidMount();
     }
 
-    componentDidMount() {
+
+    loadProfiles() {
         try {
             new Promise(async resolve => {
                 let profiles = await this.getProfiles();
@@ -177,11 +182,23 @@ export default class ProfileScreen extends Component {
         }
     }
 
+    componentDidMount() {
+        this.loadProfiles();
+        this.focusListener = this.props.navigation.addListener('willFocus', () => {
+            this.loadProfiles();
+        });
+    }
+
+    componentWillUnmount() {
+        this.focusListener?.remove();
+    }
+
     render() {
         const types = {
             create: 'Create a 4 digit pin',
             enter: 'Enter your 4 digit pin',
             delete: "Enter your 4 digit pin",
+            unmark: "Enter your 4 digit pin"
         }
 
         return (

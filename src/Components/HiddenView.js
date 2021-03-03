@@ -1,7 +1,6 @@
 import React from 'react';
-//import PropTypes from 'prop-types';
-import {View,} from 'react-native';
 import PropTypes from 'prop-types';
+import {View} from 'react-native';
 
 const HiddenView = (props) => {
     const {children, hide, style} = props;
@@ -9,7 +8,7 @@ const HiddenView = (props) => {
         return null;
     }
     return (
-        <View {...this.props} style={style}>
+        <View {...props} style={style}>
             {children}
         </View>
     );
@@ -26,7 +25,7 @@ HiddenView.propTypes = {
             PropTypes.element,
         ])),
     ]).isRequired,
-    //style: ViewPropTypes.style,
+    style: PropTypes.object,
     hide: PropTypes.bool,
 };
 

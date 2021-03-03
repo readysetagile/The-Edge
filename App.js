@@ -47,10 +47,9 @@ export default class App extends Component {
             <MenuProvider>
                 <ActionSheetProvider>
                     <Login>
-                        <Navigator name={"Teams"}/>
+                        <Navigator>
+                        </Navigator>
                     </Login>
-                    {/*<Navigator>*/}
-                    {/*</Navigator>*/}
                 </ActionSheetProvider>
             </MenuProvider>
         );

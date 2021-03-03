@@ -5,8 +5,8 @@ import {DEFAULTAVATR} from "../../../firebase/modules/profiles";
 import {firebase} from '../../../firebase/config';
 import Edge from '../../../firebase'
 import * as ImagePicker from 'expo-image-picker';
-import {NavigationActions, StackActions} from "react-navigation";
 import {createUUID} from "../../../firebase/Util";
+import {globalStyles} from "../../GlobalStyles";
 
 
 export default class CreateProfileScreen extends Component {
@@ -55,11 +55,12 @@ export default class CreateProfileScreen extends Component {
         }
         let profile = await user.addProfile(this.state.uuid, this.state.username);
         const {navigation} = this.props;
-        const resetAction = StackActions.reset({
-            index: 0,
-            actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
-        });
-        navigation.dispatch(resetAction);
+        navigation.pop();
+        // const resetAction = StackActions.reset({
+        //     index: 0,
+        //     actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
+        // });
+        navigation.navigate("HomeScreen", {profile: profile});
     }
 
     async uploadProfilePicture() {
@@ -85,7 +86,7 @@ export default class CreateProfileScreen extends Component {
                 <TouchableOpacity onPress={() => this.selectImage()}>
                     <View style={{alignItems: 'center', padding: 40}}>
 
-                        <Image style={styles.avatar}
+                        <Image style={globalStyles.avatar(100)}
                                source={{uri: (!this.state.image ? DEFAULTAVATR : this.state.image.uri)}}/>
                         <Text style={{
                             fontSize: 20,

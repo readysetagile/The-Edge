@@ -14,9 +14,9 @@ module.exports.Teams = class Teams {
 
     /**
      * Adds a default team to the database
-     * @returns {Team} returns the new team created
      * @param name the name of the team
      * @param sport the sport the team does
+     * @returns {Team} returns the new team created
      */
     async create(name, sport) {
         let team = await Team.createTeam(name, sport, this.#reference);
@@ -25,6 +25,24 @@ module.exports.Teams = class Teams {
         }
         this.teams.set(team.id, team);
         return team;
+    }
+
+    async getAllTeams() {
+
+        if (this.teams == null) {
+
+            return await new Promise(resolve => {
+                this.#reference.on('value', snap => {
+                    let val = snap.val();
+                    if (val != null) {
+                        this.teams = new Map(Object.entries(val));
+                        resolve(this.teams);
+                    }
+                });
+            });
+
+        } else return this.teams;
+
     }
 
     /**

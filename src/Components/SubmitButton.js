@@ -1,11 +1,11 @@
 import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 
-export default function FlatButton({text, onPress}) {
+export default function FlatButton({text, onPress, style}) {
 
     return (
 
-        <TouchableOpacity onPress={onPress}>
+        <TouchableOpacity onPress={onPress} style={style}>
             <View style={styles.button}>
                 <Text style={styles.buttonText}>
                     {text}

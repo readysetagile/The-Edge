@@ -4,16 +4,20 @@ import styles from './styles';
 import {connectActionSheet} from '@expo/react-native-action-sheet'
 import {Ionicons} from "@expo/vector-icons";
 import TeamCreateForm from './TeamCreateForm';
+import TeamJoinForm from './TeamJoinForm';
+
 import Edge from "../../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
-
+import Global from '../../../GlobalData';
+import {globalStyles} from "../../GlobalStyles";
 
 class HomeScreen extends Component {
 
 
     state = {
         teams: [],
-        modalOpen: false
+        modalOpen: false,
+        joinModalOpen: false
     }
 
     constructor(props) {
@@ -43,7 +47,7 @@ class HomeScreen extends Component {
     generateTeamBanner(team, key) {
 
         return (
-            <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam()}>
+            <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam(team)}>
                 <Text style={styles.teamName}>{team.teamName}</Text>
             </TouchableOpacity>
         )
@@ -57,14 +61,20 @@ class HomeScreen extends Component {
         })
     }
 
-    enterTeam() {
+    /**
+     * Navigates the user to the team they clicked on
+     * @param team the Team Object of the team
+     */
+    enterTeam(team) {
 
         const {navigation} = this.props;
+
+        Global.profileID = navigation.getParam('profile').profileUUID
+        Global.teamID = team.id;
         const resetAction = StackActions.reset({
             index: 0,
             actions: [NavigationActions.navigate({
-                routeName: 'Dashboard',
-                params: {profile: navigation.getParam("profile")}
+                routeName: 'Dashboard'
             })],
         });
         navigation.dispatch(resetAction);
@@ -75,7 +85,30 @@ class HomeScreen extends Component {
     }
 
     joinTeam = () => {
-        console.log("join team");
+        this.setState({joinModalOpen: true})
+    }
+
+    joinTeamFully = async (values) => {
+
+        this.setState({modalOpen: false})
+        let team = null;
+        let code = values["team code"]
+        for (let [K, V] of Edge.teams.teams) {
+            if (V.inviteData.teamCode === code) {
+                team = await Edge.teams.get(V.id);
+                break;
+            }
+        }
+        if (team != null) {
+            let profile = this.props.navigation.getParam('profile');
+
+            team.addMember(profile);
+            let teams = this.state.teams;
+            teams.push(this.generateTeamBanner(team, teams.length));
+            await this.setState({teams: [...teams]})
+            this.enterTeam(team);
+        }
+
     }
 
     newTeam() {
@@ -102,8 +135,8 @@ class HomeScreen extends Component {
         team.addMember(profile);
         let teams = this.state.teams;
         teams.push(this.generateTeamBanner(team, teams.length));
-        this.setState({modalOpen: false});
-        await this.setState({teams: [...teams]});
+        this.setState({modalOpen: false, teams: [...teams]});
+
     }
 
     render() {
@@ -114,9 +147,19 @@ class HomeScreen extends Component {
                 <Modal visible={this.state.modalOpen} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={styles.modalContent}>
-                            <Ionicons style={styles.closeCreateTeam} name={"close"} size={24}
+                            <Ionicons style={globalStyles.closeModal()} name={"close"} size={24}
                                       onPress={() => this.setState({modalOpen: false})}/>
                             <TeamCreateForm addTeam={this.addTeam}/>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
+
+                <Modal visible={this.state.joinModalOpen} animationType={'slide'}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={styles.modalContent}>
+                            <Ionicons style={globalStyles.closeModal()} name={"close"} size={24}
+                                      onPress={() => this.setState({joinModalOpen: false})}/>
+                            <TeamJoinForm onSubmit={this.joinTeamFully}/>
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>
@@ -135,7 +178,7 @@ class HomeScreen extends Component {
                     )}
                 </ScrollView>
 
-                <TouchableOpacity style={styles.newTeamButton} onPress={() => this.newTeam()}>
+                <TouchableOpacity style={globalStyles.newButton} onPress={() => this.newTeam()}>
                     <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
                 </TouchableOpacity>
 
