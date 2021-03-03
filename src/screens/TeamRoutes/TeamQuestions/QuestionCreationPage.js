@@ -220,16 +220,23 @@ class QuestionCreationPage extends Component {
                     {
                         Object.entries(this.state.questionInfo).map((question, index) => {
 
-                            let values = question[1];
+                            const values = question[1];
+                            const uuid = question[0];
                             return (
                                 <View style={{
                                     backgroundColor: 'white',
-                                    padding: 50,
+                                    paddingTop: 50,
+                                    paddingLeft: 50,
+                                    paddingRight: 50,
+                                    paddingBottom: 20,
                                     marginTop: 5,
                                     borderWidth: 2,
                                     borderColor: (values.required ? 'blue' : 'black'),
                                     borderRadius: 5
-                                }} key={question[0]}>
+                                }} key={uuid}>
+
+                                    <Ionicons name={'ellipsis-vertical'} size={25} style={{position: 'absolute', marginTop: 20, right: 5}}/>
+
                                     <TextInput
                                         style={{
                                             padding: 15,
@@ -244,7 +251,7 @@ class QuestionCreationPage extends Component {
                                         placeholder={"Question " + (index+1)}
                                         placeholderTextColor={"grey"}
                                         onChangeText={value => {
-                                            this.updateQuestion(question[0], 'question', value)
+                                            this.updateQuestion(uuid, 'question', value)
                                         }}
 
                                     />
@@ -256,7 +263,7 @@ class QuestionCreationPage extends Component {
                                                         {label: "Multiple Choice", value: "multipleChoice"},
                                                         {label: "Check Boxes", value: "checkBoxes"}
                                                     ]} onChangeItem={item => {
-                                        this.updateQuestion(question[0], 'type', item.value)
+                                        this.updateQuestion(uuid, 'type', item.value)
                                     }}/>
 
                                     <HiddenView hide={values.type !== 'shortAnswer'}>
@@ -268,12 +275,27 @@ class QuestionCreationPage extends Component {
                                     </HiddenView>
 
                                     <HiddenView hide={values.type !== 'multipleChoice'}>
-                                        {this.generateMultipleChoice(values.multipleChoice, question[0])}
+                                        {this.generateMultipleChoice(values.multipleChoice, uuid)}
                                     </HiddenView>
 
                                     <HiddenView hide={values.type !== 'checkBoxes'}>
-                                        {this.generateCheckBoxes(values.multipleChoice, question[0])}
+                                        {this.generateCheckBoxes(values.multipleChoice, uuid)}
                                     </HiddenView>
+
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'space-between',
+                                        marginTop: 10
+                                    }}>
+                                        <Text style={{fontSize: 20}}>Required?</Text>
+                                        <Switch
+                                            value={values.required}
+                                            trackColor={{false: "white", true: "#81b0ff"}}
+                                            ios_backgroundColor="#3e3e3e"
+                                            onValueChange={value => this.updateQuestion(uuid, "required", value)}
+                                            style={{alignSelf: 'center'}}
+                                        />
+                                    </View>
 
                                 </View>
                             )
