@@ -106,14 +106,21 @@ class ViewQuestions extends Component {
     generateChoiceOption(choice, uuid, index) {
 
         return (
-            <Text style={{borderBottomWidth: 3, borderColor: 'blue', padding: 5, width: '100%', color: 'black', alignSelf: 'center'}}>
-                {(choice.option ? choice.option : "Option " + (index+1))}
+            <Text style={{
+                borderBottomWidth: 3,
+                borderColor: 'blue',
+                padding: 5,
+                width: '100%',
+                color: 'black',
+                alignSelf: 'center'
+            }}>
+                {(choice.option ? choice.option : "Option " + (index + 1))}
             </Text>
         );
 
     }
 
-    checkBox(uuid, index, choice){
+    checkBox(uuid, index, choice) {
 
         let questions = this.state.questions;
         let answer = questions[uuid].multipleChoice[index];
@@ -164,20 +171,23 @@ class ViewQuestions extends Component {
 
                             const values = question[1];
                             const uuid = question[0];
-                            if(values.isDisabled) return null;
+                            if (values.isDisabled) return null;
                             return (
                                 <View
-                                    style={{...styles.cardContent,
+                                    style={{
+                                        ...styles.cardContent,
                                         borderColor: (values.required ? 'blue' : 'black'),
                                         zIndex: Object.keys(questions).length - index,
                                         paddingBottom: 50
                                     }} key={uuid}>
 
                                     <View>
-                                        <Text style={{...styles.questionInput,
+                                        <Text style={{
+                                            ...styles.questionInput,
                                             fontSize: 20,
-                                            color: (values.required ? 'blue' : 'grey')}}>
-                                            {(values.question ? values.question : "Question " + (index+1))}
+                                            color: (values.required ? 'blue' : 'grey')
+                                        }}>
+                                            {(values.question ? values.question : "Question " + (index + 1))}
                                         </Text>
 
                                         <HiddenView hide={values.type !== 'shortAnswer'}>

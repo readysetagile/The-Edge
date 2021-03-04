@@ -77,7 +77,6 @@ class QuestionCreationPage extends Component {
     componentWillUnmount() {
 
 
-
     }
 
     generateMultipleChoice(choices, uuid) {
@@ -133,7 +132,7 @@ class QuestionCreationPage extends Component {
                     multiChoices.splice(index, 1)
                     question.multipleChoice = multiChoices;
                     this.updateQuestion(uuid, "multipleChoice", multiChoices);
-                }else if(multiChoices[index].option){
+                } else if (multiChoices[index].option) {
                     multiChoices[index].option = ""
                     this.updateQuestion(uuid, "multipleChoice", multiChoices);
                 }
@@ -209,7 +208,7 @@ class QuestionCreationPage extends Component {
 
         let newObj = {
             type: "shortAnswer",
-            question: "Question " + (1+Object.keys(this.state.questionInfo).length),
+            question: "Question " + (1 + Object.keys(this.state.questionInfo).length),
             multipleChoice: [{
                 isFilled: false,
                 option: ""
@@ -241,8 +240,9 @@ class QuestionCreationPage extends Component {
                   onBackdropPress={() => this.updateQuestion(uuid, 'optionsOpened', false)}>
                 <MenuTrigger>
                 </MenuTrigger>
-                <MenuOptions >
-                    <MenuOption style={{padding: 10}} onSelect={() => this.updateQuestion(uuid, "isDisabled", !choice.isDisabled)}>
+                <MenuOptions>
+                    <MenuOption style={{padding: 10}}
+                                onSelect={() => this.updateQuestion(uuid, "isDisabled", !choice.isDisabled)}>
                         <Text style={{color: 'maroon', fontSize: 15}}>{choice.isDisabled ? "Enable" : "Disable"}</Text>
                     </MenuOption>
                     <MenuOption style={{padding: 10}} onSelect={() => this.deleteQuestion(uuid)}>
@@ -271,7 +271,8 @@ class QuestionCreationPage extends Component {
                             const uuid = question[0];
                             return (
                                 <View
-                                    style={{...styles.cardContent,
+                                    style={{
+                                        ...styles.cardContent,
                                         borderColor: (values.required ? 'blue' : 'black'),
                                         zIndex: Object.keys(this.state.questionInfo).length - index,
                                     }}
