@@ -8,6 +8,7 @@ import {createUUID} from "../../../firebase/Util";
 import HiddenView from "../../../Components/HiddenView";
 import CheckBox from 'react-native-check-box'
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
+import styles from './styles'
 
 
 class QuestionCreationPage extends Component {
@@ -31,7 +32,6 @@ class QuestionCreationPage extends Component {
         }
         this.setState({questionInfo: questions})
         this.props.navigation.setParams({questionInfo: questions});
-
 
     }
 
@@ -208,8 +208,8 @@ class QuestionCreationPage extends Component {
     addQuestion() {
 
         let newObj = {
-            type: null,
-            question: "Question " + Object.keys(this.state.questionInfo).length,
+            type: "shortAnswer",
+            question: "Question " + (1+Object.keys(this.state.questionInfo).length),
             multipleChoice: [{
                 isFilled: false,
                 option: ""
@@ -271,18 +271,11 @@ class QuestionCreationPage extends Component {
                             const uuid = question[0];
                             return (
                                 <View
-                                    style={{
-                                        backgroundColor: 'white',
-                                        paddingTop: 50,
-                                        paddingLeft: 50,
-                                        paddingRight: 50,
-                                        paddingBottom: 20,
-                                        marginTop: 5,
-                                        borderWidth: 3,
+                                    style={{...styles.cardContent,
                                         borderColor: (values.required ? 'blue' : 'black'),
-                                        borderRadius: 5,
                                         zIndex: Object.keys(this.state.questionInfo).length - index,
-                                    }} key={uuid} opacity={values.isDisabled ? .5 : 1}>
+                                    }}
+                                    key={uuid} opacity={values.isDisabled ? .5 : 1}>
 
                                     <Ionicons name={'ellipsis-vertical'} size={25}
                                               style={{position: 'absolute', marginTop: 20, right: 5}}
@@ -293,18 +286,11 @@ class QuestionCreationPage extends Component {
                                     <View pointerEvents={values.isDisabled ? 'none' : 'auto'}>
 
                                         <TextInput
-                                            style={{
-                                                padding: 15,
-                                                marginBottom: 5,
-                                                borderBottomWidth: 2,
-                                                borderColor: 'grey',
-                                                backgroundColor: 'lightgrey'
-                                            }}
-                                            value={question.question}
+                                            style={{...styles.questionInput}}
                                             multiline={true}
                                             fontSize={20}
                                             placeholder={"Question " + (index + 1)}
-                                            placeholderTextColor={"grey"}
+                                            placeholderTextColor={(values.required ? 'blue' : 'grey')}
                                             onChangeText={value => {
                                                 this.updateQuestion(uuid, 'question', value)
                                             }}
