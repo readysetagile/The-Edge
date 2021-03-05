@@ -1,11 +1,15 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {ScrollView, Text, View} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import styles from './styles'
 import colors from "../../styles";
-import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
-import CheckBox from "react-native-check-box";
+import {
+    generateCheckBoxes,
+    generateLongAnswerInput,
+    generateMultipleChoice,
+    generateShortAnswerInput
+} from "./QuestionMethods";
 
 class ViewQuestions extends Component {
 
@@ -30,95 +34,11 @@ class ViewQuestions extends Component {
 
     }
 
-    generateShortAnswerInput() {
-
-        return (
-            <View>
-                <TextInput
-                    style={{
-                        padding: 10,
-                        marginTop: 10,
-                        borderBottomWidth: 1,
-                        borderColor: 'grey',
-                        fontSize: 15,
-                    }}
-                    editable={true}
-                    placeholder={"Short Answer Text"}
-                    placeholderTextColor={"grey"}/>
-            </View>
-        )
-
-    }
-
-    generateLongAnswerInput() {
-        return (
-            <View>
-                <TextInput
-                    style={{
-                        padding: 10,
-                        marginTop: 10,
-                        borderBottomWidth: 1,
-                        borderColor: 'grey',
-                        fontSize: 15,
-                    }}
-                    editable={true}
-                    multiline={true}
-                    placeholder={"Long Answer Text"}
-                    placeholderTextColor={"grey"}/>
-            </View>
-        )
-    }
-
     generateMultipleChoice(choices, uuid) {
-
-        return (
-
-            <View>
-
-                {choices?.map((choice, index) => (
-
-                    <TouchableOpacity style={{flexDirection: 'row', marginTop: 10}} key={index} onPress={() => {
-                        let questions = this.state.questions;
-                        let answer = questions[uuid].multipleChoice[index];
-                        choices.forEach((i, j) => {
-                            if (j !== index)
-                                i.isFilled = false;
-                        });
-                        choice.isFilled = !choice.isFilled;
-                        questions[uuid].multipleChoice[index] = answer;
-                        this.updateQuestion(uuid, "multipleChoice", questions[uuid].multipleChoice)
-                    }}>
-
-                        <Ionicons name={choice.isFilled ? "ellipse" : "ellipse-outline"} size={15}
-                                  style={{alignSelf: 'center'}}/>
-                        {this.generateChoiceOption(choice, uuid, index)}
-
-                    </TouchableOpacity>
-
-                ))}
-
-            </View>
-
-        )
-
+        return generateMultipleChoice(choices, uuid, this.state.questions,
+            (questionID, path, value) => this.updateQuestion(questionID, path, value));
     }
 
-    generateChoiceOption(choice, uuid, index) {
-
-        return (
-            <Text style={{
-                borderBottomWidth: 3,
-                borderColor: 'blue',
-                padding: 5,
-                width: '100%',
-                color: 'black',
-                alignSelf: 'center'
-            }}>
-                {(choice.option ? choice.option : "Option " + (index + 1))}
-            </Text>
-        );
-
-    }
 
     checkBox(uuid, index, choice) {
 
@@ -131,27 +51,7 @@ class ViewQuestions extends Component {
     }
 
     generateCheckBoxes(choices, uuid) {
-
-        return (
-
-            <View>
-
-                {choices?.map((choice, index) => (
-
-                    <TouchableOpacity style={{flexDirection: 'row', marginTop: 10}} key={index} onPress={() => {
-                        this.checkBox(uuid, index, choice)
-                    }}>
-
-                        <CheckBox isChecked={choice.isChecked} onClick={() => this.checkBox(uuid, index, choice)}/>
-                        {this.generateChoiceOption(choice, uuid, index)}
-                    </TouchableOpacity>
-
-                ))}
-
-            </View>
-
-        )
-
+        return generateCheckBoxes(choices, uuid, (uuid, index, choice) => this.checkBox(uuid, index, choice));
     }
 
 
@@ -191,11 +91,11 @@ class ViewQuestions extends Component {
                                         </Text>
 
                                         <HiddenView hide={values.type !== 'shortAnswer'}>
-                                            {this.generateShortAnswerInput()}
+                                            {generateShortAnswerInput()}
                                         </HiddenView>
 
                                         <HiddenView hide={values.type !== 'longAnswer'}>
-                                            {this.generateLongAnswerInput()}
+                                            {generateLongAnswerInput()}
                                         </HiddenView>
 
                                         <HiddenView hide={values.type !== 'multipleChoice'}>
@@ -210,7 +110,6 @@ class ViewQuestions extends Component {
 
                                 </View>
                             )
-
 
                         })
                     }
