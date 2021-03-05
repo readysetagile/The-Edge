@@ -88,11 +88,11 @@ class HomeScreen extends Component {
         this.setState({joinModalOpen: true})
     }
 
-    joinTeamFully = async (values) => {
+    joinTeamFully = async (teamCode, formValues={_: 0}) => {
 
         this.setState({modalOpen: false})
         let team = null;
-        let code = values["team code"]
+        let code = teamCode
         for (let [K, V] of Edge.teams.teams) {
             if (V.inviteData.teamCode === code) {
                 team = await Edge.teams.get(V.id);
@@ -102,7 +102,7 @@ class HomeScreen extends Component {
         if (team != null) {
             let profile = this.props.navigation.getParam('profile');
 
-            team.addMember(profile);
+            team.addMember(profile, formValues);
             let teams = this.state.teams;
             teams.push(this.generateTeamBanner(team, teams.length));
             await this.setState({teams: [...teams]})

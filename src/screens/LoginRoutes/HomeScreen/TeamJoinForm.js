@@ -18,6 +18,7 @@ export default function TeamCreateForm({onSubmit}) {
     const [requiredQuestions, setRequired] = useState(false);
     const [modalOpen, openModal] = useState(false);
     const [questions, setQuestions] = useState(null);
+    const [teamCode, setCode] = useState(null);
 
     const TeamSchema = yup.object({
         "team code": yup.string().required().min(5)
@@ -29,9 +30,10 @@ export default function TeamCreateForm({onSubmit}) {
 
                             if (Object.keys(V.modules.teamQuestions).filter(i => i !== 'required').length) {
 
-                                hideQuestion(false)
+                                hideQuestion(false);
                                 setRequired(V.modules.teamQuestions.required);
                                 setQuestions(V.modules.teamQuestions);
+                                setCode(V.inviteData.teamCode);
                                 return false;
 
                             }//b3e6b0
@@ -53,6 +55,7 @@ export default function TeamCreateForm({onSubmit}) {
     const submitQuestions = (values) => {
 
         openModal(false);
+        onSubmit(teamCode, values);
 
     }
 
@@ -74,7 +77,7 @@ export default function TeamCreateForm({onSubmit}) {
                 validationSchema={TeamSchema}
                 onSubmit={(values, actions) => {
                     actions.resetForm();
-                    onSubmit(values);
+                    onSubmit(values['team code']);
                 }}>
 
                 {(props) => (

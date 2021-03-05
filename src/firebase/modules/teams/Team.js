@@ -45,11 +45,12 @@ module.exports.Team = class Team {
     async getMember(id) {
         let member = this.members.get(id);
         let profile = (await Edge.users.get(member.accountID)).getProfile(id);
-        return this.members.get(id) instanceof Member ? this.members.get(id) : new Member(this.members.get(id), profile);
+        return this.members.get(id) instanceof Member ? this.members.get(id) : new Member(this.members.get(id), profile, this);
     }
 
-    async addMember(profile) {
-        let member = await Member.createMember(profile, this, this.#reference)
+    async addMember(profile, filledQuestions={_: 0}) {
+        let member = await Member.createMember(profile, this, this.#reference);
+        member.setFormAnswers(filledQuestions);
         this.members.set(member.id, member);
         profile.addTeam(this);
     }

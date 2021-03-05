@@ -6,8 +6,9 @@ const DEFAULTMEMBER = require("./model");
 module.exports.Member = class Member {
 
     profile;
+    #team;
 
-    constructor(memberObj, profile) {
+    constructor(memberObj, profile, team) {
 
         this.id = memberObj.id;
         this.joinedTimestamp = memberObj.joinedTimestamp;
@@ -16,8 +17,16 @@ module.exports.Member = class Member {
         this.username = memberObj.username;
         this.permissions = memberObj.permissions;
         this._profile = profile;
+        this.#team = team;
     }
 
+
+    setFormAnswers(answers){
+
+        this.teamAnswers = answers;
+        firebase.database().ref('teams/'+this.#team.id+"/members/"+this.id).update({teamAnswers: answers});
+
+    }
 
     get profile() {
         return new Profile(this._profile);
@@ -40,7 +49,7 @@ module.exports.Member = class Member {
         member[obj.id] = obj;
         reference.child("members").update(member).catch(console.error);
         obj.profile = profile;
-        return new Member(obj, profile);
+        return new Member(obj, profile, team);
 
     }
 
