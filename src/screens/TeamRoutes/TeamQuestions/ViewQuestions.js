@@ -136,7 +136,7 @@ class ViewQuestions extends Component {
 
             <View>
 
-                {choices.map((choice, index) => (
+                {choices?.map((choice, index) => (
 
                     <TouchableOpacity style={{flexDirection: 'row', marginTop: 10}} key={index} onPress={() => {
                         this.checkBox(uuid, index, choice)
@@ -157,7 +157,7 @@ class ViewQuestions extends Component {
 
     render() {
 
-        const questions = this.state.questions
+        const questions = this.state.questions || {}
 
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
@@ -167,7 +167,7 @@ class ViewQuestions extends Component {
                 }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
 
                     {
-                        Object.entries(questions).map((question, index) => {
+                        Object.entries(questions).filter(i => typeof i[1] === 'object').map((question, index) => {
 
                             const values = question[1];
                             const uuid = question[0];
@@ -187,7 +187,7 @@ class ViewQuestions extends Component {
                                             fontSize: 20,
                                             color: (values.required ? 'blue' : 'grey')
                                         }}>
-                                            {(values.question ? values.question : "Question " + (index + 1))}
+                                            {(values.question ? values.question : "Question " + (index))}
                                         </Text>
 
                                         <HiddenView hide={values.type !== 'shortAnswer'}>

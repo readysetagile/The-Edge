@@ -13,13 +13,14 @@ import styles from './styles'
 
 class QuestionCreationPage extends Component {
 
-    state = {
-        questionInfo: {}
-    }
-
 
     constructor(props) {
         super(props);
+        this.state = {
+            questionInfo: {
+                required: true
+            }
+        }
     }
 
     updateQuestion(questionUUID, path, value) {
@@ -74,7 +75,18 @@ class QuestionCreationPage extends Component {
         )
     }
 
+    componentDidMount() {
+
+        console.log(2);
+        this.focusListener = this.props.navigation.addListener('', () => {
+            //this.loadProfiles();
+            console.log(12);
+        });
+
+    }
+
     componentWillUnmount() {
+
 
 
     }
@@ -208,7 +220,7 @@ class QuestionCreationPage extends Component {
 
         let newObj = {
             type: "shortAnswer",
-            question: "Question " + (1 + Object.keys(this.state.questionInfo).length),
+            question: "Question " + (Object.keys(this.state.questionInfo).length),
             multipleChoice: [{
                 isFilled: false,
                 option: ""
@@ -260,13 +272,35 @@ class QuestionCreationPage extends Component {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
+                <View style={{
+                    backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
+                    flexDirection: 'row', justifyContent: 'space-between',
+                    borderRadius: 10
+                }}>
+
+                    <Text style={{alignSelf: 'center'}}>Total Questions: {Object.keys(this.state.questionInfo).length-1}</Text>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+                        <Text style={{alignSelf: 'center', paddingRight: 5}}>Require Submissions?</Text>
+                        <CheckBox
+                            isChecked={this.state.questionInfo.required}
+                            onClick={() => {
+                                let questions = this.state.questionInfo
+                                questions.required = !questions.required;
+                                this.setState({questionInfo: questions});
+                            }}
+                            style={{alignSelf: 'flex-end'}}
+                        />
+                    </View>
+
+
+                </View>
+
                 <ScrollView ref={ref => {
                     this.scrollView = ref
                 }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
 
                     {
-                        Object.entries(this.state.questionInfo).map((question, index) => {
-
+                        Object.entries(this.state.questionInfo).filter(i => typeof i[1] === 'object').map((question, index) => {
                             const values = question[1];
                             const uuid = question[0];
                             return (
@@ -290,7 +324,7 @@ class QuestionCreationPage extends Component {
                                             style={{...styles.questionInput}}
                                             multiline={true}
                                             fontSize={20}
-                                            placeholder={"Question " + (index + 1)}
+                                            placeholder={"Question " + (index+1)}
                                             placeholderTextColor={(values.required ? 'blue' : 'grey')}
                                             onChangeText={value => {
                                                 this.updateQuestion(uuid, 'question', value)
