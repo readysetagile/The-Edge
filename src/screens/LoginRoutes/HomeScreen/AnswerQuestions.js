@@ -27,7 +27,6 @@ class AnswerQuestions extends Component {
     componentDidMount() {
         const ValidationSchema = {};
         const questions = this.props.questions;
-        console.log(Object.keys(questions));
         for(const property in questions){
             if(questions.hasOwnProperty(property)) {
                 if(questions[property] instanceof Object) {
@@ -148,6 +147,8 @@ class AnswerQuestions extends Component {
                     validationSchema={this.state.FormValidationSchema}
                         onSubmit={(values, actions) => {
                     console.log("submitted");
+                    actions.resetForm();
+                    this.props.submit(values);
                 }}>
 
                     {(props) => (
@@ -209,7 +210,7 @@ class AnswerQuestions extends Component {
                                     })
                                 }
 
-                                <FlatButton text={"Submit!"} style={{marginTop: 10}}/>
+                                <FlatButton text={"Submit!"} style={{marginTop: 10}} onPress={props.handleSubmit}/>
 
                             </ScrollView>
 

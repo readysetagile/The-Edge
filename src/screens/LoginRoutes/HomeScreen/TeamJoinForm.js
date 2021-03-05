@@ -50,6 +50,12 @@ export default function TeamCreateForm({onSubmit}) {
 
     }
 
+    const submitQuestions = (values) => {
+
+        openModal(false);
+
+    }
+
     return (
         <View style={globalStyles.modalView()}>
 
@@ -58,7 +64,7 @@ export default function TeamCreateForm({onSubmit}) {
                     <View style={styles.modalContent}>
                         <Ionicons style={globalStyles.closeModal()} name={"close"} size={24}
                                   onPress={() => openModal(false)}/>
-                        <AnswerQuestions questions={questions}/>
+                        <AnswerQuestions questions={questions} submit={submitQuestions}/>
                     </View>
                 </TouchableWithoutFeedback>
             </Modal>
