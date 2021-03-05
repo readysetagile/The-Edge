@@ -1,14 +1,12 @@
 import React, {Component} from 'react';
-import {ScrollView, Text, TextInput, TouchableOpacity, View} from "react-native";
+import {ScrollView, Text, TextInput, View} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import styles from '../../TeamRoutes/TeamQuestions/styles'
 import colors from "../../styles";
 import HiddenView from "../../../Components/HiddenView";
 import {
     generateCheckBoxes,
-    generateLongAnswerInput,
     generateMultipleChoice,
-    generateShortAnswerInput
 } from "../../TeamRoutes/TeamQuestions/QuestionMethods";
 import FlatButton from "../../../Components/SubmitButton";
 import * as yup from 'yup';
@@ -16,8 +14,6 @@ import {Formik} from 'formik';
 
 //b3e6b0
 class AnswerQuestions extends Component {
-
-
 
     state = {
         questions: {},
@@ -31,6 +27,7 @@ class AnswerQuestions extends Component {
     componentDidMount() {
         const ValidationSchema = {};
         const questions = this.props.questions;
+        console.log(Object.keys(questions));
         for(const property in questions){
             if(questions.hasOwnProperty(property)) {
                 if(questions[property] instanceof Object) {
