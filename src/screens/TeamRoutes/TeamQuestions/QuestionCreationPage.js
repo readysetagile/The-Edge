@@ -89,9 +89,7 @@ class QuestionCreationPage extends Component {
     }
 
     componentWillUnmount() {
-
-
-
+        this.saveQuestions(false);
     }
 
     generateMultipleChoice(choices, uuid) {
@@ -271,11 +269,11 @@ class QuestionCreationPage extends Component {
 
     }
 
-     saveQuestions(){
+     saveQuestions(alertUser){
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.setTeamQuestions(Object.assign({}, this.state.questionInfo));
-            Alert.alert("Questions Saved!", "Questions also save when you leave this page")
+            alertUser ? Alert.alert("Questions Saved!", "Questions also save when you leave this page") : {}
         })
     }
 
@@ -288,7 +286,7 @@ class QuestionCreationPage extends Component {
                     <Text style={{alignSelf: 'center'}}>Total Questions: {Object.keys(this.state.questionInfo).length-1}</Text>
 
                     <Button title={"Save!"} color={'yellow'} style={{borderColor: 'red', padding: 10}} onPress={() => {
-                        this.saveQuestions();
+                        this.saveQuestions(true);
                     }}/>
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
