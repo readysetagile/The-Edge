@@ -138,11 +138,7 @@ export default class MemberPage extends Component {
                     </TouchableWithoutFeedback>
                 </Modal>
 
-                <View style={{
-                    backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
-                    flexDirection: 'row', justifyContent: 'space-between',
-                    borderRadius: 10
-                }}>
+                <View style={globalStyles.topToolBar}>
 
                     <Text style={{fontSize: 15, alignSelf: 'center'}}>{this.state.members.length} Members</Text>
 

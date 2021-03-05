@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, TextInput, TouchableOpacity, View, Text, Switch} from "react-native";
+import {ScrollView, TextInput, TouchableOpacity, View, Text, Switch, Button, Alert} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
@@ -9,18 +9,19 @@ import HiddenView from "../../../Components/HiddenView";
 import CheckBox from 'react-native-check-box'
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import styles from './styles'
-
+import Edge from "../../../firebase";
+import GlobalData from '../../../GlobalData';
 
 class QuestionCreationPage extends Component {
 
+    state = {
+        questionInfo: {
+            required: true
+        }
+    }
 
     constructor(props) {
         super(props);
-        this.state = {
-            questionInfo: {
-                required: true
-            }
-        }
     }
 
     updateQuestion(questionUUID, path, value) {
@@ -77,11 +78,13 @@ class QuestionCreationPage extends Component {
 
     componentDidMount() {
 
-        console.log(2);
-        this.focusListener = this.props.navigation.addListener('', () => {
-            //this.loadProfiles();
-            console.log(12);
-        });
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            const questions = team.getTeamQuestions();
+            if(questions != null){
+                this.setState({questionInfo: questions})
+                this.props.navigation.setParams({questionInfo: questions});
+            }
+        })
 
     }
 
@@ -268,17 +271,26 @@ class QuestionCreationPage extends Component {
 
     }
 
+     saveQuestions(){
+
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            team.setTeamQuestions(Object.assign({}, this.state.questionInfo));
+            Alert.alert("Questions Saved!", "Questions also save when you leave this page")
+        })
+    }
+
     render() {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
-                <View style={{
-                    backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
-                    flexDirection: 'row', justifyContent: 'space-between',
-                    borderRadius: 10
-                }}>
+                <View style={globalStyles.topToolBar}>
 
                     <Text style={{alignSelf: 'center'}}>Total Questions: {Object.keys(this.state.questionInfo).length-1}</Text>
+
+                    <Button title={"Save!"} color={'yellow'} style={{borderColor: 'red', padding: 10}} onPress={() => {
+                        this.saveQuestions();
+                    }}/>
+
                     <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
                         <Text style={{alignSelf: 'center', paddingRight: 5}}>Require Submissions?</Text>
                         <CheckBox
@@ -288,7 +300,7 @@ class QuestionCreationPage extends Component {
                                 questions.required = !questions.required;
                                 this.setState({questionInfo: questions});
                             }}
-                            style={{alignSelf: 'flex-end'}}
+                            style={{alignSelf: 'center'}}
                         />
                     </View>
 

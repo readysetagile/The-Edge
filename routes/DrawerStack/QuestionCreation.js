@@ -3,7 +3,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {QuestionCreationPage, ViewQuestions} from "../../src/screens";
 import HeaderBurgerNav from "../../src/Components/HeaderBurgerNav";
 import {openMenu} from "../../src/firebase/Util";
-import {View, Text} from "react-native";
+import {View} from "react-native";
 import {Ionicons} from "@expo/vector-icons";
 
 const screens = {
@@ -25,6 +25,9 @@ const screens = {
     },
     ViewQuestions:{
         screen: ViewQuestions,
+        navigationOptions:  {
+            headerTitle: "View Questions"
+        }
     }
 }
 

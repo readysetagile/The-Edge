@@ -24,6 +24,19 @@ module.exports.Team = class Team {
 
     }
 
+    setTeamQuestions(questionInfo){
+
+        if(questionInfo.type !== 'multipleChoice' && questionInfo.type !== 'checkBoxes'){
+            questionInfo.multipleChoice = null;
+        }
+        this.#reference.child("modules").update({teamQuestions: questionInfo});
+
+    }
+
+    getTeamQuestions(){
+        return this.modules.teamQuestions;
+    }
+
     /**
      * Gets a member in the current team
      * @param id the id of the member (profile id)
