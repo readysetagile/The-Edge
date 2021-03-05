@@ -1,18 +1,23 @@
 import React, {useState} from 'react';
 import {Formik} from 'formik';
-import {Text, TextInput, View, TouchableOpacity} from 'react-native';
+import {Text, TextInput, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Modal} from 'react-native';
 import * as yup from 'yup';
 import FlatButton from "../../../Components/SubmitButton";
 import {globalStyles} from "../../GlobalStyles";
 import Edge from "../../../firebase";
 import HiddenView from "../../../Components/HiddenView";
 import colors from "../../styles";
+import styles from "./styles";
+import {Ionicons} from "@expo/vector-icons";
+import AnswerQuestions from "./AnswerQuestions";
 
 
 export default function TeamCreateForm({onSubmit}) {
 
     const [hideQuestions, hideQuestion] = useState(true);
     const [requiredQuestions, setRequired] = useState(false);
+    const [modalOpen, openModal] = useState(false);
+    const [questions, setQuestions] = useState(null);
 
     const TeamSchema = yup.object({
         "team code": yup.string().required().min(5)
@@ -26,7 +31,7 @@ export default function TeamCreateForm({onSubmit}) {
 
                                 hideQuestion(false)
                                 setRequired(V.modules.teamQuestions.required);
-
+                                setQuestions(V.modules.teamQuestions);
                                 return false;
 
                             }//b3e6b0
@@ -41,12 +46,22 @@ export default function TeamCreateForm({onSubmit}) {
 
     const openQuestions = () => {
 
-
+        openModal(true)
 
     }
 
     return (
         <View style={globalStyles.modalView()}>
+
+            <Modal visible={modalOpen} animationType={'slide'}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={styles.modalContent}>
+                        <Ionicons style={globalStyles.closeModal()} name={"close"} size={24}
+                                  onPress={() => openModal(false)}/>
+                        <AnswerQuestions questions={questions}/>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Modal>
 
             <Formik
                 initialValues={{"team code": ''}}
@@ -72,7 +87,7 @@ export default function TeamCreateForm({onSubmit}) {
 
                         <HiddenView hide={hideQuestions}>
                             <Text
-                                style={{...globalStyles.errorText, marginTop: -5}}>
+                                style={{...globalStyles.errorText, marginTop: -3}}>
                                 {requiredQuestions ? "This team requires you to fill out questions" :
                                 "This team has questions to answer but are optional"}
                             </Text>
