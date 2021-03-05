@@ -307,7 +307,7 @@ class QuestionCreationPage extends Component {
 
                 <ScrollView ref={ref => {
                     this.scrollView = ref
-                }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}>
+                }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})} style={{paddingBottom: 10}}>
 
                     {
                         Object.entries(this.state.questionInfo).filter(i => typeof i[1] === 'object').map((question, index) => {
