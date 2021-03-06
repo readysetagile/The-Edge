@@ -19,6 +19,7 @@ import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
 import InviteForm from "./InviteForm";
 
+
 export default class MemberPage extends Component {
 
     state = {
@@ -54,7 +55,7 @@ export default class MemberPage extends Component {
         let memArr = [];
         let indx = 0;
         for (let [K, V] of members) {
-            let member = await this.state.team?.getMember(K)
+            let member = await this.state.team.getMember(K)
             let memBox = await this.generateMemberBox(member, indx);
             memArr.push(memBox)
             indx++;
