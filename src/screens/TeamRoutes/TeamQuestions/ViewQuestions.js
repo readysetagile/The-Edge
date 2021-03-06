@@ -15,13 +15,15 @@ class ViewQuestions extends Component {
 
     state = {
         questions: {},
-        filledQuestions: null
+        filledQuestions: null,
+        freezeScreen: false
     }
 
     constructor(props) {
         super(props);
         let data = this.props.navigation.getParam("filledInData");
         this.state = {
+            freezeScreen: this.props.navigation.getParam("freezeScreen"),
             questions: this.props.navigation.getParam("data"),
             filledQuestions: data
         };
@@ -31,13 +33,10 @@ class ViewQuestions extends Component {
     fillQuestions(data){
 
         const questions = this.state.questions;
-        console.log(questions, 5);
-        console.log(data, 'data');
         Object.entries(data).forEach(i => {
 
             const key = i[0], value = i[1];
             const question = questions[key];
-            console.log(question);
             if(question.type === "multipleChoice"){
 
                 const choice = question.multipleChoice;
@@ -120,7 +119,7 @@ class ViewQuestions extends Component {
                                         borderColor: (values.required ? 'blue' : 'black'),
                                         zIndex: Object.keys(questions).length - index,
                                         paddingBottom: 50
-                                    }} key={uuid}>
+                                    }} key={uuid} pointerEvents={(this.state.freezeScreen ? 'none' : 'auto')}>
 
                                     <View>
                                         <Text style={{

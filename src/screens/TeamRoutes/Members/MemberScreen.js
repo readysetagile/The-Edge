@@ -132,7 +132,8 @@ export default class MemberPage extends Component {
 
         const {navigation} = this.props;
         console.log(this.state.clickedMember.member.teamAnswers)
-        navigation.navigate("ViewQuestions", {data: this.state.team.modules.teamQuestions, filledInData: this.state.clickedMember.member.teamAnswers})
+        navigation.navigate("ViewQuestions", {data: this.state.team.modules.teamQuestions,
+            filledInData: this.state.clickedMember.member.teamAnswers, freezeScreen: true})
 
     }
 
