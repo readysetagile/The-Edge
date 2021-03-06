@@ -123,7 +123,7 @@ export default class MemberPage extends Component {
 
         this.setState({modalOpen: false});
         this.state.team.teamCode = values["Team Code"];
-        this.state.team.toggleTeamJoining(values["Enable Joining"])
+        this.state.team.toggleTeamJoining(values["Enable Joining"]);
 
     }
 

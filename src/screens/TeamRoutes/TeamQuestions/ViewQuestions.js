@@ -37,22 +37,24 @@ class ViewQuestions extends Component {
 
             const key = i[0], value = i[1];
             const question = questions[key];
-            if (question.type === "multipleChoice") {
+            if(question) {
+                if (question.type === "multipleChoice") {
 
-                const choice = question.multipleChoice;
-                choice.forEach(m => {
-                    m.isFilled = m.option === value;
-                })
+                    const choice = question.multipleChoice;
+                    choice.forEach(m => {
+                        m.isFilled = m.option === value;
+                    })
 
-                this.updateQuestion(key, "multipleChoice", choice);
+                    this.updateQuestion(key, "multipleChoice", choice);
 
-            } else if (question.type === "checkBoxes") {
+                } else if (question.type === "checkBoxes") {
 
-                question.multipleChoice.forEach(j => {
-                    j.isChecked = value.some(m => m === j.option);
-                });
-                this.updateQuestion(key, "multipleChoice", question.multipleChoice);
+                    question.multipleChoice.forEach(j => {
+                        j.isChecked = value.some(m => m === j.option);
+                    });
+                    this.updateQuestion(key, "multipleChoice", question.multipleChoice);
 
+                }
             }
         })
 
