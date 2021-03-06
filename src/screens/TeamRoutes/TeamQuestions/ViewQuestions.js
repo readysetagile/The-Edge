@@ -13,16 +13,57 @@ import {
 
 class ViewQuestions extends Component {
 
-
     state = {
-        questions: []
+        questions: {},
+        filledQuestions: null
     }
 
     constructor(props) {
         super(props);
+        let data = this.props.navigation.getParam("filledInData");
         this.state = {
-            questions: this.props.navigation.getParam("data")
+            questions: this.props.navigation.getParam("data"),
+            filledQuestions: data
         };
+
+    }
+
+    fillQuestions(data){
+
+        const questions = this.state.questions;
+        console.log(questions, 5);
+        console.log(data, 'data');
+        Object.entries(data).forEach(i => {
+
+            const key = i[0], value = i[1];
+            const question = questions[key];
+            console.log(question);
+            if(question.type === "multipleChoice"){
+
+                const choice = question.multipleChoice;
+                choice.forEach(m => {
+                    m.isFilled = m.option === value;
+                })
+
+                this.updateQuestion(key, "multipleChoice", choice);
+
+            }else if(question.type === "checkBoxes"){
+
+                question.multipleChoice.forEach(j => {
+                    j.isChecked = value.some(m => m === j.option);
+                });
+                this.updateQuestion(key, "multipleChoice", question.multipleChoice);
+
+            }
+        })
+
+    }
+
+    componentDidMount() {
+
+        if(this.props.navigation.getParam("filledInData")){
+            this.fillQuestions(this.props.navigation.getParam("filledInData"));
+        }
 
     }
 
@@ -91,11 +132,11 @@ class ViewQuestions extends Component {
                                         </Text>
 
                                         <HiddenView hide={values.type !== 'shortAnswer'}>
-                                            {generateShortAnswerInput()}
+                                            {generateShortAnswerInput(this.state.filledQuestions[uuid])}
                                         </HiddenView>
 
                                         <HiddenView hide={values.type !== 'longAnswer'}>
-                                            {generateLongAnswerInput()}
+                                            {generateLongAnswerInput(this.state.filledQuestions[uuid])}
                                         </HiddenView>
 
                                         <HiddenView hide={values.type !== 'multipleChoice'}>

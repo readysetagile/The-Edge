@@ -55,7 +55,7 @@ export function generateChoiceOption(choice, uuid, index) {
 
 }
 
-export function generateLongAnswerInput() {
+export function generateLongAnswerInput(value=null) {
     return (
         <View>
             <TextInput
@@ -66,6 +66,7 @@ export function generateLongAnswerInput() {
                     borderColor: 'grey',
                     fontSize: 15,
                 }}
+                value={value}
                 editable={true}
                 multiline={true}
                 placeholder={"Long Answer Text"}
@@ -74,7 +75,7 @@ export function generateLongAnswerInput() {
     )
 }
 
-export function generateShortAnswerInput() {
+export function generateShortAnswerInput(value=null) {
 
     return (
         <View>
@@ -86,6 +87,7 @@ export function generateShortAnswerInput() {
                     borderColor: 'grey',
                     fontSize: 15,
                 }}
+                value={value}
                 editable={true}
                 placeholder={"Short Answer Text"}
                 placeholderTextColor={"grey"}/>
