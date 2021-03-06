@@ -1,6 +1,6 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation-stack';
-import {Members} from "../../src/screens";
+import {Members, ViewQuestions} from "../../src/screens";
 import HeaderBurgerNav from "../../src/Components/HeaderBurgerNav";
 import {openMenu} from "../../src/firebase/Util";
 
@@ -11,6 +11,12 @@ const screens = {
             return {
                 headerTitle: () => <HeaderBurgerNav title="Member List" onPress={() => openMenu(navigation)}/>
             }
+        }
+    },
+    SeeMemberQuestions:{
+        screen: ViewQuestions,
+        navigationOptions:  {
+            headerTitle: "View Questions"
         }
     }
 }

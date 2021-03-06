@@ -15,13 +15,13 @@ class ViewQuestions extends Component {
 
     state = {
         questions: {},
-        filledQuestions: null,
+        filledQuestions: {},
         freezeScreen: false
     }
 
     constructor(props) {
         super(props);
-        let data = this.props.navigation.getParam("filledInData");
+        let data = this.props.navigation.getParam("filledInData") || {};
         this.state = {
             freezeScreen: this.props.navigation.getParam("freezeScreen"),
             questions: this.props.navigation.getParam("data"),
@@ -31,7 +31,7 @@ class ViewQuestions extends Component {
     }
 
     fillQuestions(data){
-
+        if(data._ === 0) return;//edge case
         const questions = this.state.questions;
         Object.entries(data).forEach(i => {
 
@@ -41,6 +41,7 @@ class ViewQuestions extends Component {
 
                 const choice = question.multipleChoice;
                 choice.forEach(m => {
+                    console.log(m.option, value);
                     m.isFilled = m.option === value;
                 })
 
@@ -131,11 +132,15 @@ class ViewQuestions extends Component {
                                         </Text>
 
                                         <HiddenView hide={values.type !== 'shortAnswer'}>
-                                            {generateShortAnswerInput(this.state.filledQuestions[uuid])}
+                                            {generateShortAnswerInput((
+                                                typeof this.state.filledQuestions[uuid] === 'string' ?
+                                                    this.state.filledQuestions[uuid] : null))}
                                         </HiddenView>
 
                                         <HiddenView hide={values.type !== 'longAnswer'}>
-                                            {generateLongAnswerInput(this.state.filledQuestions[uuid])}
+                                            {generateLongAnswerInput((
+                                                typeof this.state.filledQuestions[uuid] === 'string' ?
+                                                    this.state.filledQuestions[uuid] : null))}
                                         </HiddenView>
 
                                         <HiddenView hide={values.type !== 'multipleChoice'}>

@@ -131,8 +131,8 @@ export default class MemberPage extends Component {
     showMemberQuestions(){
 
         const {navigation} = this.props;
-        console.log(this.state.clickedMember.member.teamAnswers)
-        navigation.navigate("ViewQuestions", {data: this.state.team.modules.teamQuestions,
+        this.RBSheet.close();
+        navigation.navigate("SeeMemberQuestions", {data: this.state.team.modules.teamQuestions,
             filledInData: this.state.clickedMember.member.teamAnswers, freezeScreen: true})
 
     }
@@ -160,8 +160,6 @@ export default class MemberPage extends Component {
                     openDuration={250}
                     customStyles={{
                         container: {
-                            //justifyContent: "center",
-                            //alignItems: "center",
                             backgroundColor: 'darkmagenta'
                         }
                     }}>
