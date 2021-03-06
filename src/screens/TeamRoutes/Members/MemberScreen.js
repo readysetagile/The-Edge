@@ -18,6 +18,7 @@ import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
 import InviteForm from "./InviteForm";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 
 export default class MemberPage extends Component {
@@ -27,13 +28,13 @@ export default class MemberPage extends Component {
         team: null,
         members: [],
         hiddenMembers: {},
-        modalOpen: false
+        modalOpen: false,
+        clickedMember: null
     }
 
     constructor(props) {
         super(props);
         Edge.teams.get(Global.teamID).then(r => {
-            //We need to reload the render
             firebase.database().ref("teams/" + r.id + "/members").on('value', snapshot => {
                 this.componentDidMount();
             })
@@ -77,7 +78,10 @@ export default class MemberPage extends Component {
                 borderWidth: 1,
                 padding: 10
             }}>
-                <TouchableOpacity style={{flexDirection: 'row'}}>
+                <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => {
+                    this.setState({clickedMember: {member: member, profileImage: profileImage}})
+                    this.RBSheet.open()
+                }}>
                     <Image style={globalStyles.avatar(50)}
                            source={{uri: profileImage}}/>
                     <Text style={{alignSelf: 'center', padding: 10, fontSize: 20, fontWeight: 'bold'}}>
@@ -123,6 +127,17 @@ export default class MemberPage extends Component {
 
     }
 
+    showMemberQuestions() {
+
+        const {navigation} = this.props;
+        this.RBSheet.close();
+        navigation.navigate("SeeMemberQuestions", {
+            data: this.state.team.modules.teamQuestions,
+            filledInData: this.state.clickedMember.member.teamAnswers, freezeScreen: true
+        })
+
+    }
+
     render() {
 
         return (
@@ -138,11 +153,50 @@ export default class MemberPage extends Component {
                     </TouchableWithoutFeedback>
                 </Modal>
 
-                <View style={{
-                    backgroundColor: colors.inputBox, marginBottom: 20, padding: 15,
-                    flexDirection: 'row', justifyContent: 'space-between',
-                    borderRadius: 10
-                }}>
+                <RBSheet
+                    ref={ref => {
+                        this.RBSheet = ref;
+                    }}
+                    height={300}
+                    openDuration={250}
+                    customStyles={{
+                        container: {
+                            backgroundColor: 'darkmagenta'
+                        }
+                    }}>
+                    <View style={globalStyles.container}>
+
+                        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+
+                            <Image style={globalStyles.avatar(100)}
+                                   source={{uri: this.state.clickedMember?.profileImage}}/>
+                            <Ionicons name={"ellipsis-horizontal"} size={30}/>
+                        </View>
+
+                        <Text style={{
+                            color: 'white',
+                            fontSize: 30,
+                            left: 5,
+                            textAlign: 'center',
+                            alignSelf: 'flex-start'
+                        }}>
+                            {this.state.clickedMember?.member.username}</Text>
+
+                        <TouchableOpacity onPress={() => this.showMemberQuestions()}>
+                            <View style={{
+                                padding: 15, backgroundColor: colors.background,
+                                marginTop: 10, borderRadius: 5, flexDirection: 'row'
+                            }}>
+                                <Ionicons name={"document-text"} size={20}/>
+                                <Text style={{alignSelf: 'center', color: 'white', fontSize: 20, left: 5}}>View Question
+                                    Form</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                    </View>
+                </RBSheet>
+
+                <View style={globalStyles.topToolBar}>
 
                     <Text style={{fontSize: 15, alignSelf: 'center'}}>{this.state.members.length} Members</Text>
 

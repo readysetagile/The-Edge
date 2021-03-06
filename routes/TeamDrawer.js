@@ -1,7 +1,8 @@
 import {createDrawerNavigator, DrawerItems} from 'react-navigation-drawer';
 import {createAppContainer, NavigationActions, StackActions} from 'react-navigation';
-import MemberStack from './MemberStack';
-import DashboardStack from "./DashboardStack";
+import MemberStack from './DrawerStack/MemberStack';
+import DashboardStack from "./DrawerStack/DashboardStack";
+import QuestionStack from './DrawerStack/QuestionCreation'
 import React from "react";
 import colors from "../src/screens/styles";
 import GlobalData from '../src/GlobalData'
@@ -62,7 +63,10 @@ const TeamDrawerNavigation = createDrawerNavigator({
     },
     Members: {
         screen: MemberStack
-    }
+    },
+    Questions: {
+        screen: QuestionStack
+    },
 
 }, DrawerConfig)
 
