@@ -3,7 +3,7 @@ import {Ionicons} from "@expo/vector-icons";
 import React from "react";
 import CheckBox from "react-native-check-box";
 
-export function generateMultipleChoice(choices, uuid, stateQuestions, onPress, props=null) {
+export function generateMultipleChoice(choices, uuid, stateQuestions, onPress, props = null) {
 
     return (
 

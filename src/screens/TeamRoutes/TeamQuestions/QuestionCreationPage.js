@@ -80,7 +80,7 @@ class QuestionCreationPage extends Component {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             const questions = team.getTeamQuestions();
-            if(questions != null){
+            if (questions != null) {
                 this.setState({questionInfo: questions})
                 this.props.navigation.setParams({questionInfo: questions});
             }
@@ -269,7 +269,7 @@ class QuestionCreationPage extends Component {
 
     }
 
-     saveQuestions(alertUser){
+    saveQuestions(alertUser) {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.setTeamQuestions(Object.assign({}, this.state.questionInfo));
@@ -283,7 +283,8 @@ class QuestionCreationPage extends Component {
 
                 <View style={globalStyles.topToolBar}>
 
-                    <Text style={{alignSelf: 'center'}}>Total Questions: {Object.keys(this.state.questionInfo).length-1}</Text>
+                    <Text style={{alignSelf: 'center'}}>Total
+                        Questions: {Object.keys(this.state.questionInfo).length - 1}</Text>
 
                     <Button title={"Save!"} color={'yellow'} style={{borderColor: 'red', padding: 10}} onPress={() => {
                         this.saveQuestions(true);
@@ -307,7 +308,8 @@ class QuestionCreationPage extends Component {
 
                 <ScrollView ref={ref => {
                     this.scrollView = ref
-                }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})} style={{paddingBottom: 10}}>
+                }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
+                            style={{paddingBottom: 10}}>
 
                     {
                         Object.entries(this.state.questionInfo).filter(i => typeof i[1] === 'object').map((question, index) => {
@@ -334,7 +336,7 @@ class QuestionCreationPage extends Component {
                                             style={{...styles.questionInput}}
                                             multiline={true}
                                             fontSize={20}
-                                            placeholder={"Question " + (index+1)}
+                                            placeholder={"Question " + (index + 1)}
                                             placeholderTextColor={(values.required ? 'blue' : 'grey')}
                                             onChangeText={value => {
                                                 this.updateQuestion(uuid, 'question', value)
