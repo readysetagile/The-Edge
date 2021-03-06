@@ -55,7 +55,7 @@ export function generateChoiceOption(choice, uuid, index) {
 
 }
 
-export function generateLongAnswerInput(value=null) {
+export function generateLongAnswerInput(value = null) {
     return (
         <View>
             <TextInput
@@ -75,7 +75,7 @@ export function generateLongAnswerInput(value=null) {
     )
 }
 
-export function generateShortAnswerInput(value=null) {
+export function generateShortAnswerInput(value = null) {
 
     return (
         <View>

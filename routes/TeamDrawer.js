@@ -10,9 +10,6 @@ import {Button, SafeAreaView, ScrollView} from "react-native";
 import Edge from "../src/firebase";
 import {firebase} from '../src/firebase/config'
 import {Profile} from "../src/firebase/modules/profiles";
-import {Members, QuestionCreationPage, ViewQuestions} from "../src/screens";
-import HeaderBurgerNav from "../src/Components/HeaderBurgerNav";
-import {openMenu} from "../src/firebase/Util";
 
 
 const navigateToHome = ({navigation}) => {
@@ -67,7 +64,7 @@ const TeamDrawerNavigation = createDrawerNavigator({
     Members: {
         screen: MemberStack
     },
-    Questions:{
+    Questions: {
         screen: QuestionStack
     },
 

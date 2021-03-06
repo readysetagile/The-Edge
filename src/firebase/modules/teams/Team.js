@@ -24,16 +24,16 @@ module.exports.Team = class Team {
 
     }
 
-    setTeamQuestions(questionInfo){
+    setTeamQuestions(questionInfo) {
 
-        if(questionInfo.type !== 'multipleChoice' && questionInfo.type !== 'checkBoxes'){
+        if (questionInfo.type !== 'multipleChoice' && questionInfo.type !== 'checkBoxes') {
             questionInfo.multipleChoice = null;
         }
         this.#reference.child("modules").update({teamQuestions: questionInfo});
 
     }
 
-    getTeamQuestions(){
+    getTeamQuestions() {
         return this.modules.teamQuestions;
     }
 
@@ -48,7 +48,7 @@ module.exports.Team = class Team {
         return this.members.get(id) instanceof Member ? this.members.get(id) : new Member(this.members.get(id), profile, this);
     }
 
-    async addMember(profile, filledQuestions={_: 0}) {
+    async addMember(profile, filledQuestions = {_: 0}) {
         let member = await Member.createMember(profile, this, this.#reference);
         member.setFormAnswers(filledQuestions);
         this.members.set(member.id, member);

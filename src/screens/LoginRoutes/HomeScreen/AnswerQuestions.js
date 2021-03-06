@@ -4,10 +4,7 @@ import {globalStyles} from "../../GlobalStyles";
 import styles from '../../TeamRoutes/TeamQuestions/styles'
 import colors from "../../styles";
 import HiddenView from "../../../Components/HiddenView";
-import {
-    generateCheckBoxes,
-    generateMultipleChoice,
-} from "../../TeamRoutes/TeamQuestions/QuestionMethods";
+import {generateCheckBoxes, generateMultipleChoice,} from "../../TeamRoutes/TeamQuestions/QuestionMethods";
 import FlatButton from "../../../Components/SubmitButton";
 import * as yup from 'yup';
 import {Formik} from 'formik';
@@ -27,9 +24,9 @@ class AnswerQuestions extends Component {
     componentDidMount() {
         const ValidationSchema = {};
         const questions = this.props.questions;
-        for(const property in questions){
-            if(questions.hasOwnProperty(property)) {
-                if(questions[property] instanceof Object) {
+        for (const property in questions) {
+            if (questions.hasOwnProperty(property)) {
+                if (questions[property] instanceof Object) {
 
                     let object = {
                         [property]: (questions[property].type !== "checkBoxes" ? yup.string() : yup.array())
@@ -67,11 +64,11 @@ class AnswerQuestions extends Component {
         questions[uuid].multipleChoice[index] = answer;
         let checkedBoxes = props.values[uuid];
 
-        if(!checkedBoxes){
+        if (!checkedBoxes) {
             checkedBoxes = []
         }
 
-        if(choice.isChecked)
+        if (choice.isChecked)
             checkedBoxes.push(choice.option);
         else checkedBoxes = checkedBoxes.filter(i => i !== choice.option);
 
@@ -84,7 +81,7 @@ class AnswerQuestions extends Component {
         return generateCheckBoxes(choices, uuid, (uuid, index, choice) => this.checkBox(uuid, index, choice, props));
     }
 
-    generateLongAnswerInput(props, questionUUID){
+    generateLongAnswerInput(props, questionUUID) {
 
         return (
             <View>
@@ -107,7 +104,7 @@ class AnswerQuestions extends Component {
 
     }
 
-    generateShortAnswerInput(props, questionUUID){
+    generateShortAnswerInput(props, questionUUID) {
 
         return (
             <View>
@@ -135,9 +132,9 @@ class AnswerQuestions extends Component {
         const questions = this.state.questions || {}
         let initialVals = {}
         Object.entries(questions).filter(i => i[0] !== 'required').forEach(i => {
-            if(i[1].type === 'checkBoxes'){
+            if (i[1].type === 'checkBoxes') {
                 return initialVals[i[0]] = []
-            }else initialVals[i[0]] = ""
+            } else initialVals[i[0]] = ""
         })
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
@@ -145,11 +142,10 @@ class AnswerQuestions extends Component {
                 <Formik
                     initialValues={initialVals}
                     validationSchema={this.state.FormValidationSchema}
-                        onSubmit={(values, actions) => {
-                    console.log("submitted");
-                    actions.resetForm();
-                    this.props.submit(values);
-                }}>
+                    onSubmit={(values, actions) => {
+                        actions.resetForm();
+                        this.props.submit(values);
+                    }}>
 
                     {(props) => (
 
@@ -198,7 +194,11 @@ class AnswerQuestions extends Component {
                                                         {this.generateCheckBoxes(values.multipleChoice, uuid, props)}
                                                     </HiddenView>
 
-                                                    <Text style={{...globalStyles.errorText, color:"black", marginBottom: 0}}>
+                                                    <Text style={{
+                                                        ...globalStyles.errorText,
+                                                        color: "black",
+                                                        marginBottom: 0
+                                                    }}>
                                                         {props.touched[uuid] && props.errors[uuid]}
                                                     </Text>
 

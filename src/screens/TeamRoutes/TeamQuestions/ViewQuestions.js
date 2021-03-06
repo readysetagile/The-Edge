@@ -30,24 +30,23 @@ class ViewQuestions extends Component {
 
     }
 
-    fillQuestions(data){
-        if(data._ === 0) return;//edge case
+    fillQuestions(data) {
+        if (data._ === 0) return;//edge case
         const questions = this.state.questions;
         Object.entries(data).forEach(i => {
 
             const key = i[0], value = i[1];
             const question = questions[key];
-            if(question.type === "multipleChoice"){
+            if (question.type === "multipleChoice") {
 
                 const choice = question.multipleChoice;
                 choice.forEach(m => {
-                    console.log(m.option, value);
                     m.isFilled = m.option === value;
                 })
 
                 this.updateQuestion(key, "multipleChoice", choice);
 
-            }else if(question.type === "checkBoxes"){
+            } else if (question.type === "checkBoxes") {
 
                 question.multipleChoice.forEach(j => {
                     j.isChecked = value.some(m => m === j.option);
@@ -61,7 +60,7 @@ class ViewQuestions extends Component {
 
     componentDidMount() {
 
-        if(this.props.navigation.getParam("filledInData")){
+        if (this.props.navigation.getParam("filledInData")) {
             this.fillQuestions(this.props.navigation.getParam("filledInData"));
         }
 

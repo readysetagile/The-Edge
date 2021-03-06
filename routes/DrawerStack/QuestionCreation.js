@@ -15,17 +15,17 @@ const screens = {
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
                         <HeaderBurgerNav title="Questions" onPress={() => openMenu(navigation)}/>
                         <Ionicons name={'eye-outline'} size={25} color={'blue'} style={{alignSelf: 'center', right: 35}}
-                        onPress={() => {
-                            navigation.navigate("ViewQuestions", {data: navigation.getParam("questionInfo")})
-                        }}/>
+                                  onPress={() => {
+                                      navigation.navigate("ViewQuestions", {data: navigation.getParam("questionInfo")})
+                                  }}/>
                     </View>
                 )
             }
         }
     },
-    ViewQuestions:{
+    ViewQuestions: {
         screen: ViewQuestions,
-        navigationOptions:  {
+        navigationOptions: {
             headerTitle: "View Questions"
         }
     }

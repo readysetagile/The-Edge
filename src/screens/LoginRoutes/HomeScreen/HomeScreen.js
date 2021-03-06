@@ -88,7 +88,7 @@ class HomeScreen extends Component {
         this.setState({joinModalOpen: true})
     }
 
-    joinTeamFully = async (teamCode, formValues={_: 0}) => {
+    joinTeamFully = async (teamCode, formValues = {_: 0}) => {
 
         this.setState({modalOpen: false})
         let team = null;

@@ -21,10 +21,10 @@ module.exports.Member = class Member {
     }
 
 
-    setFormAnswers(answers){
+    setFormAnswers(answers) {
 
         this.teamAnswers = answers;
-        firebase.database().ref('teams/'+this.#team.id+"/members/"+this.id).update({teamAnswers: answers});
+        firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id).update({teamAnswers: answers});
 
     }
 

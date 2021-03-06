@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {ScrollView, TextInput, TouchableOpacity, View, Text, Switch, Button, Alert} from "react-native";
+import {Alert, Button, ScrollView, Switch, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";

@@ -8,8 +8,7 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View,
-    Button
+    View
 } from 'react-native';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
@@ -128,12 +127,14 @@ export default class MemberPage extends Component {
 
     }
 
-    showMemberQuestions(){
+    showMemberQuestions() {
 
         const {navigation} = this.props;
         this.RBSheet.close();
-        navigation.navigate("SeeMemberQuestions", {data: this.state.team.modules.teamQuestions,
-            filledInData: this.state.clickedMember.member.teamAnswers, freezeScreen: true})
+        navigation.navigate("SeeMemberQuestions", {
+            data: this.state.team.modules.teamQuestions,
+            filledInData: this.state.clickedMember.member.teamAnswers, freezeScreen: true
+        })
 
     }
 
@@ -169,17 +170,26 @@ export default class MemberPage extends Component {
 
                             <Image style={globalStyles.avatar(100)}
                                    source={{uri: this.state.clickedMember?.profileImage}}/>
-                                   <Ionicons name={"ellipsis-horizontal"} size={30}/>
+                            <Ionicons name={"ellipsis-horizontal"} size={30}/>
                         </View>
 
-                        <Text style={{color: 'white', fontSize: 30, left: 5, textAlign: 'center', alignSelf: 'flex-start'}}>
+                        <Text style={{
+                            color: 'white',
+                            fontSize: 30,
+                            left: 5,
+                            textAlign: 'center',
+                            alignSelf: 'flex-start'
+                        }}>
                             {this.state.clickedMember?.member.username}</Text>
 
                         <TouchableOpacity onPress={() => this.showMemberQuestions()}>
-                            <View style={{padding: 15, backgroundColor: colors.background,
-                                marginTop: 10, borderRadius: 5, flexDirection: 'row'}}>
+                            <View style={{
+                                padding: 15, backgroundColor: colors.background,
+                                marginTop: 10, borderRadius: 5, flexDirection: 'row'
+                            }}>
                                 <Ionicons name={"document-text"} size={20}/>
-                                <Text style={{alignSelf: 'center', color: 'white', fontSize: 20, left: 5}}>View Question Form</Text>
+                                <Text style={{alignSelf: 'center', color: 'white', fontSize: 20, left: 5}}>View Question
+                                    Form</Text>
                             </View>
                         </TouchableOpacity>
 

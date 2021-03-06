@@ -13,9 +13,9 @@ const screens = {
             }
         }
     },
-    SeeMemberQuestions:{
+    SeeMemberQuestions: {
         screen: ViewQuestions,
-        navigationOptions:  {
+        navigationOptions: {
             headerTitle: "View Questions"
         }
     }

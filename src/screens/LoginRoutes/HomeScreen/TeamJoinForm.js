@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {Formik} from 'formik';
-import {Text, TextInput, View, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Modal} from 'react-native';
+import {Keyboard, Modal, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import * as yup from 'yup';
 import FlatButton from "../../../Components/SubmitButton";
 import {globalStyles} from "../../GlobalStyles";
@@ -98,7 +98,7 @@ export default function TeamCreateForm({onSubmit}) {
                             <Text
                                 style={{...globalStyles.errorText, marginTop: -3}}>
                                 {requiredQuestions ? "This team requires you to fill out questions" :
-                                "This team has questions to answer but are optional"}
+                                    "This team has questions to answer but are optional"}
                             </Text>
 
                             <TouchableOpacity style={{
@@ -107,7 +107,8 @@ export default function TeamCreateForm({onSubmit}) {
                                 borderRadius: 20,
                                 marginBottom: 20
                             }} onPress={openQuestions}>
-                                <Text style={{color: 'white',
+                                <Text style={{
+                                    color: 'white',
                                     fontSize: 15,
                                     alignSelf: 'center',
                                     fontWeight: 'bold'
