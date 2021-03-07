@@ -53,6 +53,7 @@ module.exports.Team = class Team {
         member.setFormAnswers(filledQuestions);
         this.members.set(member.id, member);
         profile.addTeam(this);
+        return member;
     }
 
     toggleTeamJoining(value) {

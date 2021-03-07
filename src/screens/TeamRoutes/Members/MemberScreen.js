@@ -19,7 +19,7 @@ import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
 import InviteForm from "./InviteForm";
 import RBSheet from "react-native-raw-bottom-sheet";
-
+import { FontAwesome5 } from '@expo/vector-icons';
 
 export default class MemberPage extends Component {
 
@@ -76,19 +76,25 @@ export default class MemberPage extends Component {
                 borderRadius: 3,
                 borderColor: 'lightgrey',
                 borderWidth: 1,
-                padding: 10
+                padding: 10,
             }}>
-                <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => {
+                <TouchableOpacity style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between'}} onPress={() => {
                     this.setState({clickedMember: {member: member, profileImage: profileImage}})
                     this.RBSheet.open()
                 }}>
-                    <Image style={globalStyles.avatar(50)}
-                           source={{uri: profileImage}}/>
-                    <Text style={{alignSelf: 'center', padding: 10, fontSize: 20, fontWeight: 'bold'}}>
-                        {member.username}
-                    </Text>
+                    <View style={{flexDirection: 'row'}}>
+                        <Image style={globalStyles.avatar(50)}
+                               source={{uri: profileImage}}/>
+                        <Text style={{alignSelf: 'center', padding: 10, fontSize: 20, fontWeight: 'bold'}}>
+                            {member.username}
+                        </Text>
+                    </View>
+
+                    {member.permissions.has("isCoach") ? <FontAwesome5 name="crown" size={24} color="gold" style={{alignSelf: 'center'}}/> : null}
+
 
                 </TouchableOpacity>
+
             </HiddenView>
         );
     }

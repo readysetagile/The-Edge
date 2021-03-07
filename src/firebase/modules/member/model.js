@@ -4,7 +4,9 @@ module.exports = {
     id: "",
     username: "",
     accountID: "",
-    permissions: new Map([['_', 0]]),//map of user permissions
+    permissions: {
+        _: 0
+    },
     teamAnswers: {
         _: 0
     },

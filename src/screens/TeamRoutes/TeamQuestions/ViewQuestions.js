@@ -22,6 +22,7 @@ class ViewQuestions extends Component {
     constructor(props) {
         super(props);
         let data = this.props.navigation.getParam("filledInData") || {};
+        console.log(this.props.navigation.getParam("data"));
         this.state = {
             freezeScreen: this.props.navigation.getParam("freezeScreen"),
             questions: this.props.navigation.getParam("data"),
@@ -32,6 +33,7 @@ class ViewQuestions extends Component {
 
     fillQuestions(data) {
         if (data._ === 0) return;//edge case
+
         const questions = this.state.questions;
         Object.entries(data).forEach(i => {
 

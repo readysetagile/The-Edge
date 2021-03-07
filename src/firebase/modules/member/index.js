@@ -7,6 +7,8 @@ module.exports.Member = class Member {
 
     profile;
     #team;
+    #ref;
+    #_permissions
 
     constructor(memberObj, profile, team) {
 
@@ -15,17 +17,35 @@ module.exports.Member = class Member {
         this.teamAnswers = memberObj.teamAnswers;
         this.userNotes = memberObj.userNotes;
         this.username = memberObj.username;
-        this.permissions = memberObj.permissions;
+        this.#_permissions = new Map(Object.entries(memberObj.permissions));
         this._profile = profile;
         this.#team = team;
+        this.#ref = firebase.database().ref('teams/'+this.#team.id+"/members/"+this.id);
     }
 
+    addPermission(name, value){
+        this.#_permissions.set(name, value);
+        this.#ref.update({permissions: Object.fromEntries(this.#_permissions.entries())});
+    }
+    removePermission(name){
+        this.#_permissions.delete(name);
+        this.#ref.update({permissions: this.#_permissions});
+    }
 
     setFormAnswers(answers) {
 
         this.teamAnswers = answers;
-        firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id).update({teamAnswers: answers});
+        this.#ref.update({teamAnswers: answers});
 
+    }
+
+
+    /**
+     * Gets a map of all permissions this member has
+     * @returns {Map<String, any>} a string - any map that shows set permissions
+     */
+    get permissions() {
+        return this.#_permissions;
     }
 
     get profile() {
