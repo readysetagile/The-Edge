@@ -67,9 +67,6 @@ const TeamDrawerNavigation = createDrawerNavigator({
     },
     Questions: {
         screen: QuestionStack
-    },
-    ViewQuestions: {
-        screen: ViewQuestions
     }
 
 }, DrawerConfig)
