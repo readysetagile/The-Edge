@@ -262,10 +262,14 @@ export default class MemberPage extends Component {
                 <ScrollView>
                     {this.state.members}
                 </ScrollView>
+                {
+                    this.state.currMember?.permissions.has("isCoach") ?
+                        <TouchableOpacity style={globalStyles.newButton} onPress={() => this.inviteMembers()}>
+                            <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
+                        </TouchableOpacity>
+                        : <View/>
+                }
 
-                <TouchableOpacity style={globalStyles.newButton} onPress={() => this.inviteMembers()}>
-                    <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
-                </TouchableOpacity>
 
             </View>
         )
