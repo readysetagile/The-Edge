@@ -148,12 +148,15 @@ export default class ProfileScreen extends Component {
 
     deleteParentProfile(profile) {
         profile.delete();
-
+        this.setState({modal: {show: false, profile: null, type: ""}})
+        this.componentWillUnmount();
+        this.componentDidMount();
     }
 
     enterParentAccount(profile) {
         const {navigation} = this.props;
         navigation.navigate("HomeScreen", {profile: profile});
+        this.setState({modal: {show: false, profile: null, type: ""}})
     }
 
     async updateParentProfileDisplay(profile, values) {
