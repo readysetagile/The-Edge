@@ -45,7 +45,8 @@ export default class MemberPage extends Component {
     async componentDidMount() {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
-        this.setState({profile: profile, team: team})
+        const member = await team.getMember(profile.id);
+        this.setState({profile: profile, team: team, currMember: member})
         let teamMembers = team.members;
         let members = await this.generateMembers(teamMembers)
         this.setState({members: members})
@@ -79,9 +80,12 @@ export default class MemberPage extends Component {
                 borderWidth: 1,
                 padding: 10,
             }}>
-                <TouchableOpacity style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between'}} onPress={() => {
-                    this.setState({clickedMember: {member: member, profileImage: profileImage}})
-                    this.RBSheet.open()
+                <TouchableOpacity style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between'}} onPress={async () => {
+
+                    if((this.state.currMember?.permissions.has("isCoach"))) {
+                        this.setState({clickedMember: {member: member, profileImage: profileImage}})
+                        this.RBSheet.open()
+                    }
                 }}>
                     <View style={{flexDirection: 'row'}}>
                         <Image style={globalStyles.avatar(50)}
