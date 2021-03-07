@@ -20,6 +20,7 @@ module.exports.Member = class Member {
         this.#_permissions = new Map(Object.entries(memberObj.permissions));
         this._profile = profile;
         this.#team = team;
+        this.accountID = memberObj.accountID;
         this.#ref = firebase.database().ref('teams/'+this.#team.id+"/members/"+this.id);
     }
 
@@ -39,6 +40,11 @@ module.exports.Member = class Member {
 
     }
 
+    leaveTeam(teamId){
+
+        this.profile.removeTeam(teamId);
+
+    }
 
     /**
      * Gets a map of all permissions this member has

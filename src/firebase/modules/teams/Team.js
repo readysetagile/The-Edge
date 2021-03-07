@@ -37,6 +37,12 @@ module.exports.Team = class Team {
         return this.modules.teamQuestions;
     }
 
+    removeMember(id){
+
+        this.members.delete(id);
+        this.#reference.update({members: Object.fromEntries(this.members.entries())});
+    }
+
     /**
      * Gets a member in the current team
      * @param id the id of the member (profile id)

@@ -8,7 +8,8 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View
+    View,
+    Alert
 } from 'react-native';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
@@ -92,7 +93,6 @@ export default class MemberPage extends Component {
 
                     {member.permissions.has("isCoach") ? <FontAwesome5 name="crown" size={24} color="gold" style={{alignSelf: 'center'}}/> : null}
 
-
                 </TouchableOpacity>
 
             </HiddenView>
@@ -144,6 +144,24 @@ export default class MemberPage extends Component {
 
     }
 
+    removeMember(){
+
+        Alert.alert("Are you sure you want to remove this member?", "", [
+            {
+                text: "Yes",
+                onPress: () => {
+                    this.RBSheet.close();
+                    this.state.clickedMember.member.leaveTeam(this.state.team.id);
+                    this.state.team.removeMember(this.state.clickedMember.member.id);
+                }
+            },
+            {
+                text: "Cancel"
+            }
+        ])
+
+    }
+
     render() {
 
         return (
@@ -176,6 +194,27 @@ export default class MemberPage extends Component {
 
                             <Image style={globalStyles.avatar(100)}
                                    source={{uri: this.state.clickedMember?.profileImage}}/>
+
+                                   <View style={{backgroundColor: colors.inputBox,
+                                       flexDirection: 'row',
+                                       justifyContent: 'space-evenly',
+                                       flex: .8,
+                                       borderRadius: 10
+                                   }}>
+                                       <View style={{justifyContent: 'center'}}>
+                                           <Ionicons name={"person-remove-outline"} style={{alignSelf: 'center'}}
+                                                     size={30} onPress={() => this.removeMember()}/>
+
+                                           <Text style={{textAlign: 'center'}}>Remove</Text>
+                                       </View>
+
+                                       <View style={{justifyContent: 'center'}}>
+                                           <Ionicons name={"chatbox-outline"} size={30} style={{alignSelf: 'center'}}/>
+                                           <Text style={{textAlign: 'center'}}>Message</Text>
+                                       </View>
+
+                                   </View>
+
                             <Ionicons name={"ellipsis-horizontal"} size={30}/>
                         </View>
 

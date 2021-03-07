@@ -82,6 +82,11 @@ class Profile {
         this.#reference.child(this.profileUUID + '/teams').update(obj);
     }
 
+    removeTeam(teamId){
+        this._teams.delete(teamId);
+        this.#reference.child(this.profileUUID).update({teams: Object.fromEntries(this._teams.entries())})
+    }
+
     async getProfilePicture() {
         if (!this._avatar) {
             let storage = firebase.storage();
