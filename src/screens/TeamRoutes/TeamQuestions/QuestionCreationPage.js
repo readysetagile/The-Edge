@@ -24,6 +24,12 @@ class QuestionCreationPage extends Component {
         super(props);
     }
 
+    /**
+     * Updates a question so that it can be shown to a user properly
+     * @param questionUUID the question id to update
+     * @param path the property to update
+     * @param value the new value of this property
+     */
     updateQuestion(questionUUID, path, value) {
 
         let questions = this.state.questionInfo
@@ -37,6 +43,10 @@ class QuestionCreationPage extends Component {
 
     }
 
+    /**
+     * Generates a new short answer element
+     * @returns {JSX.Element}
+     */
     generateShortAnswerInput() {
 
         return (
@@ -57,6 +67,10 @@ class QuestionCreationPage extends Component {
 
     }
 
+    /**
+     * Generates a new long answer element
+     * @returns {JSX.Element}
+     */
     generateLongAnswerInput() {
         return (
             <View>
@@ -76,6 +90,9 @@ class QuestionCreationPage extends Component {
         )
     }
 
+    /**
+     * When the component mounts, we need to get the saved team question state
+     */
     componentDidMount() {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
@@ -88,10 +105,19 @@ class QuestionCreationPage extends Component {
 
     }
 
+    /**
+     * When component unmounts, we save the questions in case they forgot to press save
+     */
     componentWillUnmount() {
         this.saveQuestions(false);
     }
 
+    /**
+     * Generates a new multiple choice question
+     * @param choices the choices in the question
+     * @param uuid the id of the question
+     * @returns {JSX.Element}
+     */
     generateMultipleChoice(choices, uuid) {
 
         return (
@@ -135,6 +161,13 @@ class QuestionCreationPage extends Component {
 
     }
 
+    /**
+     * Generates a remove symbol from ion icons (-)
+     * @param choices the choices of the card
+     * @param uuid the id of the card
+     * @param index the index of the choice
+     * @returns {JSX.Element}
+     */
     generateDeleteSymbol(choices, uuid, index) {
 
         return (

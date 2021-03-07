@@ -41,6 +41,11 @@ export default class MemberPage extends Component {
         })
     }
 
+    /**
+     * When the component mounts, we set update the state with everything needed to show
+     * each member in the list
+     * @returns {Promise<void>}
+     */
     async componentDidMount() {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
@@ -52,6 +57,11 @@ export default class MemberPage extends Component {
 
     }
 
+    /**
+     * Generates all the members to be loaded on the page
+     * @param members members to be shown
+     * @returns {Promise<[]>} a list of member boxes
+     */
     async generateMembers(members) {
 
         let memArr = [];
@@ -66,6 +76,12 @@ export default class MemberPage extends Component {
 
     }
 
+    /**
+     * Generates a member box where you can click on them and view their form questions
+     * @param member the member to make the box for
+     * @param index the index that the member is found
+     * @returns {Promise<JSX.Element>}
+     */
     async generateMemberBox(member, index) {
 
         let profileImage = await member.profile.getProfilePicture();
@@ -108,6 +124,10 @@ export default class MemberPage extends Component {
         this.setState({modalOpen: true})
     }
 
+    /**
+     * This filters members by their name
+     * @param name the name of the member
+     */
     filterMembersByName(name) {
 
         let members = this.state.team.members;
@@ -130,6 +150,10 @@ export default class MemberPage extends Component {
     }
 
 
+    /**
+     * Updates the current invite code
+     * @param values the new code to set the current team code to
+     */
     updateInvite(values) {
 
         this.setState({modalOpen: false});
@@ -138,6 +162,9 @@ export default class MemberPage extends Component {
 
     }
 
+    /**
+     * Navigates to view question page and fills in this members answers
+     */
     showMemberQuestions() {
 
         const {navigation} = this.props;
@@ -149,6 +176,9 @@ export default class MemberPage extends Component {
 
     }
 
+    /**
+     * Removes the member that has been clicked on
+     */
     removeMember() {
 
         Alert.alert("Are you sure you want to remove this member?", "", [

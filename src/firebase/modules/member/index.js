@@ -24,16 +24,29 @@ module.exports.Member = class Member {
         this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
     }
 
+    /**
+     * Adds a new permission to the user
+     * @param name the name of the permission
+     * @param value the value of the permission
+     */
     addPermission(name, value) {
         this.#_permissions.set(name, value);
         this.#ref.update({permissions: Object.fromEntries(this.#_permissions.entries())});
     }
 
+    /**
+     * removes a permission from the user
+     * @param name the permission to remove
+     */
     removePermission(name) {
         this.#_permissions.delete(name);
         this.#ref.update({permissions: this.#_permissions});
     }
 
+    /**
+     * Updates the members answers to the form
+     * @param answers
+     */
     setFormAnswers(answers) {
 
         this.teamAnswers = answers;
@@ -41,10 +54,12 @@ module.exports.Member = class Member {
 
     }
 
+    /**
+     * Convenience method to make the profile leave this team
+     * @param teamId the id of the team to leave
+     */
     leaveTeam(teamId) {
-
         this.profile.removeTeam(teamId);
-
     }
 
     /**
@@ -55,6 +70,9 @@ module.exports.Member = class Member {
         return this.#_permissions;
     }
 
+    /**
+     * @returns {Profile} a profile object of this members profile
+     */
     get profile() {
         return new Profile(this._profile);
     }
