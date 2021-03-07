@@ -22,7 +22,6 @@ class ViewQuestions extends Component {
     constructor(props) {
         super(props);
         let data = this.props.navigation.getParam("filledInData") || {};
-        console.log(this.props.navigation.getParam("data"));
         this.state = {
             freezeScreen: this.props.navigation.getParam("freezeScreen"),
             questions: this.props.navigation.getParam("data"),
