@@ -1,8 +1,8 @@
 import React from 'react'
 import {createStackNavigator} from 'react-navigation-stack';
-import {Dashboard} from "../src/screens";
-import HeaderBurgerNav from '../src/Components/HeaderBurgerNav';
-import {openMenu} from "../src/firebase/Util";
+import {Dashboard} from "../../src/screens";
+import HeaderBurgerNav from '../../src/Components/HeaderBurgerNav';
+import {openMenu} from "../../src/firebase/Util";
 
 const screens = {
     Dashboard: {
