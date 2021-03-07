@@ -46,7 +46,7 @@ class HomeScreen extends Component {
 
     generateTeamBanner(team, key) {
 
-        if(team)
+        if (team)
             return (
                 <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam(team)}>
                     <Text style={styles.teamName}>{team.teamName}</Text>

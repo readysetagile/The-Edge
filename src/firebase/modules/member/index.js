@@ -21,14 +21,15 @@ module.exports.Member = class Member {
         this._profile = profile;
         this.#team = team;
         this.accountID = memberObj.accountID;
-        this.#ref = firebase.database().ref('teams/'+this.#team.id+"/members/"+this.id);
+        this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
     }
 
-    addPermission(name, value){
+    addPermission(name, value) {
         this.#_permissions.set(name, value);
         this.#ref.update({permissions: Object.fromEntries(this.#_permissions.entries())});
     }
-    removePermission(name){
+
+    removePermission(name) {
         this.#_permissions.delete(name);
         this.#ref.update({permissions: this.#_permissions});
     }
@@ -40,7 +41,7 @@ module.exports.Member = class Member {
 
     }
 
-    leaveTeam(teamId){
+    leaveTeam(teamId) {
 
         this.profile.removeTeam(teamId);
 

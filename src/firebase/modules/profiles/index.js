@@ -82,7 +82,7 @@ class Profile {
         this.#reference.child(this.profileUUID + '/teams').update(obj);
     }
 
-    removeTeam(teamId){
+    removeTeam(teamId) {
         this._teams.delete(teamId);
         this.#reference.child(this.profileUUID).update({teams: Object.fromEntries(this._teams.entries())})
     }

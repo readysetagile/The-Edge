@@ -39,7 +39,7 @@ class ViewQuestions extends Component {
 
             const key = i[0], value = i[1];
             const question = questions[key];
-            if(question) {
+            if (question) {
                 if (question.type === "multipleChoice") {
 
                     const choice = question.multipleChoice;

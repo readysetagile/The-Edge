@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import {
+    Alert,
     Image,
     Keyboard,
     Modal,
@@ -8,19 +9,17 @@ import {
     TextInput,
     TouchableOpacity,
     TouchableWithoutFeedback,
-    View,
-    Alert
+    View
 } from 'react-native';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
 import Global from "../../../GlobalData";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
-import {Ionicons} from "@expo/vector-icons";
+import {FontAwesome5, Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
 import InviteForm from "./InviteForm";
 import RBSheet from "react-native-raw-bottom-sheet";
-import { FontAwesome5 } from '@expo/vector-icons';
 
 export default class MemberPage extends Component {
 
@@ -80,13 +79,14 @@ export default class MemberPage extends Component {
                 borderWidth: 1,
                 padding: 10,
             }}>
-                <TouchableOpacity style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between'}} onPress={async () => {
+                <TouchableOpacity style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between'}}
+                                  onPress={async () => {
 
-                    if((this.state.currMember?.permissions.has("isCoach"))) {
-                        this.setState({clickedMember: {member: member, profileImage: profileImage}})
-                        this.RBSheet.open()
-                    }
-                }}>
+                                      if ((this.state.currMember?.permissions.has("isCoach"))) {
+                                          this.setState({clickedMember: {member: member, profileImage: profileImage}})
+                                          this.RBSheet.open()
+                                      }
+                                  }}>
                     <View style={{flexDirection: 'row'}}>
                         <Image style={globalStyles.avatar(50)}
                                source={{uri: profileImage}}/>
@@ -95,7 +95,8 @@ export default class MemberPage extends Component {
                         </Text>
                     </View>
 
-                    {member.permissions.has("isCoach") ? <FontAwesome5 name="crown" size={24} color="gold" style={{alignSelf: 'center'}}/> : null}
+                    {member.permissions.has("isCoach") ?
+                        <FontAwesome5 name="crown" size={24} color="gold" style={{alignSelf: 'center'}}/> : null}
 
                 </TouchableOpacity>
 
@@ -148,7 +149,7 @@ export default class MemberPage extends Component {
 
     }
 
-    removeMember(){
+    removeMember() {
 
         Alert.alert("Are you sure you want to remove this member?", "", [
             {
@@ -199,25 +200,26 @@ export default class MemberPage extends Component {
                             <Image style={globalStyles.avatar(100)}
                                    source={{uri: this.state.clickedMember?.profileImage}}/>
 
-                                   <View style={{backgroundColor: colors.inputBox,
-                                       flexDirection: 'row',
-                                       justifyContent: 'space-evenly',
-                                       flex: .8,
-                                       borderRadius: 10
-                                   }}>
-                                       <View style={{justifyContent: 'center'}}>
-                                           <Ionicons name={"person-remove-outline"} style={{alignSelf: 'center'}}
-                                                     size={30} onPress={() => this.removeMember()}/>
+                            <View style={{
+                                backgroundColor: colors.inputBox,
+                                flexDirection: 'row',
+                                justifyContent: 'space-evenly',
+                                flex: .8,
+                                borderRadius: 10
+                            }}>
+                                <View style={{justifyContent: 'center'}}>
+                                    <Ionicons name={"person-remove-outline"} style={{alignSelf: 'center'}}
+                                              size={30} onPress={() => this.removeMember()}/>
 
-                                           <Text style={{textAlign: 'center'}}>Remove</Text>
-                                       </View>
+                                    <Text style={{textAlign: 'center'}}>Remove</Text>
+                                </View>
 
-                                       <View style={{justifyContent: 'center'}}>
-                                           <Ionicons name={"chatbox-outline"} size={30} style={{alignSelf: 'center'}}/>
-                                           <Text style={{textAlign: 'center'}}>Message</Text>
-                                       </View>
+                                <View style={{justifyContent: 'center'}}>
+                                    <Ionicons name={"chatbox-outline"} size={30} style={{alignSelf: 'center'}}/>
+                                    <Text style={{textAlign: 'center'}}>Message</Text>
+                                </View>
 
-                                   </View>
+                            </View>
 
                             <Ionicons name={"ellipsis-horizontal"} size={30}/>
                         </View>

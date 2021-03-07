@@ -37,7 +37,7 @@ module.exports.Team = class Team {
         return this.modules.teamQuestions;
     }
 
-    removeMember(id){
+    removeMember(id) {
 
         this.members.delete(id);
         this.#reference.update({members: Object.fromEntries(this.members.entries())});
