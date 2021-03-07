@@ -1,11 +1,13 @@
 const DEFAULTPROFILE = require("./model");
 const DEFAULTAVATR = "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg";//TODO: change this to something original
 import {firebase} from "../../config";
+import Edge from '../../index'
 
 class Profile {
 
     #reference;
     #parentPin;
+    _user;
 
     /**
      * Creates a new profile object
@@ -132,6 +134,16 @@ class Profile {
         let reference = this.#reference.child(this.profileUUID);
         if (path) reference = reference.child(path);
         return reference.remove();
+    }
+
+    async getUser() {
+
+        if (!this.user) {
+            let user = await Edge.users.get(this.accountUUID);
+            this.user = user;
+        }
+        return this.user;
+
     }
 
     /**
