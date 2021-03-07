@@ -10,7 +10,7 @@ import {Button, SafeAreaView, ScrollView} from "react-native";
 import Edge from "../src/firebase";
 import {firebase} from '../src/firebase/config'
 import {Profile} from "../src/firebase/modules/profiles";
-import {ViewQuestions} from "../src/screens";
+import DrillsStack from "./DrawerStack/DrillsStack";
 
 
 const navigateToHome = ({navigation}) => {
@@ -67,6 +67,9 @@ const TeamDrawerNavigation = createDrawerNavigator({
     },
     Questions: {
         screen: QuestionStack
+    },
+    Drills:{
+        screen: DrillsStack
     }
 
 }, DrawerConfig)
