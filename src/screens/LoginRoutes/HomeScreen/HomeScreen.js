@@ -93,9 +93,8 @@ class HomeScreen extends Component {
 
         this.setState({modalOpen: false})
         let team = null;
-        let code = teamCode
         for (let [K, V] of Edge.teams.teams) {
-            if (V.inviteData.teamCode === code) {
+            if (V.inviteData.teamCode === teamCode) {
                 team = await Edge.teams.get(V.id);
                 break;
             }

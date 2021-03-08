@@ -1,32 +1,70 @@
 import React, {Component} from 'react';
-import {View, Text, TextInput} from "react-native";
+import {Text, TextInput, View} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
+import NewButton from "../../../Components/NewButton";
+import {connectActionSheet} from '@expo/react-native-action-sheet'
 
 
 class DrillsList extends Component {
+
+    constructor(props) {
+        super(props);
+    }
+
+    createDrill(){
+
+
+
+    }
+
+    createFolder(){
+
+
+
+    }
+
+    addItem(){
+
+        const options = ['Create Drill', 'Create Folder', 'Cancel'];
+        const cancelButtonIndex = 2;
+        const actionMap = {
+            0: this.createDrill,
+            1: this.createFolder,
+        }
+
+        this.props.showActionSheetWithOptions({
+                options, cancelButtonIndex
+            },
+            buttonIndex => {
+                if (actionMap[buttonIndex] != null) actionMap[buttonIndex]();
+            })
+
+    }
+
+
     render() {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
                 <View style={globalStyles.topToolBar}>
-
-                    <View style={{justifyContent: 'space-between', flexDirection: 'row', flex: 1}}>
-                        <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: 0</Text>
-                        <View style={globalStyles.searchToolBar}>
-                            <TextInput
-                                placeholderTextColor={'#003f5c'}
-                                placeholder='Search 🔎'
-                                onChangeText={(val) => this.filterMembersByName(val)}>
-                            </TextInput>
-                        </View>
+                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: 0</Text>
+                    <View style={globalStyles.searchToolBar}>
+                        <TextInput
+                            placeholderTextColor={'#003f5c'}
+                            placeholder='Search 🔎'
+                            onChangeText={(val) => {
+                            }}>
+                        </TextInput>
                     </View>
-
                 </View>
+
+                <NewButton onPress={() => this.addItem()}/>{/*TODO: check for coach before displaying this*/}
 
             </View>
         );
     }
 }
 
-export default DrillsList
+const DrillsListApp = connectActionSheet(DrillsList);
+export default DrillsListApp;
