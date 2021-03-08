@@ -19,6 +19,8 @@ import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
 import InviteForm from "./InviteForm";
 import RBSheet from "react-native-raw-bottom-sheet";
+import {shadow} from "react-native-paper";
+import NewButton from "../../../Components/NewButton";
 
 
 export default class MemberPage extends Component {
@@ -200,7 +202,7 @@ export default class MemberPage extends Component {
 
                     <Text style={{fontSize: 15, alignSelf: 'center'}}>{this.state.members.length} Members</Text>
 
-                    <View style={{width: '30%', borderRadius: 5, borderWidth: 2, borderColor: 'gray', padding: 5}}>
+                    <View style={globalStyles.searchToolBar}>
                         <TextInput
                             placeholderTextColor={'#003f5c'}
                             placeholder='Search 🔎'
@@ -214,9 +216,7 @@ export default class MemberPage extends Component {
                     {this.state.members}
                 </ScrollView>
 
-                <TouchableOpacity style={globalStyles.newButton} onPress={() => this.inviteMembers()}>
-                    <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
-                </TouchableOpacity>
+                <NewButton onPress={() => this.inviteMembers()}/>
 
             </View>
         )

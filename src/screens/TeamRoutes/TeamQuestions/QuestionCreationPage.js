@@ -11,6 +11,7 @@ import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-men
 import styles from './styles'
 import Edge from "../../../firebase";
 import GlobalData from '../../../GlobalData';
+import NewButton from "../../../Components/NewButton";
 
 class QuestionCreationPage extends Component {
 
@@ -397,10 +398,7 @@ class QuestionCreationPage extends Component {
 
                 </ScrollView>
 
-                <TouchableOpacity style={globalStyles.newButton}>
-                    <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}
-                              onPress={() => this.addQuestion()}/>
-                </TouchableOpacity>
+                <NewButton onPress={() => this.addQuestion()}/>
 
             </View>
         );

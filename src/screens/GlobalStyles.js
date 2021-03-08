@@ -96,7 +96,16 @@ export const globalStyles = {
         padding: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        borderRadius: 10
+        borderRadius: 10,
+        borderBottomWidth: 2,
+        borderColor: 'black'
+    },
+    searchToolBar:{
+        width: '30%',
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: 'gray',
+        padding: 5
     }
 
 
