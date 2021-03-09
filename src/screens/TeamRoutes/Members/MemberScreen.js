@@ -19,7 +19,6 @@ import {Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
 import InviteForm from "./InviteForm";
 import RBSheet from "react-native-raw-bottom-sheet";
-import {shadow} from "react-native-paper";
 import NewButton from "../../../Components/NewButton";
 
 

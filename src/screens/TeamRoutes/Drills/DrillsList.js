@@ -12,6 +12,21 @@ class DrillsList extends Component {
         super(props);
     }
 
+    generateItem(itemType, name, onPress){
+
+        return(
+
+            <View style={{flexDirection: 'row', padding: 20,
+                borderBottomWidth: 2, borderTopWidth: 2, borderColor: 'grey'}}>
+
+
+
+            </View>
+
+        )
+
+    }
+
     createDrill(){
 
 
