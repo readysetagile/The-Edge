@@ -20,4 +20,3 @@ class Edge {
 }
 
 export default new Edge();
-export {Edge};

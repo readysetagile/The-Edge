@@ -18,16 +18,27 @@ module.exports.User = class User {
     }
 
 
+    /**
+     * Adds a new profile to this user account
+     * @param profileUUID the id of the profile
+     * @param username the username of the profile
+     * @returns {Promise<Profile>} the profile that was added
+     */
     async addProfile(profileUUID, username) {
         let profile = await Profile.createProfile(this.userData.id, profileUUID, username)
         this.#_profiles.set(profileUUID, profile);
         return profile;
     }
 
+    /**
+     * Removes a profile from this user account
+     * @param profileUUID the profile id to remove
+     */
     async removeProfile(profileUUID) {
         this.#_profiles.remove(profileUUID);
         this.#reference.update({profiles: this.#_profiles});
     }
+
 
     getProfile(profileUUID) {
         return this.#_profiles.get(profileUUID);

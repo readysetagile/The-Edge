@@ -24,6 +24,10 @@ module.exports.Team = class Team {
 
     }
 
+    /**
+     * Sets this teams questions
+     * @param questionInfo the questions to set this team questions to
+     */
     setTeamQuestions(questionInfo) {
 
         if (questionInfo.type !== 'multipleChoice' && questionInfo.type !== 'checkBoxes') {
@@ -38,6 +42,16 @@ module.exports.Team = class Team {
     }
 
     /**
+     * Removes a member from the team
+     * @param id the id of the member to remove
+     */
+    removeMember(id) {
+
+        this.members.delete(id);
+        this.#reference.update({members: Object.fromEntries(this.members.entries())});
+    }
+
+    /**
      * Gets a member in the current team
      * @param id the id of the member (profile id)
      * @returns {Member} the member that has been assigned this id
@@ -48,13 +62,24 @@ module.exports.Team = class Team {
         return this.members.get(id) instanceof Member ? this.members.get(id) : new Member(this.members.get(id), profile, this);
     }
 
+    /**
+     * Adds a new member to this team
+     * @param profile the profile of this member
+     * @param filledQuestions the questions this profile filled out to join this team
+     * @returns {Promise<Member>} the member that was added to this team
+     */
     async addMember(profile, filledQuestions = {_: 0}) {
         let member = await Member.createMember(profile, this, this.#reference);
         member.setFormAnswers(filledQuestions);
         this.members.set(member.id, member);
         profile.addTeam(this);
+        return member;
     }
 
+    /**
+     * Toggles weather or not people are allowed to join this team
+     * @param value true to allow, false to prohibit joining
+     */
     toggleTeamJoining(value) {
         this.inviteData.acceptNewMembers = value;
         this.#reference.child("inviteData").update({acceptNewMembers: value})
