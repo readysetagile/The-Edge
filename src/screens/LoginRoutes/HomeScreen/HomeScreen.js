@@ -46,11 +46,13 @@ class HomeScreen extends Component {
 
     generateTeamBanner(team, key) {
 
-        return (
-            <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam(team)}>
-                <Text style={styles.teamName}>{team.teamName}</Text>
-            </TouchableOpacity>
-        )
+        if (team)
+            return (
+                <TouchableOpacity style={styles.teamBanner} key={key} onPress={() => this.enterTeam(team)}>
+                    <Text style={styles.teamName}>{team.teamName}</Text>
+                </TouchableOpacity>
+            )
+        else return <View/>
 
     }
 
@@ -132,7 +134,8 @@ class HomeScreen extends Component {
 
         let team = await Edge.teams.create(teamInfo["team name"], teamInfo.sport);
         let profile = this.props.navigation.getParam('profile');
-        team.addMember(profile);
+        let member = await team.addMember(profile);
+        member.addPermission("isCoach", true);
         let teams = this.state.teams;
         teams.push(this.generateTeamBanner(team, teams.length));
         this.setState({modalOpen: false, teams: [...teams]});

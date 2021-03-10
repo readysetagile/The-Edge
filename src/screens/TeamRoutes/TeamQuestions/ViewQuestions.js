@@ -32,12 +32,13 @@ class ViewQuestions extends Component {
 
     fillQuestions(data) {
         if (data._ === 0) return;//edge case
+
         const questions = this.state.questions;
         Object.entries(data).forEach(i => {
 
             const key = i[0], value = i[1];
             const question = questions[key];
-            if(question) {
+            if (question) {
                 if (question.type === "multipleChoice") {
 
                     const choice = question.multipleChoice;

@@ -27,6 +27,10 @@ module.exports.Teams = class Teams {
         return team;
     }
 
+    /**
+     * Gets all the teams as an js object
+     * @returns {Promise<Map<Team>>} a map of all the current teams
+     */
     async getAllTeams() {
 
         if (this.teams == null) {

@@ -24,6 +24,12 @@ class QuestionCreationPage extends Component {
         super(props);
     }
 
+    /**
+     * Updates a question so that it can be shown to a user properly
+     * @param questionUUID the question id to update
+     * @param path the property to update
+     * @param value the new value of this property
+     */
     updateQuestion(questionUUID, path, value) {
 
         let questions = this.state.questionInfo
@@ -37,6 +43,10 @@ class QuestionCreationPage extends Component {
 
     }
 
+    /**
+     * Generates a new short answer element
+     * @returns {JSX.Element}
+     */
     generateShortAnswerInput() {
 
         return (
@@ -57,6 +67,10 @@ class QuestionCreationPage extends Component {
 
     }
 
+    /**
+     * Generates a new long answer element
+     * @returns {JSX.Element}
+     */
     generateLongAnswerInput() {
         return (
             <View>
@@ -76,22 +90,37 @@ class QuestionCreationPage extends Component {
         )
     }
 
+    /**
+     * When the component mounts, we need to get the saved team question state
+     */
     componentDidMount() {
 
-        Edge.teams.get(GlobalData.teamID).then(team => {
-            const questions = team.getTeamQuestions();
-            if (questions != null) {
-                this.setState({questionInfo: questions})
-                this.props.navigation.setParams({questionInfo: questions});
-            }
+        Edge.teams.get(GlobalData.teamID).then(async team => {
+                const questions = team.getTeamQuestions();
+                let member = await team.getMember(GlobalData.profileID);
+                if (questions != null) {
+                    this.setState({questionInfo: questions, freezeScreen: !member.permissions.has("isCoach")})
+                    this.props.navigation.setParams({questionInfo: questions});
+                }
+
         })
+
 
     }
 
+    /**
+     * When component unmounts, we save the questions in case they forgot to press save
+     */
     componentWillUnmount() {
         this.saveQuestions(false);
     }
 
+    /**
+     * Generates a new multiple choice question
+     * @param choices the choices in the question
+     * @param uuid the id of the question
+     * @returns {JSX.Element}
+     */
     generateMultipleChoice(choices, uuid) {
 
         return (
@@ -135,6 +164,13 @@ class QuestionCreationPage extends Component {
 
     }
 
+    /**
+     * Generates a remove symbol from ion icons (-)
+     * @param choices the choices of the card
+     * @param uuid the id of the card
+     * @param index the index of the choice
+     * @returns {JSX.Element}
+     */
     generateDeleteSymbol(choices, uuid, index) {
 
         return (
@@ -287,6 +323,7 @@ class QuestionCreationPage extends Component {
                         Questions: {Object.keys(this.state.questionInfo).length - 1}</Text>
 
                     <Button title={"Save!"} color={'yellow'} style={{borderColor: 'red', padding: 10}} onPress={() => {
+                        if(!this.state.freezeScreen)
                         this.saveQuestions(true);
                     }}/>
 
@@ -295,9 +332,11 @@ class QuestionCreationPage extends Component {
                         <CheckBox
                             isChecked={this.state.questionInfo.required}
                             onClick={() => {
-                                let questions = this.state.questionInfo
-                                questions.required = !questions.required;
-                                this.setState({questionInfo: questions});
+                                if(!this.state.freezeScreen) {
+                                    let questions = this.state.questionInfo
+                                    questions.required = !questions.required;
+                                    this.setState({questionInfo: questions});
+                                }
                             }}
                             style={{alignSelf: 'center'}}
                         />
@@ -330,7 +369,7 @@ class QuestionCreationPage extends Component {
                                         {this.generateCardOptions(values, uuid, index)}
                                     </Ionicons>
 
-                                    <View pointerEvents={values.isDisabled ? 'none' : 'auto'}>
+                                    <View pointerEvents={(values.isDisabled || this.state.freezeScreen) ? 'none' : 'auto'}>
 
                                         <TextInput
                                             style={{...styles.questionInput}}
@@ -399,7 +438,10 @@ class QuestionCreationPage extends Component {
 
                 <TouchableOpacity style={globalStyles.newButton}>
                     <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}
-                              onPress={() => this.addQuestion()}/>
+                              onPress={() => {
+                                  if(!this.state.freezeScreen)
+                                    this.addQuestion()
+                              }}/>
                 </TouchableOpacity>
 
             </View>

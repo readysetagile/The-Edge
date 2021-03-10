@@ -49,14 +49,16 @@ class Profile {
         return ref.update(value);
     }
 
+    /**
+     * Deletes this profile and removes their profile picture if any
+     */
     async delete() {
 
         await this.remove();
 
         let storage = firebase.storage();
         let ref = storage.ref(this.accountUUID + "/pfp/" + this.profileUUID);
-        return await ref.delete().catch(() => {
-        });
+        await ref.delete().catch(console.error);
 
     }
 
@@ -75,6 +77,10 @@ class Profile {
         return ref.update(value);
     }
 
+    /**
+     * Adds a new team id to signify that this profile is apart of a team
+     * @param team the team to add
+     */
     addTeam(team) {
         this._teams.set(team.id, 0);
         let obj = {};
@@ -82,6 +88,19 @@ class Profile {
         this.#reference.child(this.profileUUID + '/teams').update(obj);
     }
 
+    /**
+     * Removes a team from the profile to signify they are not in this team anymore
+     * @param teamId the teamid to remove
+     */
+    removeTeam(teamId) {
+        this._teams.delete(teamId);
+        this.#reference.child(this.profileUUID).update({teams: Object.fromEntries(this._teams.entries())})
+    }
+
+    /**
+     * This gets the profile's profile picture
+     * @returns {Promise<String>} the file of the profile picture
+     */
     async getProfilePicture() {
         if (!this._avatar) {
             let storage = firebase.storage();
@@ -95,6 +114,9 @@ class Profile {
         } else return this._avatar;
     }
 
+    /**
+     * @returns {String|null} the pin for the parent profile if this is a parent profile
+     */
     getParentPin() {
         if (this.isParent) {
             return this.#parentPin;
@@ -102,6 +124,10 @@ class Profile {
         return null;
     }
 
+    /**
+     * updates the current profile pin if it's a parent profile
+     * @param pin the pin to set
+     */
     setParentPin(pin) {
 
         this.#parentPin = pin;
