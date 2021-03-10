@@ -7,9 +7,18 @@ const DEFAULTUSER = require("./model");
 module.exports.Users = class Users {
 
     #reference;
+    static maxParentAccounts;
+    static maxDefaultAccounts;
 
     constructor() {
         this.#reference = firebase.database().ref("users");
+
+        firebase.database().ref("GLOBAL_SETTINGS").on('value', snap => {
+            if (snap.val() != null) {
+                Users.maxParentAccounts = snap.val().MAX_PARENT_PROFILES || 4;
+                Users.maxDefaultAccounts = snap.val().MAX_DEFAULT_PROFILES || 6;
+            }
+        })
 
     }
 

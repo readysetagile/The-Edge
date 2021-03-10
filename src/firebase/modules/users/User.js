@@ -55,4 +55,23 @@ module.exports.User = class User {
     get profiles() {
         return Array.from(this.#_profiles, ([key, value]) => new Profile(value));
     }
+
+    getDefaultProfileCount() {
+        let count = 0;
+        for (let profile of this.profiles) {
+            if (!profile.isParent)
+                count++;
+        }
+        return count;
+    }
+
+    getParentProfileCount() {
+        let count = 0;
+        for (let profile of this.profiles) {
+            if (profile.isParent)
+                count++;
+        }
+        return count
+    }
+
 }

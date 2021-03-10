@@ -7,6 +7,7 @@ import Edge from '../../../firebase'
 import * as ImagePicker from 'expo-image-picker';
 import {createUUID} from "../../../firebase/Util";
 import {globalStyles} from "../../GlobalStyles";
+import {Users} from "../../../firebase/modules/users";
 
 
 export default class CreateProfileScreen extends Component {
@@ -45,10 +46,18 @@ export default class CreateProfileScreen extends Component {
 
     }
 
-
     async createProfile() {
+
+        const user = await Edge.users.get(firebase.auth().currentUser.uid);
+        const totalDefaultProfiles = user.getDefaultProfileCount();
+
+        if (totalDefaultProfiles >= Users.maxDefaultAccounts) {
+            Alert.alert("Cannot create this profile", "Too many default accounts, max is " + Users.maxDefaultAccounts);
+            return;
+        }
+
+
         await this.uploadProfilePicture();
-        let user = await Edge.users.get(firebase.auth().currentUser.uid);
         if (!this.state.username) {
             Alert.alert("Invalid Username");
             return;
@@ -56,10 +65,6 @@ export default class CreateProfileScreen extends Component {
         let profile = await user.addProfile(this.state.uuid, this.state.username);
         const {navigation} = this.props;
         navigation.pop();
-        // const resetAction = StackActions.reset({
-        //     index: 0,
-        //     actions: [NavigationActions.navigate({routeName: 'HomeScreen', params: {profile: profile}})],
-        // });
         navigation.navigate("HomeScreen", {profile: profile});
     }
 

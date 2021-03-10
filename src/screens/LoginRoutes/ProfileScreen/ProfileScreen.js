@@ -7,6 +7,7 @@ import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-men
 import Colors from '../../styles';
 import {Ionicons} from "@expo/vector-icons";
 import InputParentPin from "./ParentPinForm";
+import {Users} from "../../../firebase/modules/users";
 
 
 export default class ProfileScreen extends Component {
@@ -124,29 +125,30 @@ export default class ProfileScreen extends Component {
     }
 
 
-    parentProfileAction(values) {
+    async parentProfileAction(values) {
 
         const profile = this.state.modal.profile;
         const type = this.state.modal.type;
-        this.setState({modal: {show: false, profile: null, type: ""}});
+
         switch (type) {
             case "delete":
                 this.deleteParentProfile(profile)
                 break;
             case "create":
-                this.updateParentProfileDisplay(profile, values);
+                await this.updateParentProfileDisplay(profile, values);
                 break;
             case "enter":
                 this.enterParentAccount(profile);
                 break;
             case "unmark":
-                this.updateParentProfileDisplay(profile, values)
+                await this.updateParentProfileDisplay(profile, values)
         }
 
     }
 
     deleteParentProfile(profile) {
         profile.delete();
+
     }
 
     enterParentAccount(profile) {
@@ -154,10 +156,34 @@ export default class ProfileScreen extends Component {
         navigation.navigate("HomeScreen", {profile: profile});
     }
 
-    updateParentProfileDisplay(profile, values) {
-        profile.isParent = !profile.isParent;
-        profile.setParentPin(values.Pin);
-        this.componentDidMount();
+    async updateParentProfileDisplay(profile, values) {
+
+        const user = await profile.getUser();
+        const alertOptions = [{
+            text: "Ok",
+            onPress: () => {
+                this.setState({modal: {show: false, profile: null, type: ""}});
+            }
+        }]
+
+
+        if (!profile.isParent && user.getParentProfileCount() >= Users.maxParentAccounts) {
+            Alert.alert("Cannot change to parent profile",
+                "There are too many parent profiles existing. Max is " + Users.maxParentAccounts,
+                alertOptions);
+        } else if (profile.isParent && user.getDefaultProfileCount() >= Users.maxDefaultAccounts) {
+            Alert.alert("Cannot change to default profile",
+                "There are too many default profiles existing. Max is " + Users.maxDefaultAccounts,
+                alertOptions);
+        } else {
+
+            profile.isParent = !profile.isParent;
+            profile.setParentPin(values.Pin);
+            this.setState({modal: {show: false, profile: null, type: ""}})
+            this.componentDidMount();
+
+        }
+
     }
 
 
