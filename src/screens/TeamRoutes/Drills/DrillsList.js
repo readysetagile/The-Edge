@@ -50,9 +50,6 @@ class DrillsList extends Component {
 
 
     generateTag(tag, onPress) {
-        const {
-            width,
-        } = Dimensions.get('window');
 
         return (
 
@@ -107,7 +104,8 @@ class DrillsList extends Component {
                     </MenuOption>
 
                     <MenuOption onSelect={() => {
-                        Alert.alert("Are you sure you want to delete this tag?", "This will not remove any drills under it", [
+                        Alert.alert("Are you sure you want to delete this tag?",
+                            "This will not remove any drills under it", [
                             {
                                 text: "Yes",
                                 onPress: () => {
