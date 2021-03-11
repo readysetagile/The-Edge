@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Dimensions, Text, TextInput, View} from "react-native";
+import {Dimensions, Text, TextInput, View, Alert} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import NewButton from "../../../Components/NewButton";
@@ -102,50 +102,89 @@ class DrillsList extends Component {
                     </MenuOption>
                     <MenuOption>
 
-                        <View style={{marginHorizontal: 24, marginTop: 20, height: 12, flex: 1}}>
-                            <SliderHuePicker
-                                ref={view => {
-                                    this.sliderHuePicker = view;
-                                }}
-                                oldColor={this.tagEditColor}
-                                trackStyle={[{height: 12, width: '100%'}]}
-                                thumbStyle={styles.thumb}
-                                useNativeDriver={true}
-                                onColorChange={(colorHsvOrRgb, resType) => {
-                                    this.changeTagColor(tag, tinycolor(colorHsvOrRgb).toHexString())
-                                }}
-                            />
-                        </View>
-                        <View style={{marginHorizontal: 24, marginTop: 20, height: 12, flex: 1}}>
-                            <SliderSaturationPicker
-                                ref={view => {
-                                    this.sliderSaturationPicker = view;
-                                }}
-                                oldColor={this.state.tags[tag.name].color}
-                                trackStyle={[{height: 12, width: '100%'}]}
-                                thumbStyle={styles.thumb}
-                                useNativeDriver={true}
-                                onColorChange={(colorHsvOrRgb, resType) => {
-                                    this.changeTagColor(tag, tinycolor(colorHsvOrRgb).toHexString())
-                                }}
-                                style={{
-                                    height: 12,
-                                    borderRadius: 6,
-                                    backgroundColor: tinycolor({
-                                        h: tinycolor(this.state.tags[tag.name].color).toHsv().h,
-                                        s: 1,
-                                        v: 1
-                                    }).toHexString()
-                                }}
-                            />
-                        </View>
+                        {this.createColorSliders(tag)}
 
                     </MenuOption>
+
+                    <MenuOption onSelect={() => {
+                        Alert.alert("Are you sure you want to delete this tag?", "This will not remove any drills under it", [
+                            {
+                                text: "Yes",
+                                onPress: () => {
+                                    this.deleteTag(tag);
+                                }
+                            },
+                            {
+                                text: 'Cancel'
+                            }
+                        ]);
+                    }}>
+
+                        <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete Tag</Text>
+
+                    </MenuOption>
+
                 </MenuOptions>
 
             </Menu>
 
 
+        )
+
+    }
+
+    deleteTag(tag){
+
+        const tags = this.state.tags;
+        delete tags[tag.name];
+        this.setState({tags: tags});
+
+    }
+
+    createColorSliders(tag){
+
+        return(
+            <View>
+
+                <View style={{marginHorizontal: 24, marginTop: 20, height: 12, flex: 1}}>
+                    <SliderHuePicker
+                        ref={view => {
+                            this.sliderHuePicker = view;
+                        }}
+                        oldColor={this.tagEditColor}
+                        trackStyle={[{height: 12, width: '100%'}]}
+                        thumbStyle={styles.thumb}
+                        useNativeDriver={true}
+                        onColorChange={(colorHsvOrRgb, resType) => {
+                            this.changeTagColor(tag, tinycolor(colorHsvOrRgb).toHexString())
+                        }}
+                    />
+                </View>
+                <View style={{marginHorizontal: 24, marginTop: 20, height: 12, flex: 1}}>
+                    <SliderSaturationPicker
+                        ref={view => {
+                            this.sliderSaturationPicker = view;
+                        }}
+                        oldColor={this.state.tags[tag.name].color}
+                        trackStyle={[{height: 12, width: '100%'}]}
+                        thumbStyle={styles.thumb}
+                        useNativeDriver={true}
+                        onColorChange={(colorHsvOrRgb, resType) => {
+                            this.changeTagColor(tag, tinycolor(colorHsvOrRgb).toHexString())
+                        }}
+                        style={{
+                            height: 12,
+                            borderRadius: 6,
+                            backgroundColor: tinycolor({
+                                h: tinycolor(this.state.tags[tag.name].color).toHsv().h,
+                                s: 1,
+                                v: 1
+                            }).toHexString()
+                        }}
+                    />
+                </View>
+
+            </View>
         )
 
     }
