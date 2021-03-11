@@ -1,30 +1,30 @@
 import React, {Component} from 'react';
-import {Dimensions, Text, TextInput, View, Alert} from "react-native";
+import {Modal, Text, TextInput, View, Alert, TouchableWithoutFeedback, Keyboard} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import NewButton from "../../../Components/NewButton";
 import {connectActionSheet} from '@expo/react-native-action-sheet'
-import {FontAwesome, MaterialIcons} from "@expo/vector-icons";
+import {FontAwesome, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import styles from "../../LoginRoutes/ProfileScreen/styles";
 import {SliderHuePicker, SliderSaturationPicker,} from 'react-native-slider-color-picker';
 import tinycolor from 'tinycolor2';
 import {createUUID} from "../../../firebase/Util";
+import InviteForm from "../Members/InviteForm";
+import NewDrill from "./NewDrill";
 
 class DrillsList extends Component {
 
     state = {
-        drills: [],
+        tags: {},
+        drills: {},
+        showModal: false
     }
     editingNameTag = "";
     tagEditColor = null;
 
     constructor(props) {
         super(props);
-        this.state = {
-            tags: {},
-            drills: {}
-        }
     }
 
     changeTagName(tag, newName){
@@ -206,7 +206,7 @@ class DrillsList extends Component {
             contentHidden: true
         }
 
-        this.setState({tags: tags});
+        this.setState({showModal: true});
 
     }
 
@@ -234,9 +234,20 @@ class DrillsList extends Component {
     }
 
     render() {
-        const displayedTags = [];
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
+
+                <Modal visible={this.state.showModal} animationType={'slide'}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={globalStyles.modalContent}>
+                            <Ionicons style={globalStyles.closeModal(3)} name={"close"} size={24}
+                                      onPress={() => this.setState({showModal: false})} />
+
+                                      <NewDrill/>
+
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
 
                 <View style={globalStyles.topToolBar}>
                     <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: 0</Text>
