@@ -194,7 +194,6 @@ class DrillsList extends Component {
             tags: []
         }
 
-        this.setState({showModal: true});
 
     }
 
@@ -207,7 +206,7 @@ class DrillsList extends Component {
             contentHidden: true
         }
 
-        this.setState({tags: tags});
+        this.setState({showModal: true});
 
     }
 
