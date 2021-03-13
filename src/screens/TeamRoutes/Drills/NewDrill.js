@@ -1,21 +1,14 @@
-import React, { useState, useEffect } from "react";
-import {
-    SafeAreaView,
-    StyleSheet,
-    TouchableOpacity,
-    View,
-    Text,
-    Platform
-} from "react-native";
+import React, {useEffect, useState} from "react";
+import {Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import KeyboardSpacer from "react-native-keyboard-spacer";
 import RNDraftView from "react-native-draftjs-editor";
 
-const ControlButton = ({ text, action, isActive }) => {
+const ControlButton = ({text, action, isActive}) => {
     return (
         <TouchableOpacity
             style={[
                 styles.controlButtonContainer,
-                isActive ? { backgroundColor: "gold" } : {}
+                isActive ? {backgroundColor: "gold"} : {}
             ]}
             onPress={action}
         >
@@ -58,7 +51,8 @@ const EditorToolBar = ({
                 action={() => toggleBlockType("ordered-list-item")}
             />
             <ControlButton
-                text={"--"}
+
+                text={"-T-"}
                 isActive={activeStyles.includes("STRIKETHROUGH")}
                 action={() => toggleStyle("STRIKETHROUGH")}
             />
@@ -79,7 +73,7 @@ const NewDrill = () => {
     const [editorState, setEditorState] = useState("");
 
     const defaultValue =
-        "<h1>A Full fledged Text Editor</h1><p>This editor is built with Draft.js. Hence should be suitable for most projects. However, Draft.js Isn’t fully compatible with mobile yet. So you might face some issues.</p><p><br></p><p>This is a simple implementation</p><ul>  <li>It contains <strong>Text formatting </strong>and <em>Some blocks formatting</em></li>  <li>Each for it’s own purpose</li></ul><p>You can also do</p><ol>  <li>Custom style map</li>  <li>Own css styles</li>  <li>Custom block styling</li></ol><p>You are welcome to try it!</p>";
+        ""//<h1>A Full fledged Text Editor</h1><p>This editor is built with Draft.js. Hence should be suitable for most projects. However, Draft.js Isn’t fully compatible with mobile yet. So you might face some issues.</p><p><br></p><p>This is a simple implementation</p><ul>  <li>It contains <strong>Text formatting </strong>and <em>Some blocks formatting</em></li>  <li>Each for it’s own purpose</li></ul><p>You can also do</p><ol>  <li>Custom style map</li>  <li>Own css styles</li>  <li>Custom block styling</li></ol><p>You are welcome to try it!</p>";
 
     const editorLoaded = () => {
         _draftRef.current && _draftRef.current.focus();
@@ -100,14 +94,14 @@ const NewDrill = () => {
          */
         setEditorState(_draftRef.current ? _draftRef.current.getEditorState() : "");
     }, [_draftRef]);
-    console.log(editorState);
+    //console.log(editorState);
 
     return (
         <SafeAreaView style={styles.containerStyle}>
             <RNDraftView
                 defaultValue={defaultValue}
                 onEditorReady={editorLoaded}
-                style={{ flex: 1 }}
+                style={{flex: 1}}
                 placeholder={"Add text here..."}
                 ref={_draftRef}
                 onStyleChanged={setActiveStyles}
@@ -120,7 +114,7 @@ const NewDrill = () => {
                 toggleStyle={toggleStyle}
                 toggleBlockType={toggleBlockType}
             />
-            {Platform.OS === "ios" ? <KeyboardSpacer /> : null}
+            {Platform.OS === "ios" ? <KeyboardSpacer/> : null}
         </SafeAreaView>
     );
 };
