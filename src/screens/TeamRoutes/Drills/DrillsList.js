@@ -193,7 +193,7 @@ class DrillsList extends Component {
         drills[createUUID('xxxxx')] = {
             tags: []
         }
-
+        this.setState({showModal: true});
 
     }
 
@@ -206,7 +206,7 @@ class DrillsList extends Component {
             contentHidden: true
         }
 
-        this.setState({showModal: true});
+        this.setState({tags: tags});
 
     }
 
