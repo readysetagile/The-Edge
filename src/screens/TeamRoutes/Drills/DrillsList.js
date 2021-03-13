@@ -195,9 +195,6 @@ class DrillsList extends Component {
         }
 
 
-        this.setState({showModal: true});
-
-
     }
 
     createTag(name) {
