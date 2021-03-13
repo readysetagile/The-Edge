@@ -1,5 +1,5 @@
 module.exports = {
   transformer: {
-    assetPlugins: ['expo-asset/tools/hashAssetFiles'],
+    assetPlugins: ['expo-assets/tools/hashAssetFiles'],
   },
 };
