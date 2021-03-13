@@ -233,6 +233,25 @@ class DrillsList extends Component {
 
     }
 
+
+
+    exitDrillEditor(){
+
+        Alert.alert("Save Changes?", "", [
+            {
+                text:"Save"
+            },
+            {
+                text:"Discard"
+            },
+            {
+                text:"Cancel"
+            }
+        ])
+        this.setState({showModal: false})
+
+    }
+
     render() {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
@@ -240,8 +259,9 @@ class DrillsList extends Component {
                 <Modal visible={this.state.showModal} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={globalStyles.modalContent}>
-                            <Ionicons style={globalStyles.closeModal(3)} name={"close"} size={24}
-                                      onPress={() => this.setState({showModal: false})} />
+                            <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
+                                      name={"checkmark-circle-outline"} size={24}
+                                      onPress={() => this.exitDrillEditor()} />
 
                                       <NewDrill/>
 
