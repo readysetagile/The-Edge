@@ -21,8 +21,7 @@ const EditorToolBar = ({
                            activeStyles,
                            blockType,
                            toggleStyle,
-                           toggleBlockType
-                       }) => {
+                           toggleBlockType,}) => {
     return (
         <View style={styles.toolbarContainer}>
             <ControlButton
@@ -31,14 +30,29 @@ const EditorToolBar = ({
                 action={() => toggleStyle("BOLD")}
             />
             <ControlButton
+                text={"L"}
+                isActive={activeStyles.includes("LINK")}
+                action={() => toggleStyle("LINK")}
+            />
+            <ControlButton
                 text={"I"}
                 isActive={activeStyles.includes("ITALIC")}
                 action={() => toggleStyle("ITALIC")}
             />
             <ControlButton
-                text={"H"}
+                text={"H1"}
                 isActive={blockType === "header-one"}
                 action={() => toggleBlockType("header-one")}
+            />
+            <ControlButton
+                text={"H2"}
+                isActive={blockType === "header-two"}
+                action={() => toggleBlockType("header-two")}
+            />
+            <ControlButton
+                text={"H3"}
+                isActive={blockType === "header-three"}
+                action={() => toggleBlockType("header-three")}
             />
             <ControlButton
                 text={"ul"}
