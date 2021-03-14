@@ -244,7 +244,7 @@ class DrillsList extends Component {
 
                         if(team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)){
                             team.addDrill(this.state.currentDrillEditing, this.state.currentDrillEditorContent);
-                            this.setState({showModel: false});
+                            this.setState({showModal: false});
                         }else{
                             this.setState({showDrillNameInput: true})
                         }
@@ -300,8 +300,20 @@ class DrillsList extends Component {
     componentDidMount() {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
+
             const tags = team.modules.drills?.tags || {};
-            this.setState({tags: tags});
+            const drills = team.modules.drills?.drills || {};
+
+            for(let [K, V] in drills){
+
+                const tags = V.tags;
+                for(let tag of tags){
+                    tags[tag].drills.push(K);
+                }
+
+            }
+
+            this.setState({tags: tags, drills: drills});
         })
 
     }
@@ -369,7 +381,6 @@ class DrillsList extends Component {
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>
-
 
                 <View style={globalStyles.topToolBar}>
                     <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: 0</Text>

@@ -9,6 +9,7 @@ module.exports.Team = class Team {
 
     #reference
     _teamCode
+    modules
 
     constructor(teamObject) {
         if (teamObject) {
@@ -37,6 +38,12 @@ module.exports.Team = class Team {
     removeDrill(drillID){
         delete this.modules.drills.drills[drillID];
         this.#reference.child("modules/drills").update({drills: this.modules.drills.drills});
+    }
+
+    setDrillTags(drillID, tags){
+        const drill = this.modules.drills.drills[drillID];
+        drill.tags = tags
+        this.#reference.child('modules/drills/drills').update({[drillID]: tags})
     }
 
     addDrill(drillID, drill){
