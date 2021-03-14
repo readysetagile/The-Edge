@@ -13,6 +13,8 @@ import {createUUID} from "../../../firebase/Util";
 import InviteForm from "../Members/InviteForm";
 import NewDrill from "./NewDrill";
 import Dialog from "react-native-dialog";
+import GlobalData from '../../../GlobalData';
+import Edge from "../../../firebase/index";
 
 class DrillsList extends Component {
 
@@ -138,6 +140,9 @@ class DrillsList extends Component {
         const tags = this.state.tags;
         delete tags[tag.name];
         this.setState({tags: tags});
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            team.removeTag(tag.name);
+        })
 
     }
 
@@ -226,12 +231,6 @@ class DrillsList extends Component {
     }
 
 
-    saveDrill(){
-
-
-
-    }
-
     exitDrillEditor(){
 
         Alert.alert("Save Changes?", "", [
@@ -257,17 +256,37 @@ class DrillsList extends Component {
     }
 
     addTag = () => {
-        console.log(1);
         let tags = this.state.tags;
         const name = this.state.newTagName;
+
+        if(!name){
+            Alert.alert("Invalid Tag Name", "Please input a tag name");
+            return;
+        }else if(tags.hasOwnProperty(name)){
+            Alert.alert("Invalid Tag Name", "There is already an existing tag with this name");
+            return;
+        }
+
         tags[name] = {
             color: 'gold',
             name: name,
             contentHidden: true
         }
-        this.setState({showTagNameInput: false, tags: tags});
+        this.setState({showTagNameInput: false, tags: tags, newTagName: ""});
+
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            team.addTag(name, tags[name]);
+        })
     }
 
+    componentDidMount() {
+
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            const tags = team.modules.drills?.tags || {};
+            this.setState({tags: tags});
+        })
+
+    }
 
     render() {
         return (
@@ -278,7 +297,7 @@ class DrillsList extends Component {
                     <Dialog.Description>
                         What do you want this tag to be called?
                     </Dialog.Description>
-                    <Dialog.Input placeholder={"Tag " + createUUID("xxx")} onChangeText={this.handleTagNameChange}/>
+                    <Dialog.Input placeholder={"Tag Name"} onChangeText={this.handleTagNameChange}/>
                     <Dialog.Button label="Cancel" onPress={() => {}}/>
                     <Dialog.Button label="Done" onPress={this.addTag}/>
                 </Dialog.Container>
@@ -314,9 +333,10 @@ class DrillsList extends Component {
 
                         const name = i[0];
                         const content = i[1];
-                        content.name = name;
-                        return this.generateTag(content, () => console.log(1));
-
+                        if(content){
+                            content.name = name;
+                            return this.generateTag(content, () => console.log(1));
+                        }
                     })
                 }
 

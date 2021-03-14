@@ -24,9 +24,14 @@ module.exports.Team = class Team {
 
     }
 
+    removeTag(tagID){
+        delete this.modules.drills.tags[tagID];
+        this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
+
+    }
     addTag(tagID, tag){
         this.modules.drills.tags[tagID] = tag;
-        this.#reference.child("modules/drills").update({tags: this.modules.drills.drills});
+        this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
     }
 
     addDrill(drillID, drill){
