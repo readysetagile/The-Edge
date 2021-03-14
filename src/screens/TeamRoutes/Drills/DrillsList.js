@@ -10,13 +10,10 @@ import styles from "../../LoginRoutes/ProfileScreen/styles";
 import {SliderHuePicker, SliderSaturationPicker,} from 'react-native-slider-color-picker';
 import tinycolor from 'tinycolor2';
 import {createUUID} from "../../../firebase/Util";
-import InviteForm from "../Members/InviteForm";
 import NewDrill from "./NewDrill";
-import Dialog from "react-native-dialog";
 import GlobalData from '../../../GlobalData';
 import Edge from "../../../firebase/index";
 import InputText from "../../../Components/InputText";
-import WebView from "react-native-webview";
 
 class DrillsList extends Component {
 
@@ -196,7 +193,7 @@ class DrillsList extends Component {
 
     }
 
-    createDrill(tag) {
+    createDrill() {
 
         let drills = this.state.drills;
         drills[createUUID('xxxxx')] = {
@@ -295,6 +292,7 @@ class DrillsList extends Component {
 
 
     render() {
+
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
@@ -310,10 +308,7 @@ class DrillsList extends Component {
                                       name={"checkmark-circle-outline"} size={24}
                                       onPress={() => this.exitDrillEditor()} />
 
-                                      <WebView source={{uri: "https://www.editpad.org/tool/online-rich-text-editor"}}>
-
-                                      </WebView>
-                                      {/*<NewDrill/>*/}
+                                      <NewDrill/>
 
                         </View>
                     </TouchableWithoutFeedback>
