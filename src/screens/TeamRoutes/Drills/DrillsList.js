@@ -15,6 +15,8 @@ import NewDrill from "./NewDrill";
 import Dialog from "react-native-dialog";
 import GlobalData from '../../../GlobalData';
 import Edge from "../../../firebase/index";
+import InputText from "../../../Components/InputText";
+import WebView from "react-native-webview";
 
 class DrillsList extends Component {
 
@@ -237,7 +239,6 @@ class DrillsList extends Component {
             {
                 text: "Save",
                 onPress: () => {
-
                     this.setState({showModal: false});
                 }
             },
@@ -288,19 +289,18 @@ class DrillsList extends Component {
 
     }
 
+    onTagNameCancel = () => {
+        this.setState({showTagNameInput: false})
+    }
+
+
     render() {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
-                <Dialog.Container visible={this.state.showTagNameInput} onBackdropPress={() => this.setState({showTagNameInput: false})}>
-                    <Dialog.Title>Name this Tag!</Dialog.Title>
-                    <Dialog.Description>
-                        What do you want this tag to be called?
-                    </Dialog.Description>
-                    <Dialog.Input placeholder={"Tag Name"} onChangeText={this.handleTagNameChange}/>
-                    <Dialog.Button label="Cancel" onPress={() => this.setState({showTagNameInput: false})}/>
-                    <Dialog.Button label="Done" onPress={this.addTag}/>
-                </Dialog.Container>
+                <InputText title={"Name this Tag!"} description={"What do you want this tag to be called?"}
+                placeholder={"Tag Name"} onTextChange={this.handleTagNameChange} onCancel={this.onTagNameCancel}
+                visible={this.state.showTagNameInput} onSubmit={this.addTag} onBackDropPress={this.onTagNameCancel}/>
 
 
                 <Modal visible={this.state.showModal} animationType={'slide'}>
@@ -310,7 +310,10 @@ class DrillsList extends Component {
                                       name={"checkmark-circle-outline"} size={24}
                                       onPress={() => this.exitDrillEditor()} />
 
-                                      <NewDrill/>
+                                      <WebView source={{uri: "https://www.editpad.org/tool/online-rich-text-editor"}}>
+
+                                      </WebView>
+                                      {/*<NewDrill/>*/}
 
                         </View>
                     </TouchableWithoutFeedback>
