@@ -16,7 +16,6 @@ import Dialog from "react-native-dialog";
 import GlobalData from '../../../GlobalData';
 import Edge from "../../../firebase/index";
 import InputText from "../../../Components/InputText";
-import WebView from "react-native-webview";
 
 class DrillsList extends Component {
 
@@ -310,10 +309,7 @@ class DrillsList extends Component {
                                       name={"checkmark-circle-outline"} size={24}
                                       onPress={() => this.exitDrillEditor()} />
 
-                                      <WebView source={{uri: "https://www.editpad.org/tool/online-rich-text-editor"}}>
-
-                                      </WebView>
-                                      {/*<NewDrill/>*/}
+                                      <NewDrill/>
 
                         </View>
                     </TouchableWithoutFeedback>
