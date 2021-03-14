@@ -218,6 +218,10 @@ class DrillsList extends Component {
                         {this.createColorSliders(drill, this.changeDrillColor.bind(this))}
                     </MenuOption>
 
+                    <MenuOption >
+
+                    </MenuOption>
+
                     <MenuOption onSelect={() => {
                         Alert.alert("Are you sure you want to delete this drill?",
                             "This action is not undoable", [
@@ -316,10 +320,6 @@ class DrillsList extends Component {
 
     createDrill() {
 
-        let drills = this.state.drills;
-        drills[createUUID('xxxxx')] = {
-            tags: []
-        }
         this.setState({showModal: true});
 
     }
@@ -461,9 +461,11 @@ class DrillsList extends Component {
                         color: 'gold',
                         name: name
                     }
+                    const drills = this.state.drills;
+                    drills[drill.name] = drill;
 
                     team.addDrill(name, drill);
-                    this.setState({showDrillNameInput: false, currentDrillEditorContent: null, showModal: false})
+                    this.setState({drills: drills, showDrillNameInput: false, currentDrillEditorContent: null, showModal: false})
 
                 }else{
                     Alert.alert("Invalid Drill", "This drill name already exists");
