@@ -24,6 +24,16 @@ module.exports.Team = class Team {
 
     }
 
+    addTag(tagID, tag){
+        this.modules.drills.tags[tagID] = tag;
+        this.#reference.child("modules/drills").update({tags: this.modules.drills.drills});
+    }
+
+    addDrill(drillID, drill){
+        this.modules.drills.drills[drillID] = drill;
+        this.#reference.child("modules/drills").update({drills: this.modules.drills.drills});
+    }
+
     /**
      * Sets this teams questions
      * @param questionInfo the questions to set this team questions to

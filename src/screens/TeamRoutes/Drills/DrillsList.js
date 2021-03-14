@@ -12,13 +12,15 @@ import tinycolor from 'tinycolor2';
 import {createUUID} from "../../../firebase/Util";
 import InviteForm from "../Members/InviteForm";
 import NewDrill from "./NewDrill";
+import Dialog from "react-native-dialog";
 
 class DrillsList extends Component {
 
     state = {
         tags: {},
         drills: {},
-        showModal: false
+        showModal: false,
+        showTagNameInput: false
     }
     editingNameTag = "";
     tagEditColor = null;
@@ -197,17 +199,8 @@ class DrillsList extends Component {
 
     }
 
-    createTag(name) {
-
-        let tags = this.state.tags;
-        tags[name] = {
-            color: 'gold',
-            name: name,
-            contentHidden: true
-        }
-
-        this.setState({tags: tags});
-
+    createTag = () => {
+        this.setState({showTagNameInput: true});
     }
 
     addItem() {
@@ -230,31 +223,66 @@ class DrillsList extends Component {
 
     showTag(tagName) {
 
-
     }
 
 
+    saveDrill(){
+
+
+
+    }
 
     exitDrillEditor(){
 
         Alert.alert("Save Changes?", "", [
             {
-                text:"Save"
+                text: "Save",
+                onPress: () => {
+
+                    this.setState({showModal: false});
+                }
             },
             {
-                text:"Discard"
+                text: "Discard Changes"
             },
             {
                 text:"Cancel"
             }
         ])
-        this.setState({showModal: false})
 
     }
+
+    handleTagNameChange = (name) => {
+        this.setState({newTagName: name})
+    }
+
+    addTag = () => {
+        console.log(1);
+        let tags = this.state.tags;
+        const name = this.state.newTagName;
+        tags[name] = {
+            color: 'gold',
+            name: name,
+            contentHidden: true
+        }
+        this.setState({showTagNameInput: false, tags: tags});
+    }
+
 
     render() {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
+
+                <Dialog.Container visible={this.state.showTagNameInput} onBackdropPcpress={() => this.setState({showTagNameInput: false})}>
+                    <Dialog.Title>Name this Tag!</Dialog.Title>
+                    <Dialog.Description>
+                        What do you want this tag to be called?
+                    </Dialog.Description>
+                    <Dialog.Input placeholder={"Tag " + createUUID("xxx")} onChangeText={this.handleTagNameChange}/>
+                    <Dialog.Button label="Cancel" onPress={() => {}}/>
+                    <Dialog.Button label="Done" onPress={this.addTag}/>
+                </Dialog.Container>
+
 
                 <Modal visible={this.state.showModal} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
