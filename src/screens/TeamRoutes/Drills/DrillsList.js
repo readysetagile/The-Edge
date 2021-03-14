@@ -292,13 +292,13 @@ class DrillsList extends Component {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
-                <Dialog.Container visible={this.state.showTagNameInput} onBackdropPcpress={() => this.setState({showTagNameInput: false})}>
+                <Dialog.Container visible={this.state.showTagNameInput} onBackdropPress={() => this.setState({showTagNameInput: false})}>
                     <Dialog.Title>Name this Tag!</Dialog.Title>
                     <Dialog.Description>
                         What do you want this tag to be called?
                     </Dialog.Description>
                     <Dialog.Input placeholder={"Tag Name"} onChangeText={this.handleTagNameChange}/>
-                    <Dialog.Button label="Cancel" onPress={() => {}}/>
+                    <Dialog.Button label="Cancel" onPress={() => this.setState({showTagNameInput: false})}/>
                     <Dialog.Button label="Done" onPress={this.addTag}/>
                 </Dialog.Container>
 
