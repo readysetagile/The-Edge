@@ -39,6 +39,10 @@ class DrillsList extends Component {
         if(newName && tag.name !== newName){
             const tags = this.state.tags;
             delete tags[tag.name];
+            Edge.teams.get(GlobalData.teamID).then(team => {
+                team.removeTag(tag.name);
+                team.addTag(newName, tag);
+            })
             tags[newName] = tag;
             this.setState({tags: tags})
             this.editingNameTag = ""
@@ -50,6 +54,10 @@ class DrillsList extends Component {
         if(newName && drill.name !== newName){
             const drills = this.state.drills;
             delete drills[drill.name];
+            Edge.teams.get(GlobalData.teamID).then(team => {
+                team.removeDrill(drill.name);
+                team.addDrill(newName, drill);
+            })
             drills[newName] = drill;
             this.setState({drills: drills})
             this.editingNameTag = ""
@@ -77,18 +85,30 @@ class DrillsList extends Component {
 
     }
 
+    updateItemColor(item, color, type){
+
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            item.color = color;
+            if(type === 'tag')
+            team.addTag(item.name, item);
+            else team.addDrill(item.name, item);
+        })
+
+    }
+
 
     generateTag(tag, onPress) {
 
         return (
 
-            <View>
+            <View key={tag.name}>
 
-                <Menu key={tag.name} onOpen={() => {
+                <Menu onOpen={() => {
                     this.editingNameTag = tag.name
                     this.tagEditColor = tag.color;
                 }} onClose={() => {
                     this.changeTagName(tag, this.editingNameTag)
+                    this.updateItemColor(tag, tag.color, 'tag');
                 }}>
 
                     <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(2)}>
@@ -176,6 +196,7 @@ class DrillsList extends Component {
                 this.editingNameTag = drill.name
             }} onClose={() => {
                 this.changeDrillName(drill, this.editingNameTag);
+                this.updateItemColor(drill, drill.color, 'drill');
             }}>
 
                 <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(5)}>
