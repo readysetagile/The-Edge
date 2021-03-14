@@ -220,6 +220,13 @@ class DrillsList extends Component {
 
                     <MenuOption >
 
+                        <View style={{padding: 5}}>
+
+                            <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
+
+
+                        </View>
+
                     </MenuOption>
 
                     <MenuOption onSelect={() => {
