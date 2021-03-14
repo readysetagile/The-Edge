@@ -46,12 +46,32 @@ class DrillsList extends Component {
         }
     }
 
+    changeDrillName(drill, newName){
+        if(newName && drill.name !== newName){
+            const drills = this.state.drills;
+            delete drills[drill.name];
+            drills[newName] = drill;
+            this.setState({drills: drills})
+            this.editingNameTag = ""
+        }
+
+    }
+
     changeTagColor(tag, newColor){
         if(newColor && tag.color !== newColor) {
-            const tagOrDrill = tag.hasOwnProperty('drills') ? 'tags' : 'drills'
-            this.state[tagOrDrill][tag.name].color = newColor;
+            this.state.tags[tag.name].color = newColor;
             this.setState({
-                [tagOrDrill]: this.state[tagOrDrill]
+                tags: this.state.tags
+            })
+        }
+    }
+
+    changeDrillColor(drill, newColor){
+
+        if(newColor && drill.color !== newColor) {
+            this.state.drills[drill.name].color = newColor;
+            this.setState({
+                drills: this.state.drills
             })
         }
 
@@ -110,7 +130,7 @@ class DrillsList extends Component {
                         </MenuOption>
                         <MenuOption>
 
-                            {this.createColorSliders(tag)}
+                            {this.createColorSliders(tag, this.changeTagColor.bind(this))}
 
                         </MenuOption>
 
@@ -152,7 +172,11 @@ class DrillsList extends Component {
     generateDrill(drill, onPress){
 
         return(
-            <Menu key={drill.name}>
+            <Menu key={drill.name} onOpen={() => {
+                this.editingNameTag = drill.name
+            }} onClose={() => {
+                this.changeDrillName(drill, this.editingNameTag);
+            }}>
 
                 <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(5)}>
                     <View style={{
@@ -180,16 +204,15 @@ class DrillsList extends Component {
                                        }}
                                        placeholder={drill.name}
                                        onChangeText={val => {
-                                           this.editingDrillName = val
+                                           this.editingNameTag = val
                                        }}
-
                             />
                         </View>
 
                     </MenuOption>
 
                     <MenuOption>
-                        {this.createColorSliders(drill)}
+                        {this.createColorSliders(drill, this.changeDrillColor.bind(this))}
                     </MenuOption>
 
                     <MenuOption onSelect={() => {
@@ -233,7 +256,7 @@ class DrillsList extends Component {
 
     }
 
-    createColorSliders(tag){
+    createColorSliders(tag, onChange){
 
         return(
             <View>
@@ -248,7 +271,7 @@ class DrillsList extends Component {
                         thumbStyle={styles.thumb}
                         useNativeDriver={true}
                         onColorChange={(colorHsvOrRgb, resType) => {
-                            this.changeTagColor(tag, tinycolor(colorHsvOrRgb).toHexString())
+                            onChange(tag, tinycolor(colorHsvOrRgb).toHexString())
                         }}
                     />
                 </View>
@@ -257,18 +280,18 @@ class DrillsList extends Component {
                         ref={view => {
                             this.sliderSaturationPicker = view;
                         }}
-                        oldColor={this.state.tags[tag.name].color}
+                        oldColor={tag.color}
                         trackStyle={[{height: 12, width: '100%'}]}
                         thumbStyle={styles.thumb}
                         useNativeDriver={true}
                         onColorChange={(colorHsvOrRgb, resType) => {
-                            this.changeTagColor(tag, tinycolor(colorHsvOrRgb).toHexString())
+                            onChange(tag, tinycolor(colorHsvOrRgb).toHexString())
                         }}
                         style={{
                             height: 12,
                             borderRadius: 6,
                             backgroundColor: tinycolor({
-                                h: tinycolor(this.state.tags[tag.name].color).toHsv().h,
+                                h: tinycolor(tag.color).toHsv().h,
                                 s: 1,
                                 v: 1
                             }).toHexString()
@@ -488,6 +511,7 @@ class DrillsList extends Component {
 
                         const content = i[1];
                         if(content){
+                            content.name = i[0];
                             return this.generateDrill(content, () => console.log(5));
                         }
                     })
