@@ -9,12 +9,13 @@ export default function InputText({
                                       placeholder,
                                       onTextChange,
                                       onSubmit,
-                                      onCancel
+                                      onCancel,
+                                      style,
                                   }) {
 
     return (
 
-        <Dialog.Container visible={visible} onBackdropPress={onBackDropPress}>
+        <Dialog.Container contentStyle={style} visible={visible} onBackdropPress={onBackDropPress}>
             <Dialog.Title>{title}</Dialog.Title>
             <Dialog.Description>
                 {description}

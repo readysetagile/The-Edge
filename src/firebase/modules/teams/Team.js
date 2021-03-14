@@ -34,6 +34,11 @@ module.exports.Team = class Team {
         this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
     }
 
+    removeDrill(drillID){
+        delete this.modules.drills.drills[drillID];
+        this.#reference.child("modules/drills").update({drills: this.modules.drills.drills});
+    }
+
     addDrill(drillID, drill){
         this.modules.drills.drills[drillID] = drill;
         this.#reference.child("modules/drills").update({drills: this.modules.drills.drills});

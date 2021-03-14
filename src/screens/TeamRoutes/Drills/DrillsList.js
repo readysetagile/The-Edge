@@ -23,7 +23,11 @@ class DrillsList extends Component {
         tags: {},
         drills: {},
         showModal: false,
-        showTagNameInput: false
+        showTagNameInput: false,
+        showDrillNameInput: false,
+        newDrillName: null,
+        currentDrillEditorContent: null,
+        currentDrillEditing: null
     }
     editingNameTag = "";
     tagEditColor = null;
@@ -195,7 +199,7 @@ class DrillsList extends Component {
 
     }
 
-    createDrill(tag) {
+    createDrill() {
 
         let drills = this.state.drills;
         drills[createUUID('xxxxx')] = {
@@ -227,32 +231,46 @@ class DrillsList extends Component {
 
     }
 
-    showTag(tagName) {
-
-    }
-
 
     exitDrillEditor(){
 
-        Alert.alert("Save Changes?", "", [
-            {
-                text: "Save",
-                onPress: () => {
-                    this.setState({showModal: false});
+        Edge.teams.get(GlobalData.teamID)
+            .then(team => {
+
+            Alert.alert("Save Changes?", "", [
+                {
+                    text: "Save",
+                    onPress: () => {
+
+                        if(team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)){
+                            team.addDrill(this.state.currentDrillEditing, this.state.currentDrillEditorContent);
+                            this.setState({showModel: false});
+                        }else{
+                            this.setState({showDrillNameInput: true})
+                        }
+                    }
+                },
+                {
+                    text: "Discard Changes",
+                    onPress: () => {
+                        this.setState({showModal: false});
+                    }
+                },
+                {
+                    text:"Cancel",
+                    onPress: this.onTagNameCancel
                 }
-            },
-            {
-                text: "Discard Changes"
-            },
-            {
-                text:"Cancel"
-            }
-        ])
+            ])
+
+        })
 
     }
 
     handleTagNameChange = (name) => {
         this.setState({newTagName: name})
+    }
+    handleDrillNameChange = (name) => {
+        this.setState({newDrillName: name})
     }
 
     addTag = () => {
@@ -291,6 +309,37 @@ class DrillsList extends Component {
     onTagNameCancel = () => {
         this.setState({showTagNameInput: false})
     }
+    
+    onEditorContentChange = (newContent) => {
+        if(newContent.msg === "ON_CHANGE"){
+            this.setState({currentDrillEditorContent: newContent.payload.html})
+        }
+    }
+
+    onDrillNameCancel = () => {
+        this.setState({showDrillNameInput: false})
+    }
+
+    addDrill = () => {
+        const name = this.state.newDrillName;
+
+        if(name) {
+            Edge.teams.get(GlobalData.teamID).then(team => {
+
+                if(!team.modules.drills.drills.hasOwnProperty(name)){
+
+                    team.addDrill(name, this.state.currentDrillEditorContent);
+                    this.setState({showDrillNameInput: false, currentDrillEditorContent: null, showModal: false})
+
+                }else{
+                    Alert.alert("Invalid Drill", "This drill name already exists");
+                }
+            })
+        }else{
+            Alert.alert("Invalid Drill", "Please input a valid drill name");
+        }
+
+    }
 
 
     render() {
@@ -305,15 +354,22 @@ class DrillsList extends Component {
                 <Modal visible={this.state.showModal} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={globalStyles.modalContent}>
+
                             <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
                                       name={"checkmark-circle-outline"} size={24}
                                       onPress={() => this.exitDrillEditor()} />
 
-                                      <NewDrill/>
+                            <InputText title={"Name this Drill!"} description={"What do you want this drill to be called?"}
+                                       placeholder={"Drill Name"} onTextChange={this.handleDrillNameChange} onCancel={this.onDrillNameCancel}
+                                       visible={this.state.showDrillNameInput} onSubmit={this.addDrill} onBackDropPress={this.onDrillNameCancel}
+                                       />
+
+                                      <NewDrill onContentChange={this.onEditorContentChange}/>
 
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>
+
 
                 <View style={globalStyles.topToolBar}>
                     <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: 0</Text>
