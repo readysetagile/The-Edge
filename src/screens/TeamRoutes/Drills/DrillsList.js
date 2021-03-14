@@ -6,7 +6,6 @@ import NewButton from "../../../Components/NewButton";
 import {connectActionSheet} from '@expo/react-native-action-sheet'
 import {FontAwesome, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import styles from "../../LoginRoutes/ProfileScreen/styles";
 import {SliderHuePicker, SliderSaturationPicker,} from 'react-native-slider-color-picker';
 import tinycolor from 'tinycolor2';
 import {createUUID} from "../../../firebase/Util";
@@ -15,6 +14,7 @@ import GlobalData from '../../../GlobalData';
 import Edge from "../../../firebase/index";
 import InputText from "../../../Components/InputText";
 import Collapsible from "react-native-collapsible";
+import styles from './styles';
 
 class DrillsList extends Component {
 
@@ -112,10 +112,7 @@ class DrillsList extends Component {
                 }}>
 
                     <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(2)}>
-                        <View style={{
-                            flexDirection: 'row', padding: 15, flexWrap: 'wrap',
-                            borderBottomWidth: 2, borderTopWidth: 2, borderColor: 'grey'
-                        }}>
+                        <View style={styles.itemContainer}>
                             <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}
                                          onPress={() => onPress()}/>
                             <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{tag.name}</Text>
@@ -133,18 +130,11 @@ class DrillsList extends Component {
                             <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
                                 <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
                                 <TextInput ref={ref => {this.tagNameInput = ref}}
-                                           style={{
-                                               padding: 5,
-                                               borderWidth: 2,
-                                               borderColor: 'grey',
-                                               flex: 1
-                                           }}
+                                           style={styles.nameInput}
                                            placeholder={tag.name}
                                            onChangeText={val => {
                                                this.editingNameTag = val
-                                           }}
-
-                                />
+                                           }}/>
                             </View>
 
                         </MenuOption>
@@ -177,11 +167,11 @@ class DrillsList extends Component {
 
                 </Menu>
 
-                {/*<Collapsible collapsed={tag.contentHidden}>*/}
+                <Collapsible collapsed={tag.contentHidden}>
 
 
 
-                {/*</Collapsible>*/}
+                </Collapsible>
 
             </View>
 
@@ -200,10 +190,7 @@ class DrillsList extends Component {
             }}>
 
                 <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(5)}>
-                    <View style={{
-                        flexDirection: 'row', padding: 15, flexWrap: 'wrap',
-                        borderBottomWidth: 2, borderTopWidth: 2, borderColor: 'grey'
-                    }}>
+                    <View style={styles.itemContainer}>
 
                         <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}
                                      onPress={() => onPress()}/>
@@ -217,12 +204,7 @@ class DrillsList extends Component {
                         <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
                             <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
                             <TextInput ref={ref => {this.tagNameInput = ref}}
-                                       style={{
-                                           padding: 5,
-                                           borderWidth: 2,
-                                           borderColor: 'grey',
-                                           flex: 1
-                                       }}
+                                       style={styles.nameInput}
                                        placeholder={drill.name}
                                        onChangeText={val => {
                                            this.editingNameTag = val
@@ -251,7 +233,7 @@ class DrillsList extends Component {
                             ]);
                     }}>
 
-                        <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete Tag</Text>
+                        <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete Drill</Text>
 
                     </MenuOption>
 
@@ -263,6 +245,13 @@ class DrillsList extends Component {
     }
 
     deleteDrill = (drill) => {
+
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            team.removeDrill(drill.name);
+            const drills = this.state.drills;
+            delete drills[drill.name];
+            this.setState({drills: drills});
+        })
 
     }
 

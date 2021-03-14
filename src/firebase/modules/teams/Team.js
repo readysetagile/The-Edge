@@ -31,6 +31,8 @@ module.exports.Team = class Team {
 
     }
     addTag(tagID, tag){
+        if(tag.drills)
+            delete tag.drills;
         this.modules.drills.tags[tagID] = tag;
         this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
     }
