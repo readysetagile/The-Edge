@@ -10,12 +10,11 @@ import styles from "../../LoginRoutes/ProfileScreen/styles";
 import {SliderHuePicker, SliderSaturationPicker,} from 'react-native-slider-color-picker';
 import tinycolor from 'tinycolor2';
 import {createUUID} from "../../../firebase/Util";
-import InviteForm from "../Members/InviteForm";
 import NewDrill from "./NewDrill";
-import Dialog from "react-native-dialog";
 import GlobalData from '../../../GlobalData';
 import Edge from "../../../firebase/index";
 import InputText from "../../../Components/InputText";
+import Collapsible from "react-native-collapsible";
 
 class DrillsList extends Component {
 
@@ -49,9 +48,10 @@ class DrillsList extends Component {
 
     changeTagColor(tag, newColor){
         if(newColor && tag.color !== newColor) {
-            this.state.tags[tag.name].color = newColor;
+            const tagOrDrill = tag.hasOwnProperty('drills') ? 'tags' : 'drills'
+            this.state[tagOrDrill][tag.name].color = newColor;
             this.setState({
-                tags: this.state.tags
+                [tagOrDrill]: this.state[tagOrDrill]
             })
         }
 
@@ -62,26 +62,107 @@ class DrillsList extends Component {
 
         return (
 
-            <Menu key={tag.name} onOpen={() => {
-                this.editingNameTag = tag.name
-                this.tagEditColor = tag.color;
-            }} onClose={() => {
-                this.changeTagName(tag, this.editingNameTag)
-            }}>
+            <View>
 
-                <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(2)}>
+                <Menu key={tag.name} onOpen={() => {
+                    this.editingNameTag = tag.name
+                    this.tagEditColor = tag.color;
+                }} onClose={() => {
+                    this.changeTagName(tag, this.editingNameTag)
+                }}>
+
+                    <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(2)}>
+                        <View style={{
+                            flexDirection: 'row', padding: 15, flexWrap: 'wrap',
+                            borderBottomWidth: 2, borderTopWidth: 2, borderColor: 'grey'
+                        }}>
+                            <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}
+                                         onPress={() => onPress()}/>
+                            <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{tag.name}</Text>
+
+                            <View style={{flex: 1}}>
+                                <MaterialIcons name={tag.contentHidden ? 'arrow-drop-up' : 'arrow-drop-down'}
+                                               size={30} color={'grey'} style={{alignSelf: 'flex-end'}}/>
+                            </View>
+
+                        </View>
+                    </MenuTrigger>
+                    <MenuOptions>
+                        <MenuOption>
+
+                            <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
+                                <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
+                                <TextInput ref={ref => {this.tagNameInput = ref}}
+                                           style={{
+                                               padding: 5,
+                                               borderWidth: 2,
+                                               borderColor: 'grey',
+                                               flex: 1
+                                           }}
+                                           placeholder={tag.name}
+                                           onChangeText={val => {
+                                               this.editingNameTag = val
+                                           }}
+
+                                />
+                            </View>
+
+                        </MenuOption>
+                        <MenuOption>
+
+                            {this.createColorSliders(tag)}
+
+                        </MenuOption>
+
+                        <MenuOption onSelect={() => {
+                            Alert.alert("Are you sure you want to delete this tag?",
+                                "This will not remove any drills under it", [
+                                    {
+                                        text: "Yes",
+                                        onPress: () => {
+                                            this.deleteTag(tag);
+                                        }
+                                    },
+                                    {
+                                        text: 'Cancel'
+                                    }
+                                ]);
+                        }}>
+
+                            <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete Tag</Text>
+
+                        </MenuOption>
+
+                    </MenuOptions>
+
+                </Menu>
+
+                {/*<Collapsible collapsed={tag.contentHidden}>*/}
+
+
+
+                {/*</Collapsible>*/}
+
+            </View>
+
+        )
+
+    }
+
+    generateDrill(drill, onPress){
+
+        return(
+            <Menu key={drill.name}>
+
+                <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(5)}>
                     <View style={{
                         flexDirection: 'row', padding: 15, flexWrap: 'wrap',
                         borderBottomWidth: 2, borderTopWidth: 2, borderColor: 'grey'
                     }}>
-                        <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}
-                                     onPress={() => onPress()}/>
-                        <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{tag.name}</Text>
 
-                        <View style={{flex: 1}}>
-                            <MaterialIcons name={tag.contentHidden ? 'arrow-drop-up' : 'arrow-drop-down'}
-                                           size={30} color={'grey'} style={{alignSelf: 'flex-end'}}/>
-                        </View>
+                        <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}
+                                     onPress={() => onPress()}/>
+                        <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
 
                     </View>
                 </MenuTrigger>
@@ -91,40 +172,39 @@ class DrillsList extends Component {
                         <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
                             <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
                             <TextInput ref={ref => {this.tagNameInput = ref}}
-                                style={{
-                                    padding: 5,
-                                    borderWidth: 2,
-                                    borderColor: 'grey',
-                                    flex: 1
-                                }}
-                                placeholder={tag.name}
-                                onChangeText={val => {
-                                    this.editingNameTag = val
-                                }}
+                                       style={{
+                                           padding: 5,
+                                           borderWidth: 2,
+                                           borderColor: 'grey',
+                                           flex: 1
+                                       }}
+                                       placeholder={drill.name}
+                                       onChangeText={val => {
+                                           this.editingDrillName = val
+                                       }}
 
                             />
                         </View>
 
                     </MenuOption>
+
                     <MenuOption>
-
-                        {this.createColorSliders(tag)}
-
+                        {this.createColorSliders(drill)}
                     </MenuOption>
 
                     <MenuOption onSelect={() => {
-                        Alert.alert("Are you sure you want to delete this tag?",
-                            "This will not remove any drills under it", [
-                            {
-                                text: "Yes",
-                                onPress: () => {
-                                    this.deleteTag(tag);
+                        Alert.alert("Are you sure you want to delete this drill?",
+                            "This action is not undoable", [
+                                {
+                                    text: "Yes",
+                                    onPress: () => {
+                                        this.deleteDrill(drill);
+                                    }
+                                },
+                                {
+                                    text: 'Cancel'
                                 }
-                            },
-                            {
-                                text: 'Cancel'
-                            }
-                        ]);
+                            ]);
                     }}>
 
                         <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete Tag</Text>
@@ -134,9 +214,11 @@ class DrillsList extends Component {
                 </MenuOptions>
 
             </Menu>
+        );
 
+    }
 
-        )
+    deleteDrill = (drill) => {
 
     }
 
@@ -305,10 +387,11 @@ class DrillsList extends Component {
             const drills = team.modules.drills?.drills || {};
 
             for(let [K, V] in drills){
-
-                const tags = V.tags;
-                for(let tag of tags){
-                    tags[tag].drills.push(K);
+                if(V && V.tags) {
+                    const tags = V.tags;
+                    for (let tag of tags) {
+                        tags[tag].drills.push(K);
+                    }
                 }
 
             }
@@ -340,7 +423,13 @@ class DrillsList extends Component {
 
                 if(!team.modules.drills.drills.hasOwnProperty(name)){
 
-                    team.addDrill(name, this.state.currentDrillEditorContent);
+                    const drill = {
+                        content: this.state.currentDrillEditorContent,
+                        color: 'gold',
+                        name: name
+                    }
+
+                    team.addDrill(name, drill);
                     this.setState({showDrillNameInput: false, currentDrillEditorContent: null, showModal: false})
 
                 }else{
@@ -395,6 +484,17 @@ class DrillsList extends Component {
                 </View>
 
                 {
+                    Object.entries(this.state.drills)?.map((i, j) => {
+
+                        const content = i[1];
+                        if(content){
+                            return this.generateDrill(content, () => console.log(5));
+                        }
+                    })
+                }
+
+                {
+
                     Object.entries(this.state.tags).map((i, j) => {
 
                         const name = i[0];
@@ -404,6 +504,7 @@ class DrillsList extends Component {
                             return this.generateTag(content, () => console.log(1));
                         }
                     })
+
                 }
 
                 <NewButton onPress={() => this.addItem()}/>{/*TODO: check for coach before displaying this*/}

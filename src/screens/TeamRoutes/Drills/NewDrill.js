@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Platform, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {SafeAreaView, StyleSheet} from "react-native";
 import WebViewQuillJS from 'react-native-webview-quilljs'
 
 const NewDrill = ({onContentChange}) => {
