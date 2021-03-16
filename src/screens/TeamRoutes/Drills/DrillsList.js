@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Modal, Text, TextInput, View, Alert, TouchableWithoutFeedback, Keyboard} from "react-native";
+import {Modal, Text, TextInput, View, Alert, TouchableWithoutFeedback, Keyboard, ScrollView} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import NewButton from "../../../Components/NewButton";
@@ -15,6 +15,7 @@ import Edge from "../../../firebase/index";
 import InputText from "../../../Components/InputText";
 import Collapsible from "react-native-collapsible";
 import styles from './styles';
+import CheckBox from "react-native-check-box";
 
 class DrillsList extends Component {
 
@@ -218,12 +219,17 @@ class DrillsList extends Component {
                         {this.createColorSliders(drill, this.changeDrillColor.bind(this))}
                     </MenuOption>
 
-                    <MenuOption >
+                    <MenuOption disableTouchable={true}>
 
-                        <View style={{padding: 5}}>
+                        <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
 
-                            <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
+                        <View style={{height: 50}}>
 
+                            <ScrollView style={{padding: 5}}>
+
+                                {this.generateDrillTags(drill)}
+
+                            </ScrollView>
 
                         </View>
 
@@ -253,6 +259,57 @@ class DrillsList extends Component {
             </Menu>
         );
 
+    }
+
+    generateDrillTags(drill){
+
+        const tags = [];
+
+        Object.entries(this.state.tags).forEach(i => {
+
+            if(i && i[1]){
+                const name = i[0], content = i[1];
+
+                const view = this.generateDrillTag(drill, content);
+                tags.push(view);
+
+            }
+
+        });
+
+        return tags;
+    }
+
+    generateDrillTag(drill, tagContent){
+
+        return(
+
+            <View key={tagContent.name} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+
+                <Text>{tagContent.name}:</Text>
+                <CheckBox  isChecked={drill.tags?.includes(tagContent.name)}
+                           onClick={() => this.toggleTag(drill, tagContent.name)}/>
+
+            </View>
+
+        )
+
+    }
+
+    toggleTag(drill, tagName){
+
+        if(drill.tags) {
+            if(drill.tags.includes(tagName))
+                drill.tags = drill.tags.filter(i => i !== tagName);
+            else drill.tags.push(tagName);
+
+            const drills = this.state.drills;
+            drills[drill.name] = drill;
+            this.setState({drills: drills});
+        }else {
+            drill.tags = []
+            this.toggleTag(drill, tagName);
+        }
     }
 
     deleteDrill = (drill) => {
@@ -423,18 +480,23 @@ class DrillsList extends Component {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
 
-            const tags = team.modules.drills?.tags || {};
-            const drills = team.modules.drills?.drills || {};
+            const tags = team.modules.drills?.tags || [];
+            const drills = team.modules.drills?.drills || [];
 
-            for(let [K, V] in drills){
-                if(V && V.tags) {
-                    const tags = V.tags;
-                    for (let tag of tags) {
-                        tags[tag].drills.push(K);
+            Object.entries(drills).forEach(i => {
+                if(i[1]){
+                    const name = i[0];
+                    const content = i[1];
+
+                    const tags = content.tags;
+                    if(tags)
+                    for(const tag of Object.values(tags)){
+                        tags[tag]?.drills.push(name)
                     }
-                }
+                    drills[i[0]].tags = Object.values(content.tags)
 
-            }
+                }
+            })
 
             this.setState({tags: tags, drills: drills});
         })

@@ -25,6 +25,22 @@ module.exports.Team = class Team {
 
     }
 
+    addTagToDrill(drillID, tagID){
+
+        const drillTags = this.modules.drills.drills[drillID].tags;
+        drillTags.push(tagID);
+        this.#reference.child('modules/drills/drills').child(drillID).update({tags: drillTags})
+
+    }
+
+    removeTagFromDrill(drillID, tagID){
+
+        let drillTags = this.modules.drills.drills[drillID].tags;
+        drillTags = drillTags.filter(i => i !== tagID);
+        this.#reference.child('modules/drills/drills').child(drillID).update({tags: drillTags})
+
+    }
+
     removeTag(tagID){
         delete this.modules.drills.tags[tagID];
         this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
