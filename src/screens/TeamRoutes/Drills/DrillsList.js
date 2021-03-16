@@ -268,7 +268,7 @@ class DrillsList extends Component {
         Object.entries(this.state.tags).forEach(i => {
 
             if(i && i[1]){
-                const name = i[0], content = i[1];
+                const content = i[1];
 
                 const view = this.generateDrillTag(drill, content);
                 tags.push(view);
@@ -480,7 +480,7 @@ class DrillsList extends Component {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
 
-            const tags = team.modules.drills?.tags || [];
+            const allTags = Object.assign({}, team.modules.drills?.tags || {});
             const drills = team.modules.drills?.drills || [];
 
             Object.entries(drills).forEach(i => {
@@ -489,16 +489,23 @@ class DrillsList extends Component {
                     const content = i[1];
 
                     const tags = content.tags;
-                    if(tags)
-                    for(const tag of Object.values(tags)){
-                        tags[tag]?.drills.push(name)
+                    if(tags) {
+                        for (const tag of tags) {
+                            if (allTags[tag]) {
+                                if (allTags[tag].drills)
+                                    allTags[tag].drills.push(name)
+                                else allTags[tag].drills = [name];
+                            }else{
+                                team.removeTagFromDrill(name, tag);
+                            }
+                        }
                     }
                     drills[i[0]].tags = Object.values(content.tags)
 
                 }
             })
 
-            this.setState({tags: tags, drills: drills});
+            this.setState({tags: allTags, drills: drills});
         })
 
     }
