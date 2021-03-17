@@ -96,6 +96,14 @@ class DrillsList extends Component {
 
     }
 
+    invertTagHiddenContent(tag) {
+
+        const tags = this.state.tags;
+        tag.contentHidden = !tag.contentHidden;
+        tags[tag.name].contentHidden = tag.contentHidden;
+        this.setState({tags: tags})
+
+    }
 
     generateTag(tag, onPress) {
 
@@ -111,7 +119,7 @@ class DrillsList extends Component {
                     this.updateItemColor(tag, tag.color, 'tag');
                 }}>
 
-                    <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(2)}>
+                    <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.invertTagHiddenContent.bind(this, tag)}>
                         <View style={styles.itemContainer}>
                             <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}
                                          onPress={() => onPress()}/>
@@ -171,6 +179,7 @@ class DrillsList extends Component {
                 </Menu>
 
                 <Collapsible collapsed={tag.contentHidden}>
+
 
 
                 </Collapsible>
