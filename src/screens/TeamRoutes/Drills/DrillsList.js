@@ -15,6 +15,7 @@ import InputText from "../../../Components/InputText";
 import Collapsible from "react-native-collapsible";
 import styles from './styles';
 import CheckBox from "react-native-check-box";
+import {firebase} from "../../../firebase/config";
 
 class DrillsList extends Component {
 
@@ -26,7 +27,8 @@ class DrillsList extends Component {
         showDrillNameInput: false,
         newDrillName: null,
         currentDrillEditorContent: null,
-        currentDrillEditing: null
+        currentDrillEditing: null,
+        canEditDrills: false
     }
     editingNameTag = "";
     tagEditColor = null;
@@ -523,6 +525,10 @@ class DrillsList extends Component {
     componentDidMount() {
 
 
+        this.memberHasPermissionToEditDrills().then((editable) => {
+            this.setState({canEditDrills: editable})
+        })
+
         Edge.teams.get(GlobalData.teamID).then(team => {
 
             const allTags = Object.assign({}, team.modules.drills?.tags || {});
@@ -614,41 +620,56 @@ class DrillsList extends Component {
 
     }
 
-    createDrillHeader(isReadOnly, drillName){
+     createDrillHeader(drillName){
 
         const content = this.state.drills[drillName]?.content
+        const canEdit = this.state.canEditDrills;
 
         return(
 
             <View style={globalStyles.modalContent}>
 
                 {
-                    !isReadOnly ? (
-                        <View>
-                            <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
-                                      name={"checkmark-circle-outline"} size={24}
-                                      onPress={() => this.exitDrillEditor()}/>
+                    canEdit ? (
+                            <View>
+                                <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
+                                          name={"checkmark-circle-outline"} size={24}
+                                          onPress={() => this.exitDrillEditor()}/>
 
-                            <InputText title={"Name this Drill!"}
-                                       description={"What do you want this drill to be called?"}
-                                       placeholder={"Drill Name"} onTextChange={this.handleDrillNameChange}
-                                       onCancel={this.onDrillNameCancel}
-                                       visible={this.state.showDrillNameInput} onSubmit={this.addDrill}
-                                       onBackDropPress={this.onDrillNameCancel}
-                            />
-                        </View>
-                    ) :
+                                <InputText title={"Name this Drill!"}
+                                           description={"What do you want this drill to be called?"}
+                                           placeholder={"Drill Name"} onTextChange={this.handleDrillNameChange}
+                                           onCancel={this.onDrillNameCancel}
+                                           visible={this.state.showDrillNameInput} onSubmit={this.addDrill}
+                                           onBackDropPress={this.onDrillNameCancel}
+                                />
+                            </View>
+                        ) :
                         <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
                                   name={"close"} size={24}
                                   onPress={() => this.setState({showModal: false})}/>
                 }
 
-                <NewDrill onContentChange={this.onEditorContentChange} isReadOnly={isReadOnly} content={content}/>
+                <NewDrill onContentChange={this.onEditorContentChange} isReadOnly={!canEdit} content={content}/>
 
 
             </View>
 
         )
+
+    }
+
+      memberHasPermissionToEditDrills(){
+
+        return new Promise(resolve => {
+
+            Edge.teams.get(GlobalData.teamID).then(r => {
+                r.getMember(GlobalData.profileID).then(member => {
+                    resolve(member.permissions.has("editDrills") || member.permissions.has("isCoach"));
+                })
+            })
+
+        });
 
     }
 
@@ -665,7 +686,7 @@ class DrillsList extends Component {
 
                 <Modal visible={this.state.showModal} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                            {this.createDrillHeader(true, this.state.currentDrillEditing)}
+                        {this.createDrillHeader(this.state.currentDrillEditing)}
                     </TouchableWithoutFeedback>
                 </Modal>
 
@@ -674,7 +695,7 @@ class DrillsList extends Component {
                     <View style={globalStyles.searchToolBar}>
                         <TextInput
                             placeholderTextColor={'#003f5c'}
-                            placeholder='Search 🔎'
+                            placeholder='Search :mag_right:'
                             onChangeText={(val) => {
                             }}>
                         </TextInput>
@@ -706,7 +727,9 @@ class DrillsList extends Component {
 
                 }
 
-                <NewButton onPress={() => this.addItem()}/>{/*TODO: check for coach before displaying this*/}
+                {
+                    this.state.canEditDrills ? <NewButton onPress={() => this.addItem()}/> : <View/>
+                }
 
             </View>
         );
