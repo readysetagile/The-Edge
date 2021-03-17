@@ -1,12 +1,14 @@
-import React, {useState} from "react";
+import React from "react";
 import {SafeAreaView, StyleSheet} from "react-native";
 import WebViewQuillJS from 'react-native-webview-quilljs'
 
-const NewDrill = ({onContentChange}) => {
+const NewDrill = ({onContentChange, isReadOnly, content}) => {
 
     return (
         <SafeAreaView style={styles.containerStyle}>
             <WebViewQuillJS
+                content={content}
+                isReadOnly={isReadOnly}
                 onMessageReceived={onContentChange}
                 backgroundColor={"#FAEBD7"}
             />

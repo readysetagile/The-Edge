@@ -30,20 +30,10 @@ class DrillsList extends Component {
     }
     editingNameTag = "";
     tagEditColor = null;
+    currentDrillEditorContent = null
 
     constructor(props) {
         super(props);
-
-        this.state = {
-            tags: {},
-            drills: {},
-            showModal: false,
-            showTagNameInput: false,
-            showDrillNameInput: false,
-            newDrillName: null,
-            currentDrillEditorContent: null,
-            currentDrillEditing: null
-        }
 
     }
 
@@ -117,7 +107,7 @@ class DrillsList extends Component {
 
     }
 
-    generateTag(tag, onPress) {
+    generateTag(tag) {
 
         return (
 
@@ -133,8 +123,7 @@ class DrillsList extends Component {
 
                     <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.invertTagHiddenContent.bind(this, tag)}>
                         <View style={styles.itemContainer}>
-                            <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}
-                                         onPress={() => onPress()}/>
+                            <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}/>
                             <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{tag.name}</Text>
 
                             <View style={{flex: 1}}>
@@ -194,7 +183,7 @@ class DrillsList extends Component {
 
                     {
                         tag.drills.map(name => {
-                            return this.generateDrill(this.state.drills[name], () => console.log('pranked'))
+                            return this.generateDrill(this.state.drills[name])
                         })
                     }
 
@@ -206,7 +195,13 @@ class DrillsList extends Component {
 
     }
 
-    generateDrill(drill, onPress) {
+    setDrillViewing(drill) {
+
+        this.setState({currentDrillEditing: drill.name, showModal: true});
+
+    }
+
+    generateDrill(drill) {
 
         return (
             <Menu key={drill.name} onOpen={() => {
@@ -216,11 +211,10 @@ class DrillsList extends Component {
                 this.updateItemColor(drill, drill.color, 'drill');
             }}>
 
-                <MenuTrigger triggerOnLongPress={true} onAlternativeAction={() => console.log(5)}>
+                <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.setDrillViewing.bind(this, drill)}>
                     <View style={styles.itemContainer}>
 
-                        <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}
-                                     onPress={() => onPress()}/>
+                        <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}/>
                         <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
 
                     </View>
@@ -470,6 +464,7 @@ class DrillsList extends Component {
                         text: "Save",
                         onPress: () => {
 
+                            this.setState({currentDrillEditorContent: this.currentDrillEditorContent})
                             if (team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)) {
                                 team.addDrill(this.state.currentDrillEditing, this.state.currentDrillEditorContent);
                                 this.setState({showModal: false});
@@ -577,7 +572,7 @@ class DrillsList extends Component {
 
     onEditorContentChange = (newContent) => {
         if (newContent.msg === "ON_CHANGE") {
-            this.setState({currentDrillEditorContent: newContent.payload.html})
+            this.currentDrillEditorContent = newContent.payload.html;
         }
     }
 
@@ -619,6 +614,43 @@ class DrillsList extends Component {
 
     }
 
+    createDrillHeader(isReadOnly, drillName){
+
+        const content = this.state.drills[drillName]?.content
+
+        return(
+
+            <View style={globalStyles.modalContent}>
+
+                {
+                    !isReadOnly ? (
+                        <View>
+                            <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
+                                      name={"checkmark-circle-outline"} size={24}
+                                      onPress={() => this.exitDrillEditor()}/>
+
+                            <InputText title={"Name this Drill!"}
+                                       description={"What do you want this drill to be called?"}
+                                       placeholder={"Drill Name"} onTextChange={this.handleDrillNameChange}
+                                       onCancel={this.onDrillNameCancel}
+                                       visible={this.state.showDrillNameInput} onSubmit={this.addDrill}
+                                       onBackDropPress={this.onDrillNameCancel}
+                            />
+                        </View>
+                    ) :
+                        <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
+                                  name={"close"} size={24}
+                                  onPress={() => this.setState({showModal: false})}/>
+                }
+
+                <NewDrill onContentChange={this.onEditorContentChange} isReadOnly={isReadOnly} content={content}/>
+
+
+            </View>
+
+        )
+
+    }
 
     render() {
         return (
@@ -633,23 +665,7 @@ class DrillsList extends Component {
 
                 <Modal visible={this.state.showModal} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                        <View style={globalStyles.modalContent}>
-
-                            <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
-                                      name={"checkmark-circle-outline"} size={24}
-                                      onPress={() => this.exitDrillEditor()}/>
-
-                            <InputText title={"Name this Drill!"}
-                                       description={"What do you want this drill to be called?"}
-                                       placeholder={"Drill Name"} onTextChange={this.handleDrillNameChange}
-                                       onCancel={this.onDrillNameCancel}
-                                       visible={this.state.showDrillNameInput} onSubmit={this.addDrill}
-                                       onBackDropPress={this.onDrillNameCancel}
-                            />
-
-                            <NewDrill onContentChange={this.onEditorContentChange}/>
-
-                        </View>
+                            {this.createDrillHeader(true, this.state.currentDrillEditing)}
                     </TouchableWithoutFeedback>
                 </Modal>
 
@@ -669,10 +685,9 @@ class DrillsList extends Component {
                     Object.entries(this.state.drills)?.map((i, j) => {
 
                         const content = i[1];
-                        console.log(content.tags);
                         if (content && (!Array.isArray(content.tags) || content.tags.length === 0)) {
                             content.name = i[0];
-                            return this.generateDrill(content, () => console.log(5));
+                            return this.generateDrill(content);
                         }
                     })
                 }
@@ -685,7 +700,7 @@ class DrillsList extends Component {
                         const content = i[1];
                         if (content) {
                             content.name = name;
-                            return this.generateTag(content, () => console.log(1));
+                            return this.generateTag(content);
                         }
                     })
 
