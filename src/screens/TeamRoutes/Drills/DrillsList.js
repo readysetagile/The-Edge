@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Modal, Text, TextInput, View, Alert, TouchableWithoutFeedback, Keyboard, ScrollView} from "react-native";
+import {Alert, Keyboard, Modal, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import NewButton from "../../../Components/NewButton";
@@ -8,7 +8,6 @@ import {FontAwesome, Ionicons, MaterialIcons} from "@expo/vector-icons";
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
 import {SliderHuePicker, SliderSaturationPicker,} from 'react-native-slider-color-picker';
 import tinycolor from 'tinycolor2';
-import {createUUID} from "../../../firebase/Util";
 import NewDrill from "./NewDrill";
 import GlobalData from '../../../GlobalData';
 import Edge from "../../../firebase/index";
@@ -36,8 +35,8 @@ class DrillsList extends Component {
         super(props);
     }
 
-    changeTagName(tag, newName){
-        if(newName && tag.name !== newName){
+    changeTagName(tag, newName) {
+        if (newName && tag.name !== newName) {
             const tags = this.state.tags;
             delete tags[tag.name];
             Edge.teams.get(GlobalData.teamID).then(team => {
@@ -51,8 +50,8 @@ class DrillsList extends Component {
         }
     }
 
-    changeDrillName(drill, newName){
-        if(newName && drill.name !== newName){
+    changeDrillName(drill, newName) {
+        if (newName && drill.name !== newName) {
             const drills = this.state.drills;
             delete drills[drill.name];
             Edge.teams.get(GlobalData.teamID).then(team => {
@@ -66,8 +65,8 @@ class DrillsList extends Component {
 
     }
 
-    changeTagColor(tag, newColor){
-        if(newColor && tag.color !== newColor) {
+    changeTagColor(tag, newColor) {
+        if (newColor && tag.color !== newColor) {
             this.state.tags[tag.name].color = newColor;
             this.setState({
                 tags: this.state.tags
@@ -75,9 +74,9 @@ class DrillsList extends Component {
         }
     }
 
-    changeDrillColor(drill, newColor){
+    changeDrillColor(drill, newColor) {
 
-        if(newColor && drill.color !== newColor) {
+        if (newColor && drill.color !== newColor) {
             this.state.drills[drill.name].color = newColor;
             this.setState({
                 drills: this.state.drills
@@ -86,12 +85,12 @@ class DrillsList extends Component {
 
     }
 
-    updateItemColor(item, color, type){
+    updateItemColor(item, color, type) {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             item.color = color;
-            if(type === 'tag')
-            team.addTag(item.name, item);
+            if (type === 'tag')
+                team.addTag(item.name, item);
             else team.addDrill(item.name, item);
         })
 
@@ -130,7 +129,9 @@ class DrillsList extends Component {
 
                             <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
                                 <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
-                                <TextInput ref={ref => {this.tagNameInput = ref}}
+                                <TextInput ref={ref => {
+                                    this.tagNameInput = ref
+                                }}
                                            style={styles.nameInput}
                                            placeholder={tag.name}
                                            onChangeText={val => {
@@ -160,7 +161,8 @@ class DrillsList extends Component {
                                 ]);
                         }}>
 
-                            <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete Tag</Text>
+                            <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete
+                                Tag</Text>
 
                         </MenuOption>
 
@@ -171,7 +173,6 @@ class DrillsList extends Component {
                 <Collapsible collapsed={tag.contentHidden}>
 
 
-
                 </Collapsible>
 
             </View>
@@ -180,9 +181,9 @@ class DrillsList extends Component {
 
     }
 
-    generateDrill(drill, onPress){
+    generateDrill(drill, onPress) {
 
-        return(
+        return (
             <Menu key={drill.name} onOpen={() => {
                 this.editingNameTag = drill.name
             }} onClose={() => {
@@ -204,7 +205,9 @@ class DrillsList extends Component {
 
                         <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
                             <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
-                            <TextInput ref={ref => {this.tagNameInput = ref}}
+                            <TextInput ref={ref => {
+                                this.tagNameInput = ref
+                            }}
                                        style={styles.nameInput}
                                        placeholder={drill.name}
                                        onChangeText={val => {
@@ -223,7 +226,7 @@ class DrillsList extends Component {
 
                         <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
 
-                        <View style={{height: 50}}>
+                        <View style={{height: 100}}>
 
                             <ScrollView style={{padding: 5}}>
 
@@ -261,13 +264,13 @@ class DrillsList extends Component {
 
     }
 
-    generateDrillTags(drill){
+    generateDrillTags(drill) {
 
         const tags = [];
 
         Object.entries(this.state.tags).forEach(i => {
 
-            if(i && i[1]){
+            if (i && i[1]) {
                 const content = i[1];
 
                 const view = this.generateDrillTag(drill, content);
@@ -280,15 +283,27 @@ class DrillsList extends Component {
         return tags;
     }
 
-    generateDrillTag(drill, tagContent){
+    generateDrillTag(drill, tagContent) {
 
-        return(
+        return (
 
-            <View key={tagContent.name} style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+            <View key={tagContent.name} style={
+                {
+                    flexDirection: 'row',
+                    justifyContent: 'space-between'
+                }}>
 
-                <Text>{tagContent.name}:</Text>
-                <CheckBox  isChecked={drill.tags?.includes(tagContent.name)}
-                           onClick={() => this.toggleTag(drill, tagContent.name)}/>
+                <Text style={{
+                    borderWidth: 2,
+                    borderColor: tagContent.color,
+                    borderRadius: 5,
+                    padding: 3,
+                    marginTop: 3
+                }}>{tagContent.name}:</Text>
+                <CheckBox checkBoxColor={tagContent.color}
+                          col
+                          isChecked={drill.tags?.includes(tagContent.name)}
+                          onClick={() => this.toggleTag(drill, tagContent.name)}/>
 
             </View>
 
@@ -296,17 +311,17 @@ class DrillsList extends Component {
 
     }
 
-    toggleTag(drill, tagName){
+    toggleTag(drill, tagName) {
 
-        if(drill.tags) {
-            if(drill.tags.includes(tagName))
+        if (drill.tags) {
+            if (drill.tags.includes(tagName))
                 drill.tags = drill.tags.filter(i => i !== tagName);
             else drill.tags.push(tagName);
 
             const drills = this.state.drills;
             drills[drill.name] = drill;
             this.setState({drills: drills});
-        }else {
+        } else {
             drill.tags = []
             this.toggleTag(drill, tagName);
         }
@@ -323,7 +338,7 @@ class DrillsList extends Component {
 
     }
 
-    deleteTag(tag){
+    deleteTag(tag) {
 
         const tags = this.state.tags;
         delete tags[tag.name];
@@ -334,9 +349,9 @@ class DrillsList extends Component {
 
     }
 
-    createColorSliders(tag, onChange){
+    createColorSliders(tag, onChange) {
 
-        return(
+        return (
             <View>
 
                 <View style={{marginHorizontal: 24, marginTop: 20, height: 12, flex: 1}}>
@@ -411,37 +426,37 @@ class DrillsList extends Component {
     }
 
 
-    exitDrillEditor(){
+    exitDrillEditor() {
 
         Edge.teams.get(GlobalData.teamID)
             .then(team => {
 
-            Alert.alert("Save Changes?", "", [
-                {
-                    text: "Save",
-                    onPress: () => {
+                Alert.alert("Save Changes?", "", [
+                    {
+                        text: "Save",
+                        onPress: () => {
 
-                        if(team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)){
-                            team.addDrill(this.state.currentDrillEditing, this.state.currentDrillEditorContent);
-                            this.setState({showModal: false});
-                        }else{
-                            this.setState({showDrillNameInput: true})
+                            if (team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)) {
+                                team.addDrill(this.state.currentDrillEditing, this.state.currentDrillEditorContent);
+                                this.setState({showModal: false});
+                            } else {
+                                this.setState({showDrillNameInput: true})
+                            }
                         }
+                    },
+                    {
+                        text: "Discard Changes",
+                        onPress: () => {
+                            this.setState({showModal: false});
+                        }
+                    },
+                    {
+                        text: "Cancel",
+                        onPress: this.onTagNameCancel
                     }
-                },
-                {
-                    text: "Discard Changes",
-                    onPress: () => {
-                        this.setState({showModal: false});
-                    }
-                },
-                {
-                    text:"Cancel",
-                    onPress: this.onTagNameCancel
-                }
-            ])
+                ])
 
-        })
+            })
 
     }
 
@@ -456,10 +471,10 @@ class DrillsList extends Component {
         let tags = this.state.tags;
         const name = this.state.newTagName;
 
-        if(!name){
+        if (!name) {
             Alert.alert("Invalid Tag Name", "Please input a tag name");
             return;
-        }else if(tags.hasOwnProperty(name)){
+        } else if (tags.hasOwnProperty(name)) {
             Alert.alert("Invalid Tag Name", "There is already an existing tag with this name");
             return;
         }
@@ -484,18 +499,18 @@ class DrillsList extends Component {
             const drills = team.modules.drills?.drills || [];
 
             Object.entries(drills).forEach(i => {
-                if(i[1]){
+                if (i[1]) {
                     const name = i[0];
                     const content = i[1];
 
                     const tags = content.tags;
-                    if(tags) {
+                    if (tags) {
                         for (const tag of tags) {
                             if (allTags[tag]) {
                                 if (allTags[tag].drills)
                                     allTags[tag].drills.push(name)
                                 else allTags[tag].drills = [name];
-                            }else{
+                            } else {
                                 team.removeTagFromDrill(name, tag);
                             }
                         }
@@ -513,9 +528,9 @@ class DrillsList extends Component {
     onTagNameCancel = () => {
         this.setState({showTagNameInput: false})
     }
-    
+
     onEditorContentChange = (newContent) => {
-        if(newContent.msg === "ON_CHANGE"){
+        if (newContent.msg === "ON_CHANGE") {
             this.setState({currentDrillEditorContent: newContent.payload.html})
         }
     }
@@ -527,10 +542,10 @@ class DrillsList extends Component {
     addDrill = () => {
         const name = this.state.newDrillName;
 
-        if(name) {
+        if (name) {
             Edge.teams.get(GlobalData.teamID).then(team => {
 
-                if(!team.modules.drills.drills.hasOwnProperty(name)){
+                if (!team.modules.drills.drills.hasOwnProperty(name)) {
 
                     const drill = {
                         content: this.state.currentDrillEditorContent,
@@ -541,13 +556,18 @@ class DrillsList extends Component {
                     drills[drill.name] = drill;
 
                     team.addDrill(name, drill);
-                    this.setState({drills: drills, showDrillNameInput: false, currentDrillEditorContent: null, showModal: false})
+                    this.setState({
+                        drills: drills,
+                        showDrillNameInput: false,
+                        currentDrillEditorContent: null,
+                        showModal: false
+                    })
 
-                }else{
+                } else {
                     Alert.alert("Invalid Drill", "This drill name already exists");
                 }
             })
-        }else{
+        } else {
             Alert.alert("Invalid Drill", "Please input a valid drill name");
         }
 
@@ -559,8 +579,10 @@ class DrillsList extends Component {
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
                 <InputText title={"Name this Tag!"} description={"What do you want this tag to be called?"}
-                placeholder={"Tag Name"} onTextChange={this.handleTagNameChange} onCancel={this.onTagNameCancel}
-                visible={this.state.showTagNameInput} onSubmit={this.addTag} onBackDropPress={this.onTagNameCancel}/>
+                           placeholder={"Tag Name"} onTextChange={this.handleTagNameChange}
+                           onCancel={this.onTagNameCancel}
+                           visible={this.state.showTagNameInput} onSubmit={this.addTag}
+                           onBackDropPress={this.onTagNameCancel}/>
 
 
                 <Modal visible={this.state.showModal} animationType={'slide'}>
@@ -569,14 +591,17 @@ class DrillsList extends Component {
 
                             <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
                                       name={"checkmark-circle-outline"} size={24}
-                                      onPress={() => this.exitDrillEditor()} />
+                                      onPress={() => this.exitDrillEditor()}/>
 
-                            <InputText title={"Name this Drill!"} description={"What do you want this drill to be called?"}
-                                       placeholder={"Drill Name"} onTextChange={this.handleDrillNameChange} onCancel={this.onDrillNameCancel}
-                                       visible={this.state.showDrillNameInput} onSubmit={this.addDrill} onBackDropPress={this.onDrillNameCancel}
-                                       />
+                            <InputText title={"Name this Drill!"}
+                                       description={"What do you want this drill to be called?"}
+                                       placeholder={"Drill Name"} onTextChange={this.handleDrillNameChange}
+                                       onCancel={this.onDrillNameCancel}
+                                       visible={this.state.showDrillNameInput} onSubmit={this.addDrill}
+                                       onBackDropPress={this.onDrillNameCancel}
+                            />
 
-                                      <NewDrill onContentChange={this.onEditorContentChange}/>
+                            <NewDrill onContentChange={this.onEditorContentChange}/>
 
                         </View>
                     </TouchableWithoutFeedback>
@@ -598,7 +623,7 @@ class DrillsList extends Component {
                     Object.entries(this.state.drills)?.map((i, j) => {
 
                         const content = i[1];
-                        if(content){
+                        if (content) {
                             content.name = i[0];
                             return this.generateDrill(content, () => console.log(5));
                         }
@@ -611,7 +636,7 @@ class DrillsList extends Component {
 
                         const name = i[0];
                         const content = i[1];
-                        if(content){
+                        if (content) {
                             content.name = name;
                             return this.generateTag(content, () => console.log(1));
                         }
