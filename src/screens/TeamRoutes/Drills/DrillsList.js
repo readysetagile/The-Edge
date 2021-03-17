@@ -205,6 +205,24 @@ class DrillsList extends Component {
 
     generateDrill(drill) {
 
+        return this.state.canEditDrills ? this.generateDrillMenu(drill) : this.generateDillView(drill);
+
+    }
+
+    generateDillView(drill){
+        return(
+            <View style={styles.itemContainer} key={drill.name} onPress={() => this.setDrillViewing(drill)}>
+
+                <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}/>
+                <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
+
+            </View>
+
+        )
+    }
+
+    generateDrillMenu(drill){
+
         return (
             <Menu key={drill.name} onOpen={() => {
                 this.editingNameTag = drill.name
@@ -214,12 +232,7 @@ class DrillsList extends Component {
             }}>
 
                 <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.setDrillViewing.bind(this, drill)}>
-                    <View style={styles.itemContainer}>
-
-                        <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}/>
-                        <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
-
-                    </View>
+                    {this.generateDillView(drill)}
                 </MenuTrigger>
                 <MenuOptions>
                     <MenuOption>
