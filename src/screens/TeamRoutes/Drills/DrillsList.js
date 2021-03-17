@@ -33,6 +33,18 @@ class DrillsList extends Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            tags: {},
+            drills: {},
+            showModal: false,
+            showTagNameInput: false,
+            showDrillNameInput: false,
+            newDrillName: null,
+            currentDrillEditorContent: null,
+            currentDrillEditing: null
+        }
+
     }
 
     changeTagName(tag, newName) {
@@ -180,7 +192,11 @@ class DrillsList extends Component {
 
                 <Collapsible collapsed={tag.contentHidden}>
 
-
+                    {
+                        tag.drills.map(name => {
+                            return this.generateDrill(this.state.drills[name], () => console.log('pranked'))
+                        })
+                    }
 
                 </Collapsible>
 
@@ -323,13 +339,22 @@ class DrillsList extends Component {
     toggleTag(drill, tagName) {
 
         if (drill.tags) {
-            if (drill.tags.includes(tagName))
+            const tags = this.state.tags;
+
+            if (drill.tags.includes(tagName)) {
                 drill.tags = drill.tags.filter(i => i !== tagName);
-            else drill.tags.push(tagName);
+                tags[tagName].drills = tags[tagName].drills.filter(i => i !== drill.name);
+            }else {
+                drill.tags.push(tagName);
+                if (tags[tagName].drills) {
+                    tags[tagName].drills.push(drill.name);
+                }else tags[tagName].drills = [drill.name];
+
+            }
 
             const drills = this.state.drills;
             drills[drill.name] = drill;
-            this.setState({drills: drills});
+            this.setState({drills: drills, tags: tags});
         } else {
             drill.tags = []
             this.toggleTag(drill, tagName);
@@ -502,6 +527,7 @@ class DrillsList extends Component {
 
     componentDidMount() {
 
+
         Edge.teams.get(GlobalData.teamID).then(team => {
 
             const allTags = Object.assign({}, team.modules.drills?.tags || {});
@@ -512,19 +538,30 @@ class DrillsList extends Component {
                     const name = i[0];
                     const content = i[1];
 
-                    const tags = content.tags;
+                    const tags = content.tags;//drill tags
                     if (tags) {
-                        for (const tag of tags) {
-                            if (allTags[tag]) {
-                                if (allTags[tag].drills)
-                                    allTags[tag].drills.push(name)
-                                else allTags[tag].drills = [name];
-                            } else {
+
+                        for(const tag of tags){
+
+                            const currentTag = allTags[tag];
+                            if(currentTag){
+
+                                if(currentTag.drills ){
+                                    if(!currentTag.drills.includes(name))
+                                        currentTag.drills.push(name);
+                                }else{
+                                    currentTag.drills = [name];
+                                }
+
+                            }else{
                                 team.removeTagFromDrill(name, tag);
                             }
+
                         }
+
                     }
-                    drills[i[0]].tags = Object.values(content.tags)
+                    if(content.tags)
+                        drills[i[0]].tags = Object.values(content.tags);
 
                 }
             })
@@ -632,7 +669,8 @@ class DrillsList extends Component {
                     Object.entries(this.state.drills)?.map((i, j) => {
 
                         const content = i[1];
-                        if (content) {
+                        console.log(content.tags);
+                        if (content && (!Array.isArray(content.tags) || content.tags.length === 0)) {
                             content.name = i[0];
                             return this.generateDrill(content, () => console.log(5));
                         }
