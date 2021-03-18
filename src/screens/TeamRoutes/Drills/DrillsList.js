@@ -95,9 +95,29 @@ class DrillsList extends Component {
         }
     }
 
+    updateTagDrills(drill, newDrillName){
+
+        const tags = this.state.tags;
+        const tagsToUpdate = drill.tags;
+        if(tagsToUpdate) {
+            for (const tag of tagsToUpdate) {
+
+                let drills = tags[tag].drills;
+                drills = drills.filter(i => i !== drill.name);
+                drills.push(newDrillName);
+
+            }
+
+            this.setState({tags: tags});
+        }
+
+    }
+
     changeDrillName(drill, newName) {
         if (newName && drill.name !== newName) {
             const drills = this.state.drills;
+
+            this.updateTagDrills(drill, newName);
             delete drills[drill.name];
             Edge.teams.get(GlobalData.teamID).then(team => {
                 team.removeDrill(drill.name);
