@@ -76,7 +76,7 @@ class DrillsList extends Component {
                 team.removeTag(oldName);
                 team.addTag(newName, tag);
                 this.updateDrillTags(oldTagDrills, oldName, newName);
-            })
+            });
             tags[newName] = tag;
             this.setState({tags: tags})
             this.editingNameTag = ""
