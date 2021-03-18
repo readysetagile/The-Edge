@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, Keyboard, Modal, ScrollView, Text, TextInput, TouchableWithoutFeedback, View} from "react-native";
+import {Alert, Keyboard, Modal, ScrollView, Text, TextInput, TouchableWithoutFeedback, View, TouchableOpacity} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import NewButton from "../../../Components/NewButton";
@@ -115,71 +115,7 @@ class DrillsList extends Component {
 
             <View key={tag.name}>
 
-                <Menu onOpen={() => {
-                    this.editingNameTag = tag.name
-                    this.tagEditColor = tag.color;
-                }} onClose={() => {
-                    this.changeTagName(tag, this.editingNameTag)
-                    this.updateItemColor(tag, tag.color, 'tag');
-                }}>
-
-                    <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.invertTagHiddenContent.bind(this, tag)}>
-                        <View style={styles.itemContainer}>
-                            <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}/>
-                            <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{tag.name}</Text>
-
-                            <View style={{flex: 1}}>
-                                <MaterialIcons name={tag.contentHidden ? 'arrow-drop-up' : 'arrow-drop-down'}
-                                               size={30} color={'grey'} style={{alignSelf: 'flex-end'}}/>
-                            </View>
-
-                        </View>
-                    </MenuTrigger>
-                    <MenuOptions>
-                        <MenuOption>
-
-                            <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
-                                <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
-                                <TextInput ref={ref => {
-                                    this.tagNameInput = ref
-                                }}
-                                           style={styles.nameInput}
-                                           placeholder={tag.name}
-                                           onChangeText={val => {
-                                               this.editingNameTag = val
-                                           }}/>
-                            </View>
-
-                        </MenuOption>
-                        <MenuOption>
-
-                            {this.createColorSliders(tag, this.changeTagColor.bind(this))}
-
-                        </MenuOption>
-
-                        <MenuOption onSelect={() => {
-                            Alert.alert("Are you sure you want to delete this tag?",
-                                "This will not remove any drills under it", [
-                                    {
-                                        text: "Yes",
-                                        onPress: () => {
-                                            this.deleteTag(tag);
-                                        }
-                                    },
-                                    {
-                                        text: 'Cancel'
-                                    }
-                                ]);
-                        }}>
-
-                            <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete
-                                Tag</Text>
-
-                        </MenuOption>
-
-                    </MenuOptions>
-
-                </Menu>
+                {this.generateTagViewing(tag)}
 
                 <Collapsible collapsed={tag.contentHidden}>
 
@@ -197,6 +133,97 @@ class DrillsList extends Component {
 
     }
 
+    generateTagViewing(tag){
+
+        return this.state.canEditDrills ? this.generateTagMenu(tag) : this.generateTagView(tag);
+
+    }
+
+    generateTagView(tag){
+
+        return(
+            <View style={styles.itemContainer}>
+                <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}/>
+                <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{tag.name}</Text>
+
+                <View style={{flex: 1}}>
+                    <MaterialIcons name={tag.contentHidden ? 'arrow-drop-up' : 'arrow-drop-down'}
+                                   size={30} color={'grey'} style={{alignSelf: 'flex-end'}}/>
+                </View>
+
+            </View>
+        )
+
+    }
+
+    generateTagMenu(tag){
+
+        return(
+
+            <Menu onOpen={() => {
+                this.editingNameTag = tag.name
+                this.tagEditColor = tag.color;
+            }} onClose={() => {
+                this.changeTagName(tag, this.editingNameTag)
+                this.updateItemColor(tag, tag.color, 'tag');
+            }}>
+
+                <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.invertTagHiddenContent.bind(this, tag)}>
+
+                    {this.generateTagView(tag)}
+
+                </MenuTrigger>
+                <MenuOptions>
+                    <MenuOption>
+
+                        <View style={{padding: 15, flexDirection: 'row', flex: 1}}>
+                            <Text style={{alignSelf: 'center', padding: 2, fontSize: 20}}>Name: </Text>
+                            <TextInput ref={ref => {
+                                this.tagNameInput = ref
+                            }}
+                                       style={styles.nameInput}
+                                       placeholder={tag.name}
+                                       onChangeText={val => {
+                                           this.editingNameTag = val
+                                       }}/>
+                        </View>
+
+                    </MenuOption>
+                    <MenuOption>
+
+                        {this.createColorSliders(tag, this.changeTagColor.bind(this))}
+
+                    </MenuOption>
+
+                    <MenuOption onSelect={() => {
+                        Alert.alert("Are you sure you want to delete this tag?",
+                            "This will not remove any drills under it", [
+                                {
+                                    text: "Yes",
+                                    onPress: () => {
+                                        this.deleteTag(tag);
+                                    }
+                                },
+                                {
+                                    text: 'Cancel'
+                                }
+                            ]);
+                    }}>
+
+                        <Text style={{fontSize: 20, color: 'red', padding: 20, alignSelf: 'center'}}>Delete
+                            Tag</Text>
+
+                    </MenuOption>
+
+                </MenuOptions>
+
+            </Menu>
+
+
+        )
+
+    }
+
     setDrillViewing(drill) {
 
         this.setState({currentDrillEditing: drill.name, showModal: true});
@@ -205,17 +232,18 @@ class DrillsList extends Component {
 
     generateDrill(drill) {
 
-        return this.state.canEditDrills ? this.generateDrillMenu(drill) : this.generateDillView(drill);
-
+        return this.state.canEditDrills ? this.generateDrillMenu(drill) : (
+            <TouchableOpacity onPress={() => this.setDrillViewing(drill)} key={drill.name}>
+                {this.generateDillView(drill)}
+            </TouchableOpacity>
+        )
     }
 
     generateDillView(drill){
         return(
             <View style={styles.itemContainer} key={drill.name} onPress={() => this.setDrillViewing(drill)}>
-
                 <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}/>
                 <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
-
             </View>
 
         )
@@ -638,7 +666,7 @@ class DrillsList extends Component {
         const content = this.state.drills[drillName]?.content
         const canEdit = this.state.canEditDrills;
 
-        return(
+         return(
 
             <View style={globalStyles.modalContent}>
 
