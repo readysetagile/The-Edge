@@ -91,12 +91,15 @@ class DrillsList extends Component {
 
     updateItemColor(item, color, type) {
 
-        Edge.teams.get(GlobalData.teamID).then(team => {
-            item.color = color;
-            if (type === 'tag')
-                team.addTag(item.name, item);
-            else team.addDrill(item.name, item);
-        })
+        if(color && color !== item.color) {
+
+            Edge.teams.get(GlobalData.teamID).then(team => {
+                item.color = color;
+                if (type === 'tag')
+                    team.addTag(item.name, item);
+                else team.addDrill(item.name, item);
+            })
+        }
 
     }
 
@@ -120,7 +123,7 @@ class DrillsList extends Component {
                 <Collapsible collapsed={tag.contentHidden}>
 
                     {
-                        tag.drills.map(name => {
+                        tag.drills?.map(name => {
                             return this.generateDrill(this.state.drills[name])
                         })
                     }
@@ -135,7 +138,11 @@ class DrillsList extends Component {
 
     generateTagViewing(tag){
 
-        return this.state.canEditDrills ? this.generateTagMenu(tag) : this.generateTagView(tag);
+        return this.state.canEditDrills ? this.generateTagMenu(tag) : (
+            <TouchableOpacity onPress={this.invertTagHiddenContent.bind(this,tag)}>
+                {this.generateTagView(tag)}
+            </TouchableOpacity>
+    )
 
     }
 
@@ -165,7 +172,7 @@ class DrillsList extends Component {
                 this.tagEditColor = tag.color;
             }} onClose={() => {
                 this.changeTagName(tag, this.editingNameTag)
-                this.updateItemColor(tag, tag.color, 'tag');
+                 this.updateItemColor(tag, tag.color, 'tag');
             }}>
 
                 <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.invertTagHiddenContent.bind(this, tag)}>
