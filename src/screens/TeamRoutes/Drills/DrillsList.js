@@ -50,15 +50,23 @@ class DrillsList extends Component {
 
     updateDrillTags(drills, oldTagName, newTagName){
 
-        console.log(drills);
         if(Array.isArray(drills)) {
-            const stateDrills = this.state.drills;
+            const stateDrills = this.state.drills, stateTags = this.state.tags;
 
             for (const drill of drills) {
-                stateDrills[drill].tags = stateDrills[drill].tags.filter(i => i !== oldTagName)
-                stateDrills[drill].tags.push(newTagName);
-                console.log(stateDrills[drill], newTagName, oldTagName);
-                this.updateDrill(drill);
+                const drillObj = stateDrills[drill];
+                drillObj.tags = stateDrills[drill].tags.filter(i => i !== oldTagName)
+                drillObj.tags.push(newTagName);
+                stateDrills[drill] = drillObj;
+
+                // stateTags[newTagName].contentHidden = true;
+                // if (stateTags[newTagName].drills) {
+                //     stateTags[newTagName].drills.push(drill);
+                // } else stateTags[newTagName].drills = [drill];
+                // console.log(stateTags[newTagName]);
+
+                this.updateDrill(stateDrills[drill]);
+
             }
             this.setState({drills: stateDrills});
         }
@@ -75,11 +83,15 @@ class DrillsList extends Component {
             Edge.teams.get(GlobalData.teamID).then(team => {
                 team.removeTag(oldName);
                 team.addTag(newName, tag);
+
+                tags[newName] = tag;
+                tags[newName].drills = oldTagDrills;
+                this.setState({tags: tags})
                 this.updateDrillTags(oldTagDrills, oldName, newName);
+                this.componentDidMount()
+                this.editingNameTag = ""
             });
-            tags[newName] = tag;
-            this.setState({tags: tags})
-            this.editingNameTag = ""
+
         }
     }
 
@@ -158,6 +170,7 @@ class DrillsList extends Component {
 
                     {
                         tag.drills?.map(name => {
+                            console.log(name, 1);
                             return this.generateDrill(this.state.drills[name])
                         })
                     }
@@ -275,9 +288,11 @@ class DrillsList extends Component {
     generateDrill(drill) {
 
         return this.state.canEditDrills ? this.generateDrillMenu(drill) : (
+
             <TouchableOpacity onPress={() => this.setDrillViewing(drill)} key={drill.name}>
                 {this.generateDillView(drill)}
             </TouchableOpacity>
+
         )
     }
 
@@ -615,7 +630,7 @@ class DrillsList extends Component {
         Edge.teams.get(GlobalData.teamID).then(team => {
 
             const allTags = Object.assign({}, team.modules.drills?.tags || {});
-            const drills = team.modules.drills?.drills || [];
+            const drills = team.modules.drills?.drills || {};
 
             Object.entries(drills).forEach(i => {
                 if (i[1]) {
@@ -644,8 +659,11 @@ class DrillsList extends Component {
                         }
 
                     }
-                    if (content.tags)
-                        drills[i[0]].tags = Object.values(content.tags);
+                    if (content.tags){
+                        const drill = drills[i[0]]
+                        drill.tags = Object.values(content.tags);
+                        drills[i[0]] = drill;
+                    }
 
                 }
             })
@@ -786,11 +804,10 @@ class DrillsList extends Component {
                 </View>
 
                 {
-                    Object.entries(this.state.drills)?.map((i, j) => {
+                    Object.entries(this.state.drills)?.map(i => {
 
                         const content = i[1];
                         if (content && (!Array.isArray(content.tags) || content.tags.length === 0)) {
-                            content.name = i[0];
                             return this.generateDrill(content);
                         }
                     })
@@ -798,7 +815,7 @@ class DrillsList extends Component {
 
                 {
 
-                    Object.entries(this.state.tags).map((i, j) => {
+                    Object.entries(this.state.tags).map(i => {
 
                         const name = i[0];
                         const content = i[1];
