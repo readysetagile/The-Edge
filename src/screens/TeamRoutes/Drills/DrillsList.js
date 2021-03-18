@@ -1,5 +1,15 @@
 import React, {Component} from 'react';
-import {Alert, Keyboard, Modal, ScrollView, Text, TextInput, TouchableWithoutFeedback, View, TouchableOpacity} from "react-native";
+import {
+    Alert,
+    Keyboard,
+    Modal,
+    ScrollView,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View
+} from "react-native";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import NewButton from "../../../Components/NewButton";
@@ -15,7 +25,6 @@ import InputText from "../../../Components/InputText";
 import Collapsible from "react-native-collapsible";
 import styles from './styles';
 import CheckBox from "react-native-check-box";
-import {firebase} from "../../../firebase/config";
 
 class DrillsList extends Component {
 
@@ -91,7 +100,7 @@ class DrillsList extends Component {
 
     updateItemColor(item, color, type) {
 
-        if(color && color !== item.color) {
+        if (color && color !== item.color) {
 
             Edge.teams.get(GlobalData.teamID).then(team => {
                 item.color = color;
@@ -136,19 +145,19 @@ class DrillsList extends Component {
 
     }
 
-    generateTagViewing(tag){
+    generateTagViewing(tag) {
 
         return this.state.canEditDrills ? this.generateTagMenu(tag) : (
-            <TouchableOpacity onPress={this.invertTagHiddenContent.bind(this,tag)}>
+            <TouchableOpacity onPress={this.invertTagHiddenContent.bind(this, tag)}>
                 {this.generateTagView(tag)}
             </TouchableOpacity>
-    )
+        )
 
     }
 
-    generateTagView(tag){
+    generateTagView(tag) {
 
-        return(
+        return (
             <View style={styles.itemContainer}>
                 <FontAwesome name={'tag'} size={24} color={tag.color} style={{alignSelf: 'center'}}/>
                 <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{tag.name}</Text>
@@ -163,19 +172,20 @@ class DrillsList extends Component {
 
     }
 
-    generateTagMenu(tag){
+    generateTagMenu(tag) {
 
-        return(
+        return (
 
             <Menu onOpen={() => {
                 this.editingNameTag = tag.name
                 this.tagEditColor = tag.color;
             }} onClose={() => {
                 this.changeTagName(tag, this.editingNameTag)
-                 this.updateItemColor(tag, tag.color, 'tag');
+                this.updateItemColor(tag, tag.color, 'tag');
             }}>
 
-                <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.invertTagHiddenContent.bind(this, tag)}>
+                <MenuTrigger triggerOnLongPress={true}
+                             onAlternativeAction={this.invertTagHiddenContent.bind(this, tag)}>
 
                     {this.generateTagView(tag)}
 
@@ -246,8 +256,8 @@ class DrillsList extends Component {
         )
     }
 
-    generateDillView(drill){
-        return(
+    generateDillView(drill) {
+        return (
             <View style={styles.itemContainer} key={drill.name} onPress={() => this.setDrillViewing(drill)}>
                 <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}/>
                 <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
@@ -256,7 +266,7 @@ class DrillsList extends Component {
         )
     }
 
-    generateDrillMenu(drill){
+    generateDrillMenu(drill) {
 
         return (
             <Menu key={drill.name} onOpen={() => {
@@ -388,11 +398,11 @@ class DrillsList extends Component {
             if (drill.tags.includes(tagName)) {
                 drill.tags = drill.tags.filter(i => i !== tagName);
                 tags[tagName].drills = tags[tagName].drills.filter(i => i !== drill.name);
-            }else {
+            } else {
                 drill.tags.push(tagName);
                 if (tags[tagName].drills) {
                     tags[tagName].drills.push(drill.name);
-                }else tags[tagName].drills = [drill.name];
+                } else tags[tagName].drills = [drill.name];
 
             }
 
@@ -590,26 +600,26 @@ class DrillsList extends Component {
                     const tags = content.tags;//drill tags
                     if (tags) {
 
-                        for(const tag of tags){
+                        for (const tag of tags) {
 
                             const currentTag = allTags[tag];
-                            if(currentTag){
+                            if (currentTag) {
 
-                                if(currentTag.drills ){
-                                    if(!currentTag.drills.includes(name))
+                                if (currentTag.drills) {
+                                    if (!currentTag.drills.includes(name))
                                         currentTag.drills.push(name);
-                                }else{
+                                } else {
                                     currentTag.drills = [name];
                                 }
 
-                            }else{
+                            } else {
                                 team.removeTagFromDrill(name, tag);
                             }
 
                         }
 
                     }
-                    if(content.tags)
+                    if (content.tags)
                         drills[i[0]].tags = Object.values(content.tags);
 
                 }
@@ -668,12 +678,12 @@ class DrillsList extends Component {
 
     }
 
-     createDrillHeader(drillName){
+    createDrillHeader(drillName) {
 
         const content = this.state.drills[drillName]?.content
         const canEdit = this.state.canEditDrills;
 
-         return(
+        return (
 
             <View style={globalStyles.modalContent}>
 
@@ -707,7 +717,7 @@ class DrillsList extends Component {
 
     }
 
-      memberHasPermissionToEditDrills(){
+    memberHasPermissionToEditDrills() {
 
         return new Promise(resolve => {
 
