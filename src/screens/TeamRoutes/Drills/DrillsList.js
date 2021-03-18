@@ -48,18 +48,38 @@ class DrillsList extends Component {
 
     }
 
+    updateDrillTags(drills, oldTagName, newTagName){
+
+        console.log(drills);
+        if(Array.isArray(drills)) {
+            const stateDrills = this.state.drills;
+
+            for (const drill of drills) {
+                stateDrills[drill].tags = stateDrills[drill].tags.filter(i => i !== oldTagName)
+                stateDrills[drill].tags.push(newTagName);
+                console.log(stateDrills[drill], newTagName, oldTagName);
+                this.updateDrill(drill);
+            }
+            this.setState({drills: stateDrills});
+        }
+
+    }
+
     changeTagName(tag, newName) {
+
         if (newName && tag.name !== newName) {
             const tags = this.state.tags;
+            const oldName = tag.name;
+            const oldTagDrills = tag.drills;
             delete tags[tag.name];
             Edge.teams.get(GlobalData.teamID).then(team => {
-                team.removeTag(tag.name);
+                team.removeTag(oldName);
                 team.addTag(newName, tag);
+                this.updateDrillTags(oldTagDrills, oldName, newName);
             })
             tags[newName] = tag;
             this.setState({tags: tags})
             this.editingNameTag = ""
-
         }
     }
 
@@ -98,9 +118,15 @@ class DrillsList extends Component {
 
     }
 
-    updateItemColor(item, color, type) {
+    updateDrill(drill){
 
-        if (color && color !== item.color) {
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            team.addDrill(drill.name, drill);
+        })
+
+    }
+
+    updateItemColor(item, color, type) {
 
             Edge.teams.get(GlobalData.teamID).then(team => {
                 item.color = color;
@@ -108,7 +134,6 @@ class DrillsList extends Component {
                     team.addTag(item.name, item);
                 else team.addDrill(item.name, item);
             })
-        }
 
     }
 

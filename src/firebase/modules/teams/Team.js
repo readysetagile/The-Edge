@@ -43,6 +43,7 @@ module.exports.Team = class Team {
 
     removeTag(tagID){
         delete this.modules.drills.tags[tagID];
+        console.log(tagID);
         this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
 
     }
