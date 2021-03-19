@@ -100,7 +100,7 @@ export const globalStyles = {
         borderBottomWidth: 2,
         borderColor: 'black'
     },
-    searchToolBar:{
+    searchToolBar: {
         width: '30%',
         borderRadius: 5,
         borderWidth: 2,

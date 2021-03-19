@@ -13,11 +13,11 @@ module.exports = {
         },
         schedule: {},
         drills: {
-            tags:{
-              _:0
+            tags: {
+                _: 0
             },
-            drills:{
-                _:0
+            drills: {
+                _: 0
             }
         }
     },

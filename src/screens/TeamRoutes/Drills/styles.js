@@ -10,7 +10,7 @@ export default StyleSheet.create({
         borderTopWidth: 2,
         borderColor: 'grey'
     },
-    nameInput:{
+    nameInput: {
         padding: 5,
         borderWidth: 2,
         borderColor: 'grey',

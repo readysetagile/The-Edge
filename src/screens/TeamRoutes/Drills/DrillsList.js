@@ -58,9 +58,9 @@ class DrillsList extends Component {
      * @param oldTagName the old tag name to change
      * @param newTagName the new tag name to change to
      */
-    updateDrillTags(drills, oldTagName, newTagName){
+    updateDrillTags(drills, oldTagName, newTagName) {
 
-        if(Array.isArray(drills)) {
+        if (Array.isArray(drills)) {
             const stateDrills = this.state.drills
 
             for (const drill of drills) {
@@ -87,7 +87,7 @@ class DrillsList extends Component {
         if (newName && tag.name !== newName) {
             const tags = this.state.tags;
 
-            if(tags[newName] != null){
+            if (tags[newName] != null) {
                 Alert.alert("Invalid Name", "This tag name already exists")
                 return;
             }
@@ -117,12 +117,12 @@ class DrillsList extends Component {
      * @param drill the drill to update
      * @param newDrillName the new name of the drill to update each tag's drills to contain the new drill name
      */
-    updateTagDrills(drill, newDrillName){
+    updateTagDrills(drill, newDrillName) {
 
         const tags = this.state.tags;
         const tagsToUpdate = drill.tags;
 
-        if(tagsToUpdate) {
+        if (tagsToUpdate) {
             for (const tag of tagsToUpdate) {
 
                 let drills = tags[tag].drills;
@@ -146,7 +146,7 @@ class DrillsList extends Component {
 
             const drills = this.state.drills;
 
-            if(drills[newName] != null){
+            if (drills[newName] != null) {
                 Alert.alert("Invalid Name", "This tag name already exists")
                 return;
             }
@@ -203,7 +203,7 @@ class DrillsList extends Component {
      * Updates a drill in the firebase
      * @param drill the drill to update
      */
-    updateDrill(drill){
+    updateDrill(drill) {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.addDrill(drill.name, drill);
@@ -220,15 +220,14 @@ class DrillsList extends Component {
     updateItemColor(item, color, type) {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
-                item.color = color;
-                if (type === 'tag') {
-                    const isContentHidden = item.contentHidden;
-                    item.contentHidden = null;
-                    team.addTag(item.name, item);
-                    item.contentHidden = isContentHidden;
-                }
-                else team.addDrill(item.name, item);
-            })
+            item.color = color;
+            if (type === 'tag') {
+                const isContentHidden = item.contentHidden;
+                item.contentHidden = null;
+                team.addTag(item.name, item);
+                item.contentHidden = isContentHidden;
+            } else team.addDrill(item.name, item);
+        })
 
     }
 
@@ -328,7 +327,7 @@ class DrillsList extends Component {
                 this.tagEditColor = tag.color;
             }} onClose={() => {
                 this.changeTagName(tag, this.editingNameTag)
-                if(this.colorDidChange)
+                if (this.colorDidChange)
                     this.updateItemColor(tag, tag.color, 'tag');
             }}>
 
@@ -404,7 +403,7 @@ class DrillsList extends Component {
      */
     generateDrill(drill) {
 
-        if(drill) {
+        if (drill) {
             return this.state.canEditDrills ? this.generateDrillMenu(drill) : (
                 <TouchableOpacity onPress={() => this.setDrillViewing(drill)} key={drill.name}>
                     {this.generateDillView(drill)}
@@ -441,7 +440,7 @@ class DrillsList extends Component {
                 this.editingNameTag = drill.name
             }} onClose={() => {
                 this.changeDrillName(drill, this.editingNameTag);
-                if(this.colorDidChange)
+                if (this.colorDidChange)
                     this.updateItemColor(drill, drill.color, 'drill');
             }}>
 
@@ -838,7 +837,7 @@ class DrillsList extends Component {
                         }
 
                     }
-                    if (content.tags){
+                    if (content.tags) {
                         const drill = drills[i[0]]
                         drill.tags = Object.values(content.tags);
                         drills[i[0]] = drill;
@@ -983,8 +982,10 @@ class DrillsList extends Component {
                 </Modal>
 
                 <View style={globalStyles.topToolBar}>
-                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: {Object.keys(this.state.drills).length-1}</Text>
-                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total Tags: {Object.keys(this.state.tags).length-1}</Text>
+                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total
+                        Drills: {Object.keys(this.state.drills).length - 1}</Text>
+                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total
+                        Tags: {Object.keys(this.state.tags).length - 1}</Text>
 
                 </View>
 

@@ -33,7 +33,7 @@ export default class MemberPage extends Component {
         clickedMember: null
     };
 
-    constructor (props) {
+    constructor(props) {
         super(props);
         Edge.teams.get(Global.teamID).then(r => {
             firebase.database().ref("teams/" + r.id + "/members").on('value', snapshot => {
@@ -47,7 +47,7 @@ export default class MemberPage extends Component {
      * each member in the list
      * @returns {Promise<void>}
      */
-    async componentDidMount () {
+    async componentDidMount() {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
         const member = await team.getMember(profile.id);
@@ -63,7 +63,7 @@ export default class MemberPage extends Component {
      * @param members members to be shown
      * @returns {Promise<[]>} a list of member boxes
      */
-    async generateMembers (members) {
+    async generateMembers(members) {
 
         let memArr = [];
         let indx = 0;
@@ -83,37 +83,37 @@ export default class MemberPage extends Component {
      * @param index the index that the member is found
      * @returns {Promise<JSX.Element>}
      */
-    async generateMemberBox (member, index) {
+    async generateMemberBox(member, index) {
 
         let profileImage = await member.profile.getProfilePicture();
         if (profileImage == null) profileImage = member.profile.avatar;
         return (
             <HiddenView hide={this.state.hiddenMembers[member.id]}
-                key={index} style={{
-                    marginBottom: 10,
-                    borderRadius: 3,
-                    borderColor: 'lightgrey',
-                    borderWidth: 1,
-                    padding: 10,
-                }}>
+                        key={index} style={{
+                marginBottom: 10,
+                borderRadius: 3,
+                borderColor: 'lightgrey',
+                borderWidth: 1,
+                padding: 10,
+            }}>
                 <TouchableOpacity style={{flexDirection: 'row', flex: 1, justifyContent: 'space-between'}}
-                    onPress={async () => {
+                                  onPress={async () => {
 
-                        if ((this.state.currMember?.permissions.has("isCoach"))) {
-                            this.setState({clickedMember: {member: member, profileImage: profileImage}});
-                            this.RBSheet.open();
-                        }
-                    }}>
+                                      if ((this.state.currMember?.permissions.has("isCoach"))) {
+                                          this.setState({clickedMember: {member: member, profileImage: profileImage}});
+                                          this.RBSheet.open();
+                                      }
+                                  }}>
                     <View style={{flexDirection: 'row'}}>
                         <Image style={globalStyles.avatar(50)}
-                            source={{uri: profileImage}} />
+                               source={{uri: profileImage}}/>
                         <Text style={{alignSelf: 'center', padding: 10, fontSize: 20, fontWeight: 'bold'}}>
                             {member.username}
                         </Text>
                     </View>
 
                     {member.permissions.has("isCoach") ?
-                        <FontAwesome5 name="crown" size={24} color="gold" style={{alignSelf: 'center'}} /> : null}
+                        <FontAwesome5 name="crown" size={24} color="gold" style={{alignSelf: 'center'}}/> : null}
 
                 </TouchableOpacity>
 
@@ -121,7 +121,7 @@ export default class MemberPage extends Component {
         );
     }
 
-    inviteMembers () {
+    inviteMembers() {
         this.setState({modalOpen: true});
     }
 
@@ -129,7 +129,7 @@ export default class MemberPage extends Component {
      * This filters members by their name
      * @param name the name of the member
      */
-    filterMembersByName (name) {
+    filterMembersByName(name) {
 
         let members = this.state.team.members;
         let hiddenMembers = this.state.hiddenMembers;
@@ -155,7 +155,7 @@ export default class MemberPage extends Component {
      * Updates the current invite code
      * @param values the new code to set the current team code to
      */
-    updateInvite (values) {
+    updateInvite(values) {
 
         this.setState({modalOpen: false});
         this.state.team.teamCode = values["Team Code"];
@@ -166,7 +166,7 @@ export default class MemberPage extends Component {
     /**
      * Navigates to view question page and fills in this members answers
      */
-    showMemberQuestions () {
+    showMemberQuestions() {
 
         const {navigation} = this.props;
         this.RBSheet.close();
@@ -180,7 +180,7 @@ export default class MemberPage extends Component {
     /**
      * Removes the member that has been clicked on
      */
-    removeMember () {
+    removeMember() {
 
         Alert.alert("Are you sure you want to remove this member?", "", [
             {
@@ -198,7 +198,7 @@ export default class MemberPage extends Component {
 
     }
 
-    render () {
+    render() {
 
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
@@ -207,8 +207,8 @@ export default class MemberPage extends Component {
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={globalStyles.modalContent}>
                             <Ionicons style={globalStyles.closeModal(3)} name={"close"} size={24}
-                                onPress={() => this.setState({modalOpen: false})} />
-                            <InviteForm team={this.state.team} onSubmit={(values) => this.updateInvite(values)} />
+                                      onPress={() => this.setState({modalOpen: false})}/>
+                            <InviteForm team={this.state.team} onSubmit={(values) => this.updateInvite(values)}/>
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>
@@ -229,7 +229,7 @@ export default class MemberPage extends Component {
                         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
 
                             <Image style={globalStyles.avatar(100)}
-                                source={{uri: this.state.clickedMember?.profileImage}} />
+                                   source={{uri: this.state.clickedMember?.profileImage}}/>
 
                             <View style={{
                                 backgroundColor: colors.inputBox,
@@ -240,19 +240,19 @@ export default class MemberPage extends Component {
                             }}>
                                 <View style={{justifyContent: 'center'}}>
                                     <Ionicons name={"person-remove-outline"} style={{alignSelf: 'center'}}
-                                        size={30} onPress={() => this.removeMember()} />
+                                              size={30} onPress={() => this.removeMember()}/>
 
                                     <Text style={{textAlign: 'center'}}>Remove</Text>
                                 </View>
 
                                 <View style={{justifyContent: 'center'}}>
-                                    <Ionicons name={"chatbox-outline"} size={30} style={{alignSelf: 'center'}} />
+                                    <Ionicons name={"chatbox-outline"} size={30} style={{alignSelf: 'center'}}/>
                                     <Text style={{textAlign: 'center'}}>Message</Text>
                                 </View>
 
                             </View>
 
-                            <Ionicons name={"ellipsis-horizontal"} size={30} />
+                            <Ionicons name={"ellipsis-horizontal"} size={30}/>
                         </View>
 
                         <Text style={{
@@ -269,7 +269,7 @@ export default class MemberPage extends Component {
                                 padding: 15, backgroundColor: colors.background,
                                 marginTop: 10, borderRadius: 5, flexDirection: 'row'
                             }}>
-                                <Ionicons name={"document-text"} size={20} />
+                                <Ionicons name={"document-text"} size={20}/>
                                 <Text style={{alignSelf: 'center', color: 'white', fontSize: 20, left: 5}}>View Question
                                     Form</Text>
                             </View>
@@ -297,8 +297,8 @@ export default class MemberPage extends Component {
                 </ScrollView>
                 {
                     this.state.currMember?.permissions.has("isCoach") ?
-                        <NewButton onPress={() => this.inviteMembers()} />
-                        : <View />
+                        <NewButton onPress={() => this.inviteMembers()}/>
+                        : <View/>
                 }
 
             </View>

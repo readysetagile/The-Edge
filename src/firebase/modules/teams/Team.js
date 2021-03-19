@@ -25,7 +25,7 @@ module.exports.Team = class Team {
 
     }
 
-    addTagToDrill(drillID, tagID){
+    addTagToDrill(drillID, tagID) {
 
         const drillTags = this.modules.drills.drills[drillID].tags;
         drillTags.push(tagID);
@@ -33,7 +33,7 @@ module.exports.Team = class Team {
 
     }
 
-    removeTagFromDrill(drillID, tagID){
+    removeTagFromDrill(drillID, tagID) {
 
         let drillTags = this.modules.drills.drills[drillID].tags;
         drillTags = drillTags.filter(i => i !== tagID);
@@ -41,30 +41,31 @@ module.exports.Team = class Team {
 
     }
 
-    removeTag(tagID){
+    removeTag(tagID) {
         delete this.modules.drills.tags[tagID];
         this.#reference.child("modules/drills/tags").child(tagID).remove();
 
     }
-    addTag(tagID, tag){
-        if(tag.drills)
+
+    addTag(tagID, tag) {
+        if (tag.drills)
             delete tag.drills;
         this.modules.drills.tags[tagID] = tag;
         this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
     }
 
-    removeDrill(drillID){
+    removeDrill(drillID) {
         delete this.modules.drills.drills[drillID];
         this.#reference.child("modules/drills/drills").child(drillID).remove();
     }
 
-    setDrillTags(drillID, tags){
+    setDrillTags(drillID, tags) {
         const drill = this.modules.drills.drills[drillID];
         drill.tags = tags
         this.#reference.child('modules/drills/drills').update({[drillID]: tags})
     }
 
-    addDrill(drillID, drill){
+    addDrill(drillID, drill) {
         this.modules.drills.drills[drillID] = drill;
         this.#reference.child("modules/drills/drills").update({[drillID]: drill});
     }
