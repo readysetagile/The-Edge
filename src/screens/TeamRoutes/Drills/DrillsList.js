@@ -51,19 +51,13 @@ class DrillsList extends Component {
     updateDrillTags(drills, oldTagName, newTagName){
 
         if(Array.isArray(drills)) {
-            const stateDrills = this.state.drills, stateTags = this.state.tags;
+            const stateDrills = this.state.drills
 
             for (const drill of drills) {
                 const drillObj = stateDrills[drill];
                 drillObj.tags = stateDrills[drill].tags.filter(i => i !== oldTagName)
                 drillObj.tags.push(newTagName);
                 stateDrills[drill] = drillObj;
-
-                // stateTags[newTagName].contentHidden = true;
-                // if (stateTags[newTagName].drills) {
-                //     stateTags[newTagName].drills.push(drill);
-                // } else stateTags[newTagName].drills = [drill];
-                // console.log(stateTags[newTagName]);
 
                 this.updateDrill(stateDrills[drill]);
 
@@ -77,6 +71,12 @@ class DrillsList extends Component {
 
         if (newName && tag.name !== newName) {
             const tags = this.state.tags;
+
+            if(tags[newName] != null){
+                Alert.alert("Invalid Name", "This tag name already exists")
+                return;
+            }
+
             const oldName = tag.name;
             const oldTagDrills = tag.drills;
 
@@ -106,10 +106,8 @@ class DrillsList extends Component {
             for (const tag of tagsToUpdate) {
 
                 let drills = tags[tag].drills;
-                console.log(drills, 1);
                 drills = drills.filter(i => i !== drill.name);
                 drills.push(newDrillName);
-                console.log(drills, 1);
 
             }
 
@@ -123,6 +121,10 @@ class DrillsList extends Component {
 
             const drills = this.state.drills;
 
+            if(drills[newName] != null){
+                Alert.alert("Invalid Name", "This tag name already exists")
+                return;
+            }
 
             Edge.teams.get(GlobalData.teamID).then(team => {
                 this.updateTagDrills(drill, newName);
