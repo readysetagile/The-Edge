@@ -153,6 +153,7 @@ class DrillsList extends Component {
     changeDrillColor(drill, newColor) {
 
         if (newColor && drill.color !== newColor) {
+            this.colorDidChange = true;
             this.state.drills[drill.name].color = newColor;
             this.setState({
                 drills: this.state.drills
@@ -171,7 +172,8 @@ class DrillsList extends Component {
 
     updateItemColor(item, color, type) {
 
-            Edge.teams.get(GlobalData.teamID).then(team => {
+        console.log(arguments)
+        Edge.teams.get(GlobalData.teamID).then(team => {
                 item.color = color;
                 if (type === 'tag') {
                     const isContentHidden = item.contentHidden;
@@ -254,7 +256,8 @@ class DrillsList extends Component {
                 this.tagEditColor = tag.color;
             }} onClose={() => {
                 this.changeTagName(tag, this.editingNameTag)
-                this.updateItemColor(tag, tag.color, 'tag');
+                if(this.colorDidChange)
+                    this.updateItemColor(tag, tag.color, 'tag');
             }}>
 
                 <MenuTrigger triggerOnLongPress={true}
@@ -349,7 +352,8 @@ class DrillsList extends Component {
                 this.editingNameTag = drill.name
             }} onClose={() => {
                 this.changeDrillName(drill, this.editingNameTag);
-                this.updateItemColor(drill, drill.color, 'drill');
+                if(this.colorDidChange);
+                    this.updateItemColor(drill, drill.color, 'drill');
             }}>
 
                 <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.setDrillViewing.bind(this, drill)}>
