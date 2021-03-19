@@ -38,15 +38,15 @@ export default class DashboardScreen extends Component {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity>
-                    <View style={[styles.buttonStyle, styles.drillsColor]}>
+                    <TouchableOpacity style={[styles.buttonStyle, styles.drillsColor]} onPress={() => navigation.navigate("Drills")}>
                         <Image
                             source={{uri: 'https://grid.gograph.com/softball-vector-clipart_gg91304766.jpg'}}
                             style={styles.imageStyle}
                         />
                         <Text style={styles.buttonsText}>Drills</Text>
-                    </View>
+                    </TouchableOpacity>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Questions")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Questions")} onPress={() => navigation.navigate("Questions")}>
                     <View style={[styles.buttonStyle, styles.graphsColor]}>
                         <Image
                             source={{uri: 'https://grid.gograph.com/softball-vector-clipart_gg91304766.jpg'}}
