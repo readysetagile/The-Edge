@@ -174,7 +174,6 @@ class DrillsList extends Component {
 
     updateItemColor(item, color, type) {
 
-        console.log(arguments)
         Edge.teams.get(GlobalData.teamID).then(team => {
                 item.color = color;
                 if (type === 'tag') {
@@ -652,14 +651,15 @@ class DrillsList extends Component {
 
         tags[name] = {
             color: 'gold',
-            name: name,
-            contentHidden: true
+            name: name
         }
-        this.setState({showTagNameInput: false, tags: tags, newTagName: ""});
-
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.addTag(name, tags[name]);
         })
+
+        tags[name].contentHidden = true;
+        this.setState({showTagNameInput: false, tags: tags, newTagName: ""});
+
     }
 
     componentDidMount() {
