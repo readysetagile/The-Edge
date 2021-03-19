@@ -88,7 +88,7 @@ class DrillsList extends Component {
                 tags[newName].drills = oldTagDrills;
                 this.setState({tags: tags})
                 this.updateDrillTags(oldTagDrills, oldName, newName);
-                this.componentDidMount()
+                //this.componentDidMount()
                 this.editingNameTag = ""
             });
 
@@ -99,6 +99,7 @@ class DrillsList extends Component {
 
         const tags = this.state.tags;
         const tagsToUpdate = drill.tags;
+
         if(tagsToUpdate) {
             for (const tag of tagsToUpdate) {
 
@@ -115,16 +116,19 @@ class DrillsList extends Component {
 
     changeDrillName(drill, newName) {
         if (newName && drill.name !== newName) {
+
             const drills = this.state.drills;
 
             this.updateTagDrills(drill, newName);
             delete drills[drill.name];
             Edge.teams.get(GlobalData.teamID).then(team => {
                 team.removeDrill(drill.name);
+                drill.name = newName;
                 team.addDrill(newName, drill);
+
+                drills[newName] = drill;
+                this.setState({drills: drills})
             })
-            drills[newName] = drill;
-            this.setState({drills: drills})
             this.editingNameTag = ""
         }
 
