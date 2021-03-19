@@ -208,7 +208,6 @@ class DrillsList extends Component {
 
                     {
                         tag.drills?.map(name => {
-                            console.log(tag.drills);
                             return this.generateDrill(this.state.drills[name])
                         })
                     }
