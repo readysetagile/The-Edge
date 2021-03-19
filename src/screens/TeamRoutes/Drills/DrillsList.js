@@ -48,6 +48,16 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Updates each drills tags to be renamed to the tag that has been renamed
+     *
+     * Goes through each drill that was passed in to replace the oldTagName with the newTagName in order to
+     * move the drill location to the desired location
+     *
+     * @param drills the drills to update
+     * @param oldTagName the old tag name to change
+     * @param newTagName the new tag name to change to
+     */
     updateDrillTags(drills, oldTagName, newTagName){
 
         if(Array.isArray(drills)) {
@@ -67,6 +77,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Changes the tag name
+     * @param tag the tag to change the name of
+     * @param newName the new name of the tag
+     */
     changeTagName(tag, newName) {
 
         if (newName && tag.name !== newName) {
@@ -97,6 +112,11 @@ class DrillsList extends Component {
         }
     }
 
+    /**
+     * Updates the tags of a certain drill to add the new drill name to it and remove its current old drill name
+     * @param drill the drill to update
+     * @param newDrillName the new name of the drill to update each tag's drills to contain the new drill name
+     */
     updateTagDrills(drill, newDrillName){
 
         const tags = this.state.tags;
@@ -116,6 +136,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Changes a drill's name
+     * @param drill the drill to change the name of
+     * @param newName the new name of the drill
+     */
     changeDrillName(drill, newName) {
         if (newName && drill.name !== newName) {
 
@@ -143,6 +168,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Changes a tags color
+     * @param tag the tag to change
+     * @param newColor the new color of the tag
+     */
     changeTagColor(tag, newColor) {
         if (newColor && tag.color !== newColor) {
             this.state.tags[tag.name].color = newColor;
@@ -152,6 +182,11 @@ class DrillsList extends Component {
         }
     }
 
+    /**
+     * Changes a drills color
+     * @param drill the drill to change
+     * @param newColor the new color of the drill
+     */
     changeDrillColor(drill, newColor) {
 
         if (newColor && drill.color !== newColor) {
@@ -164,6 +199,10 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Updates a drill in the firebase
+     * @param drill the drill to update
+     */
     updateDrill(drill){
 
         Edge.teams.get(GlobalData.teamID).then(team => {
@@ -172,6 +211,12 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Updates any items color in the database
+     * @param item the item to update
+     * @param color the color to change the item to
+     * @param type the type of the item (tag | drill)
+     */
     updateItemColor(item, color, type) {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
@@ -187,6 +232,13 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Toggles wether or not to see what is under a tag
+     *
+     * This shows the drills that the clicked tag contains
+     *
+     * @param tag the tag clicked to toggle
+     */
     invertTagHiddenContent(tag) {
 
         const tags = this.state.tags;
@@ -196,6 +248,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Generates how a tag looks
+     * @param tag the data of a tag
+     * @returns {JSX.Element}
+     */
     generateTag(tag) {
 
         return (
@@ -220,6 +277,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * determines if a tag should be able to be held onto based on a users permission
+     * @param tag the tag to generate
+     * @returns {*|JSX.Element}
+     */
     generateTagViewing(tag) {
 
         return this.state.canEditDrills ? this.generateTagMenu(tag) : (
@@ -230,6 +292,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * The face value of a tag (what anyone sees)
+     * @param tag the tag data
+     * @returns {JSX.Element}
+     */
     generateTagView(tag) {
 
         return (
@@ -247,6 +314,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Generates a tag menu to be able to change, update and remove a tag
+     * @param tag the data of a tag
+     * @returns {JSX.Element}
+     */
     generateTagMenu(tag) {
 
         return (
@@ -317,12 +389,19 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Toggles if you are viewing the contents of a drill
+     * @param drill the drill data
+     */
     setDrillViewing(drill) {
-
         this.setState({currentDrillEditing: drill.name, showModal: true});
-
     }
 
+    /**
+     * Determines if a drill is able to be held onto for a menu based on the users permissions
+     * @param drill
+     * @returns {null|*|JSX.Element}
+     */
     generateDrill(drill) {
 
         if(drill) {
@@ -335,6 +414,11 @@ class DrillsList extends Component {
         } else return null;
     }
 
+    /**
+     * Generates what anyone sees about a drill
+     * @param drill
+     * @returns {JSX.Element}
+     */
     generateDillView(drill) {
         return (
             <View style={styles.itemContainer} key={drill.name} onPress={() => this.setDrillViewing(drill)}>
@@ -345,6 +429,11 @@ class DrillsList extends Component {
         )
     }
 
+    /**
+     * Generates the drills menu in order to change, delete, and update a drill
+     * @param drill the drill data
+     * @returns {JSX.Element}
+     */
     generateDrillMenu(drill) {
 
         return (
@@ -352,7 +441,7 @@ class DrillsList extends Component {
                 this.editingNameTag = drill.name
             }} onClose={() => {
                 this.changeDrillName(drill, this.editingNameTag);
-                if(this.colorDidChange);
+                if(this.colorDidChange)
                     this.updateItemColor(drill, drill.color, 'drill');
             }}>
 
@@ -423,6 +512,12 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Generates all the tags to be added in a list of toggleable checkmarks so that a drill can be
+     * put into a tag
+     * @param drill the drill data
+     * @returns {[]} a list of tags the drill has enabled
+     */
     generateDrillTags(drill) {
 
         const tags = [];
@@ -442,6 +537,12 @@ class DrillsList extends Component {
         return tags;
     }
 
+    /**
+     * Generates the view of a togglable checkmark so that the user can click on it and a drill be added to a tag
+     * @param drill the drill in question (its data)
+     * @param tagContent the data of a tag
+     * @returns {JSX.Element}
+     */
     generateDrillTag(drill, tagContent) {
 
         return (
@@ -470,6 +571,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Adds or removes a tag from a drill and also updates the tag
+     * @param drill the drill to add or remove a tag name from
+     * @param tagName the tag name to add or remove from the drill
+     */
     toggleTag(drill, tagName) {
 
         if (drill.tags) {
@@ -495,6 +601,10 @@ class DrillsList extends Component {
         }
     }
 
+    /**
+     * Deletes a drill from the database and state
+     * @param drill the drill to delete
+     */
     deleteDrill = (drill) => {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
@@ -505,6 +615,11 @@ class DrillsList extends Component {
         })
 
     }
+
+    /**
+     * Deletes a tag from the database and state
+     * @param tag the tag to delete
+     */
 
     deleteTag(tag) {
 
@@ -517,7 +632,13 @@ class DrillsList extends Component {
 
     }
 
-    createColorSliders(tag, onChange) {
+    /**
+     * Creates 2 color sliders so that a drill or tag can have their colors modified
+     * @param item the item to change the color of
+     * @param onChange what happens when a color changes
+     * @returns {JSX.Element}
+     */
+    createColorSliders(item, onChange) {
 
         return (
             <View>
@@ -532,7 +653,7 @@ class DrillsList extends Component {
                         thumbStyle={styles.thumb}
                         useNativeDriver={true}
                         onColorChange={(colorHsvOrRgb, resType) => {
-                            onChange(tag, tinycolor(colorHsvOrRgb).toHexString())
+                            onChange(item, tinycolor(colorHsvOrRgb).toHexString())
                         }}
                     />
                 </View>
@@ -541,18 +662,18 @@ class DrillsList extends Component {
                         ref={view => {
                             this.sliderSaturationPicker = view;
                         }}
-                        oldColor={tag.color}
+                        oldColor={item.color}
                         trackStyle={[{height: 12, width: '100%'}]}
                         thumbStyle={styles.thumb}
                         useNativeDriver={true}
                         onColorChange={(colorHsvOrRgb, resType) => {
-                            onChange(tag, tinycolor(colorHsvOrRgb).toHexString())
+                            onChange(item, tinycolor(colorHsvOrRgb).toHexString())
                         }}
                         style={{
                             height: 12,
                             borderRadius: 6,
                             backgroundColor: tinycolor({
-                                h: tinycolor(tag.color).toHsv().h,
+                                h: tinycolor(item.color).toHsv().h,
                                 s: 1,
                                 v: 1
                             }).toHexString()
@@ -565,16 +686,25 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Prompts the user to create a new drill by showing them the editor
+     */
     createDrill() {
 
         this.setState({showModal: true});
 
     }
 
+    /**
+     * Creates a new tag by prompting the user to add a new tag
+     */
     createTag = () => {
         this.setState({showTagNameInput: true});
     }
 
+    /**
+     * Shows a popup view of which item to create
+     */
     addItem() {
 
         const options = ['Create Drill', 'Create Tag', 'Cancel'];
@@ -594,6 +724,9 @@ class DrillsList extends Component {
     }
 
 
+    /**
+     * Removes the user from the drill editor
+     */
     exitDrillEditor() {
 
         Edge.teams.get(GlobalData.teamID)
@@ -636,6 +769,9 @@ class DrillsList extends Component {
         this.setState({newDrillName: name})
     }
 
+    /**
+     * Creates a new tag by prompting the user for a name
+     */
     addTag = () => {
         let tags = this.state.tags;
         const name = this.state.newTagName;
@@ -661,6 +797,9 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Sets up each tag to contain a drill in the state.
+     */
     componentDidMount() {
 
         this.memberHasPermissionToEditDrills().then((editable) => {
@@ -727,6 +866,9 @@ class DrillsList extends Component {
         this.setState({showDrillNameInput: false})
     }
 
+    /**
+     * Creates a new drill when the user sets a new drill name for the first time
+     */
     addDrill = () => {
         const name = this.state.newDrillName;
 
@@ -761,6 +903,11 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Shows the header for the drill editor
+     * @param drillName the drill name to create a header for
+     * @returns {JSX.Element}
+     */
     createDrillHeader(drillName) {
 
         const content = this.state.drills[drillName]?.content
@@ -800,6 +947,10 @@ class DrillsList extends Component {
 
     }
 
+    /**
+     * Detects if a user has permissions to edit drills
+     * @returns {Promise<boolean>} if the user has permissions to edit a drill
+     */
     memberHasPermissionToEditDrills() {
 
         return new Promise(resolve => {
