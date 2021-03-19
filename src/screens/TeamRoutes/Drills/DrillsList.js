@@ -833,15 +833,9 @@ class DrillsList extends Component {
                 </Modal>
 
                 <View style={globalStyles.topToolBar}>
-                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: 0</Text>
-                    <View style={globalStyles.searchToolBar}>
-                        <TextInput
-                            placeholderTextColor={'#003f5c'}
-                            placeholder='Search :mag_right:'
-                            onChangeText={(val) => {
-                            }}>
-                        </TextInput>
-                    </View>
+                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total Drills: {Object.keys(this.state.drills).length-1}</Text>
+                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total Tags: {Object.keys(this.state.tags).length-1}</Text>
+
                 </View>
 
                 {
