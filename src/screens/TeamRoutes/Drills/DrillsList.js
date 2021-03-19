@@ -166,8 +166,12 @@ class DrillsList extends Component {
 
             Edge.teams.get(GlobalData.teamID).then(team => {
                 item.color = color;
-                if (type === 'tag')
+                if (type === 'tag') {
+                    const isContentHidden = item.contentHidden;
+                    item.contentHidden = null;
                     team.addTag(item.name, item);
+                    item.contentHidden = isContentHidden;
+                }
                 else team.addDrill(item.name, item);
             })
 
