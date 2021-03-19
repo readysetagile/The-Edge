@@ -79,6 +79,7 @@ class DrillsList extends Component {
             const tags = this.state.tags;
             const oldName = tag.name;
             const oldTagDrills = tag.drills;
+
             delete tags[tag.name];
             Edge.teams.get(GlobalData.teamID).then(team => {
                 team.removeTag(oldName);
@@ -86,9 +87,10 @@ class DrillsList extends Component {
 
                 tags[newName] = tag;
                 tags[newName].drills = oldTagDrills;
-                this.setState({tags: tags})
+
                 this.updateDrillTags(oldTagDrills, oldName, newName);
-                //this.componentDidMount()
+                this.setState({tags: tags});
+                this.componentDidMount();
                 this.editingNameTag = ""
             });
 
@@ -104,8 +106,10 @@ class DrillsList extends Component {
             for (const tag of tagsToUpdate) {
 
                 let drills = tags[tag].drills;
+                console.log(drills, 1);
                 drills = drills.filter(i => i !== drill.name);
                 drills.push(newDrillName);
+                console.log(drills, 1);
 
             }
 
@@ -119,15 +123,18 @@ class DrillsList extends Component {
 
             const drills = this.state.drills;
 
-            this.updateTagDrills(drill, newName);
-            delete drills[drill.name];
+
             Edge.teams.get(GlobalData.teamID).then(team => {
+                this.updateTagDrills(drill, newName);
+                delete drills[drill.name];
+
                 team.removeDrill(drill.name);
                 drill.name = newName;
-                team.addDrill(newName, drill);
 
+                team.addDrill(newName, drill);
                 drills[newName] = drill;
-                this.setState({drills: drills})
+                this.setState({drills: drills});
+                this.componentDidMount();
             })
             this.editingNameTag = ""
         }
@@ -198,7 +205,7 @@ class DrillsList extends Component {
 
                     {
                         tag.drills?.map(name => {
-                            console.log(name, 1);
+                            console.log(tag.drills);
                             return this.generateDrill(this.state.drills[name])
                         })
                     }
@@ -315,13 +322,14 @@ class DrillsList extends Component {
 
     generateDrill(drill) {
 
-        return this.state.canEditDrills ? this.generateDrillMenu(drill) : (
+        if(drill) {
+            return this.state.canEditDrills ? this.generateDrillMenu(drill) : (
+                <TouchableOpacity onPress={() => this.setDrillViewing(drill)} key={drill.name}>
+                    {this.generateDillView(drill)}
+                </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => this.setDrillViewing(drill)} key={drill.name}>
-                {this.generateDillView(drill)}
-            </TouchableOpacity>
-
-        )
+            )
+        } else return null;
     }
 
     generateDillView(drill) {
@@ -649,7 +657,6 @@ class DrillsList extends Component {
     }
 
     componentDidMount() {
-
 
         this.memberHasPermissionToEditDrills().then((editable) => {
             this.setState({canEditDrills: editable})
