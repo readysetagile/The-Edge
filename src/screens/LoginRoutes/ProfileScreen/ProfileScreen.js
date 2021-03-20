@@ -57,8 +57,8 @@ export default class ProfileScreen extends Component {
                 text: "Yes",
                 onPress: () => {
                     if (profile.isParent) {
-                        this.setState({modal: {show: true, profile: profile, type: "delete"}})
-                    } else this.deleteProfile(profile)
+                        this.setState({modal: {show: true, profile: profile, type: "delete"}});
+                    } else this.deleteProfile(profile);
                 }
             },
             {

@@ -440,7 +440,7 @@ class DrillsList extends Component {
                 this.editingNameTag = drill.name
             }} onClose={() => {
                 this.changeDrillName(drill, this.editingNameTag);
-                if (this.colorDidChange)
+                //if (this.colorDidChange)
                     this.updateItemColor(drill, drill.color, 'drill');
             }}>
 
@@ -622,9 +622,19 @@ class DrillsList extends Component {
 
     deleteTag(tag) {
 
-        const tags = this.state.tags;
+        const tags = this.state.tags, drills = this.state.drills;
+        if(tag.drills){
+            const tagDrills = tag.drills;
+            for(const drill of tagDrills){
+
+                const stateDrill = drills[drill];
+                stateDrill.tags = stateDrill.tags.filter(i => i !== tag.name);
+                drills[drill] = stateDrill;
+
+            }
+        }
         delete tags[tag.name];
-        this.setState({tags: tags});
+        this.setState({tags: tags, drills});
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.removeTag(tag.name);
         })
