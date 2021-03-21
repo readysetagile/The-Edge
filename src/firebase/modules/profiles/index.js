@@ -14,7 +14,6 @@ class Profile {
      * @param profileObject
      */
     constructor(profileObject) {
-        console.log(profileObject, 'profObj');
         if(profileObject) {
             this.accountUUID = profileObject.accountUUID;
             this.profileUUID = profileObject.id;

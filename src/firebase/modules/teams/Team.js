@@ -105,7 +105,6 @@ module.exports.Team = class Team {
         if(typeof members.entries().next().value === 'object') {
             for (const [K, V] of members) {
                 const profile = new Profile((await Edge.users.get(V.accountID)).getProfile(V.id));
-                console.log(profile, "PROFILE")
                 if(profile) {
                     members.set(K, new Member(V, profile, this.id));
                 }
