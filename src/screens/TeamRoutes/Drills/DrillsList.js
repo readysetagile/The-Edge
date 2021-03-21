@@ -749,7 +749,6 @@ class DrillsList extends Component {
                             this.setState({currentDrillEditorContent: this.currentDrillEditorContent})
 
                             if (team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)) {
-                                console.log(this.state.currentDrillEditing, this.state.currentDrillEditorContent)
 
                                 if(this.state.currentDrillEditorContent !== this.state.drills[this.state.currentDrillEditing]) {
                                     this.state.drills[this.state.currentDrillEditing].content = this.state.currentDrillEditorContent;

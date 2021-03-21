@@ -70,7 +70,6 @@ export default class MemberPage extends Component {
         let indx = 0;
         for (let [K, V] of members) {
             let member = await this.state.team.getMember(K);
-            console.log(member, 9)
             if(member) {
                 let memBox = await this.generateMemberBox(member, indx);
                 memArr.push(memBox);
@@ -89,7 +88,6 @@ export default class MemberPage extends Component {
      */
     async generateMemberBox(member, index) {
 
-        console.log(member, 8);
         let profileImage = await member.profile?.getProfilePicture();
         if (profileImage == null) profileImage = member.profile.avatar;
         return (
