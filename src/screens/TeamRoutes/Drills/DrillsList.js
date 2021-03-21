@@ -469,21 +469,28 @@ class DrillsList extends Component {
                         {this.createColorSliders(drill, this.changeDrillColor.bind(this))}
                     </MenuOption>
 
-                    <MenuOption disableTouchable={true}>
+                        <MenuOption disableTouchable={true}>
 
-                        <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
+                            {Object.keys(this.state.tags).length-1 ?
+                                <View>
 
-                        <View style={{height: 100}}>
+                                    <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
 
-                            <ScrollView style={{padding: 5}}>
+                                    <View style={{height: 100}}>
 
-                                {this.generateDrillTags(drill)}
+                                        <ScrollView style={{padding: 5}}>
 
-                            </ScrollView>
+                                            {this.generateDrillTags(drill)}
 
-                        </View>
+                                        </ScrollView>
 
-                    </MenuOption>
+                                    </View>
+
+                                </View> : null
+                            }
+
+                        </MenuOption>
+
 
                     <MenuOption onSelect={() => {
                         Alert.alert("Are you sure you want to delete this drill?",
@@ -623,19 +630,22 @@ class DrillsList extends Component {
     deleteTag(tag) {
 
         const tags = this.state.tags, drills = this.state.drills;
-        if(tag.drills){
+        Edge.teams.get(GlobalData.teamID).then(team => {
+
+            if(tag.drills){
+
             const tagDrills = tag.drills;
             for(const drill of tagDrills){
 
                 const stateDrill = drills[drill];
                 stateDrill.tags = stateDrill.tags.filter(i => i !== tag.name);
                 drills[drill] = stateDrill;
+                team.addDrill(stateDrill.name, stateDrill);
 
             }
         }
         delete tags[tag.name];
         this.setState({tags: tags, drills});
-        Edge.teams.get(GlobalData.teamID).then(team => {
             team.removeTag(tag.name);
         })
 
@@ -830,7 +840,7 @@ class DrillsList extends Component {
                     const name = i[0];
                     const content = i[1];
 
-                    const tags = content.tags;//drill tags
+                    let tags = content.tags;//drill tags
                     if (tags) {
 
                         for (const tag of tags) {
@@ -846,6 +856,7 @@ class DrillsList extends Component {
                                 }
 
                             } else {
+                                tags = tags.filter(i => i.name !== tag.name);
                                 team.removeTagFromDrill(name, tag);
                             }
 
