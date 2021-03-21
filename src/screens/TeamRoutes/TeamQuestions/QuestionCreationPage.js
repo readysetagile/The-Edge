@@ -437,8 +437,9 @@ class QuestionCreationPage extends Component {
                     }
 
                 </ScrollView>
-
-                <NewButton onPress={() => this.addQuestion()}/>
+                {
+                    !this.state.freezeScreen ? <NewButton onPress={() => this.addQuestion()}/> : null
+                }
 
             </View>
         );
