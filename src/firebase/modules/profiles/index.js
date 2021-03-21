@@ -14,14 +14,17 @@ class Profile {
      * @param profileObject
      */
     constructor(profileObject) {
-        this.accountUUID = profileObject.accountUUID;
-        this.profileUUID = profileObject.id;
-        this._username = profileObject.username;
-        this._avatar = profileObject.avatar;
-        this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();
-        this._isParent = profileObject.isParent;
-        this.#parentPin = profileObject.parentPin;
-        this.#reference = firebase.database().ref("users/" + this.accountUUID + "/profiles");
+        console.log(profileObject, 'profObj');
+        if(profileObject) {
+            this.accountUUID = profileObject.accountUUID;
+            this.profileUUID = profileObject.id;
+            this._username = profileObject.username;
+            this._avatar = profileObject.avatar;
+            this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();
+            this._isParent = profileObject.isParent;
+            this.#parentPin = profileObject.parentPin;
+            this.#reference = firebase.database().ref("users/" + this.accountUUID + "/profiles");
+        }
     }
 
     /**
@@ -225,7 +228,8 @@ class Profile {
 
 
     get teams() {
-        return Array.from(this._teams.keys()).filter(i => i !== '_');
+        if(this._teams)
+            return Array.from(this._teams.keys()).filter(i => i !== '_');
     }
 }
 

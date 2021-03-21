@@ -2,6 +2,7 @@ import {createUUID} from "../../Util";
 import {firebase} from "../../config";
 import {Member} from "../member";
 import Edge from "../../index";
+import {Profile} from "../profiles";
 
 const DEFAULTTEAM = require('./model');
 
@@ -15,6 +16,7 @@ module.exports.Team = class Team {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
+
             this.members = new Map(Object.entries(teamObject.members));
             this._teamCode = teamObject.inviteData.teamCode;
             this.teamName = teamObject.teamName;
@@ -95,6 +97,22 @@ module.exports.Team = class Team {
 
         this.members.delete(id);
         this.#reference.update({members: Object.fromEntries(this.members.entries())});
+    }
+
+    async getMembers(){
+
+        const members = this.members;
+        if(typeof members.entries().next().value === 'object') {
+            for (const [K, V] of members) {
+                const profile = new Profile((await Edge.users.get(V.accountID)).getProfile(V.id));
+                console.log(profile, "PROFILE")
+                if(profile) {
+                    members.set(K, new Member(V, profile, this.id));
+                }
+            }
+        }
+        return members;
+
     }
 
     /**

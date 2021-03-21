@@ -51,8 +51,9 @@ export default class MemberPage extends Component {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
         const member = await team.getMember(profile.id);
+
         this.setState({profile: profile, team: team, currMember: member});
-        let teamMembers = team.members;
+        let teamMembers = await team.getMembers();
         let members = await this.generateMembers(teamMembers);
         this.setState({members: members});
 
@@ -69,9 +70,12 @@ export default class MemberPage extends Component {
         let indx = 0;
         for (let [K, V] of members) {
             let member = await this.state.team.getMember(K);
-            let memBox = await this.generateMemberBox(member, indx);
-            memArr.push(memBox);
-            indx++;
+            console.log(member, 9)
+            if(member) {
+                let memBox = await this.generateMemberBox(member, indx);
+                memArr.push(memBox);
+                indx++;
+            }
         }
         return memArr;
 
@@ -85,7 +89,8 @@ export default class MemberPage extends Component {
      */
     async generateMemberBox(member, index) {
 
-        let profileImage = await member.profile.getProfilePicture();
+        console.log(member, 8);
+        let profileImage = await member.profile?.getProfilePicture();
         if (profileImage == null) profileImage = member.profile.avatar;
         return (
             <HiddenView hide={this.state.hiddenMembers[member.id]}

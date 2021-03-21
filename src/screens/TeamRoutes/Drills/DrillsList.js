@@ -747,8 +747,14 @@ class DrillsList extends Component {
                         onPress: () => {
 
                             this.setState({currentDrillEditorContent: this.currentDrillEditorContent})
+
                             if (team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)) {
-                                team.addDrill(this.state.currentDrillEditing, this.state.currentDrillEditorContent);
+                                console.log(this.state.currentDrillEditing, this.state.currentDrillEditorContent)
+
+                                if(this.state.currentDrillEditorContent !== this.state.drills[this.state.currentDrillEditing]) {
+                                    this.state.drills[this.state.currentDrillEditing].content = this.state.currentDrillEditorContent;
+                                    team.addDrill(this.state.currentDrillEditing, this.state.drills[this.state.currentDrillEditing]);
+                                }
                                 this.setState({showModal: false});
                             } else {
                                 this.setState({showDrillNameInput: true})

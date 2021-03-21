@@ -5,7 +5,7 @@ const DEFAULTMEMBER = require("./model");
 
 module.exports.Member = class Member {
 
-    profile;
+    _profile;
     #team;
     #ref;
     #_permissions
@@ -74,7 +74,10 @@ module.exports.Member = class Member {
      * @returns {Profile} a profile object of this members profile
      */
     get profile() {
-        return new Profile(this._profile);
+        console.log(this._profile, 5);
+        if(this._profile)
+            return new Profile(this._profile);
+
     }
 
     /**
