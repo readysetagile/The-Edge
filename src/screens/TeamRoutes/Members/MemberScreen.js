@@ -53,7 +53,17 @@ export default class MemberPage extends Component {
         const member = await team.getMember(profile.id);
 
         this.setState({profile: profile, team: team, currMember: member});
-        let teamMembers = await team.getMembers();
+
+        let teamMembers = new Map([...(await team.getMembers())].sort((a, b) => {//sorts alphabetically by username
+            const nameA = a[1].username.toUpperCase();
+            const nameB = b[1].username.toUpperCase();
+            if(nameA < nameB)
+                return 1;
+            if(nameA > nameB)
+                return -1;
+            return 0;
+        }));
+
         let members = await this.generateMembers(teamMembers);
         this.setState({members: members});
 
