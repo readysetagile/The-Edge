@@ -423,6 +423,10 @@ class DrillsList extends Component {
         } else return null;
     }
 
+    /**
+     * Toggles if a drill is assigned
+     * @param drill the drill to assign
+     */
     toggleDrillToAssign(drill){
 
         let assignedDrills = this.state.assignedDrills;
@@ -449,7 +453,6 @@ class DrillsList extends Component {
 
                     <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}/>
                     <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
-
 
                 </View>
 
@@ -1064,6 +1067,46 @@ class DrillsList extends Component {
             </View> : null
     }
 
+    removeAssignedDrill(drillName) {
+
+        let assignedDrills = this.state.assignedDrills;
+        assignedDrills = assignedDrills.filter(i => i !== drillName);
+        this.setState({assignedDrills: assignedDrills})
+
+    }
+
+    getAssignedDrills(){
+
+        return this.state.assignedDrills.map(drillName => {
+
+            return (
+
+                <View style={{
+                    borderRadius: 5,
+                    borderWidth: 2,
+                    borderColor: this.state.drills[drillName].color,
+                    flexDirection: 'row',
+                    alignItems:'center',
+                    margin: 5,
+                }}>
+
+                    <Text style={{
+                        textAlign: 'center',
+                        fontSize: 15,
+                        padding: 5,
+                        color: 'white',
+                        fontWeight: 'bold'
+                    }}>{drillName}</Text>
+
+                    <Ionicons name={'close'} size={20} color={'red'} onPress={this.removeAssignedDrill.bind(this, drillName)}/>
+
+                </View>
+
+            )
+
+        })
+
+    }
 
     getToolBarContent(isAssigning){
 
@@ -1074,7 +1117,12 @@ class DrillsList extends Component {
             <Text style={{alignSelf: 'center', fontSize: 20}}>Total
                 Tags: {Object.keys(this.state.tags).length - 1}</Text>
         </View>
-            : <View style={globalStyles.topToolBar}>
+            : <View style={{...globalStyles.topToolBar,
+                backgroundColor: '#89cff0',
+                justifyContent: 'space-equally', flexWrap: 'wrap'
+            }}>
+
+                {this.getAssignedDrills()}
 
             </View>
 
