@@ -13,6 +13,8 @@ module.exports = {
     userNotes: {
         _: 0
     },
-    assignedDrills: []
+    assignedDrills: {
+        _: 0
+    }
 
 }

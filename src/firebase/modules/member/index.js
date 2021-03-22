@@ -22,25 +22,23 @@ module.exports.Member = class Member {
         this._profile = profile;
         this.#team = team;
         this.accountID = memberObj.accountID;
-        this._assignedDrills = memberObj._assignedDrills;
+        this._assignedDrills = memberObj.assignedDrills;
         this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
     }
 
-    addDrillToAssign(drillName){
-        
+    addDrillToAssign(drillObj){
         const drills = this._assignedDrills;
-        drills[drillName] = 0;
+        drills[drillObj.id] = drillObj;
         this.#ref.child("assignedDrills").update(drills);
-
     }
 
-    removeAssignedDrill(drillName){
-
-        let drills = this._assignedDrills;
-        drills = drills.filter(i => i !== drillName);
-        this._assignedDrills = drills;
-        this.#ref.child('assignedDrills').child(drillName).remove();
-
+    /**
+     * Gets a drill from this member
+     * @param drillID the id of the drill
+     * @returns {Drill}
+     */
+    getDrill(drillID){
+        return this._assignedDrills[drillID];
     }
 
     /**
