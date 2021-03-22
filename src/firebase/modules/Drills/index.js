@@ -29,13 +29,14 @@ module.exports.Drill = class Drill{
 
 
     /**
+     *
      * Creates a new drill for a member
      * @param teamID the team id
      * @param assignedBy the profile ID that assigned this drill to the member
      * @param memberAssignedTo the Member object to assign to
      * @param drillName the name of the drill in the team to assign
      * @param dueDate the date that the drill should be completed by
-     * @returns {{dateDue: number, assignedBy: string, drillName: string, teamID: string, id: string, dateAssigned: number, assignedTo: string} & {dateAssigned?: number, drillName?: string, assignedBy?: string, teamID?: string, assignedTo?: string, id?: string, dateDue?: number}}
+     * @returns {exports.Drill} a new drill object
      */
     static createDrill(teamID, assignedBy, memberAssignedTo, drillName, dueDate=-1){
 
@@ -48,7 +49,7 @@ module.exports.Drill = class Drill{
         drill.assignedTo = memberAssignedTo.id;
         drill.drillName = drillName;
 
-        return drill;
+        return new Drill(drill);
 
     }
 

@@ -26,6 +26,7 @@ import Collapsible from "react-native-collapsible";
 import styles from './styles';
 import CheckBox from "react-native-check-box";
 import FlatButton from "../../../Components/SubmitButton";
+import {Drill} from "../../../firebase/modules/Drills";
 
 class DrillsList extends Component {
 
@@ -1139,12 +1140,18 @@ class DrillsList extends Component {
 
     }
 
+    newDrill(drillName){
+
+        return Drill.createDrill(GlobalData.teamID, GlobalData.profileID, this.state.memberToAssign, drillName);
+
+    }
+
     sendDrills(){
 
         const member = this.state.memberToAssign;
-        for(const drill of this.state.assignedDrills)
-            member.addDrillToAssign(drill);
-
+        for(const drill of this.state.assignedDrills){
+            member.addAssignedDrill(this.newDrill(drill));
+        }
     }
 
     confirmSend(){

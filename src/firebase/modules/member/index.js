@@ -26,7 +26,7 @@ module.exports.Member = class Member {
         this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
     }
 
-    addDrillToAssign(drillObj){
+    addAssignedDrill(drillObj){
         const drills = this._assignedDrills;
         drills[drillObj.id] = drillObj;
         this.#ref.child("assignedDrills").update(drills);
