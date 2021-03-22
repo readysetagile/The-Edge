@@ -9,6 +9,7 @@ module.exports.Member = class Member {
     #team;
     #ref;
     #_permissions
+    _assignedDrills
 
     constructor(memberObj, profile, team) {
 
@@ -21,7 +22,25 @@ module.exports.Member = class Member {
         this._profile = profile;
         this.#team = team;
         this.accountID = memberObj.accountID;
+        this._assignedDrills = memberObj._assignedDrills;
         this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
+    }
+
+    addDrillToAssign(drillName){
+        
+        const drills = this._assignedDrills;
+        drills[drillName] = 0;
+        this.#ref.child("assignedDrills").update(drills);
+
+    }
+
+    removeAssignedDrill(drillName){
+
+        let drills = this._assignedDrills;
+        drills = drills.filter(i => i !== drillName);
+        this._assignedDrills = drills;
+        this.#ref.child('assignedDrills').child(drillName).remove();
+
     }
 
     /**
@@ -77,6 +96,11 @@ module.exports.Member = class Member {
         if(this._profile)
             return new Profile(this._profile);
 
+    }
+
+
+    get assignedDrills() {
+        return this._assignedDrills;
     }
 
     /**

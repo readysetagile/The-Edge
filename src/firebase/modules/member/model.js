@@ -13,5 +13,6 @@ module.exports = {
     userNotes: {
         _: 0
     },
+    assignedDrills: []
 
 }

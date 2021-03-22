@@ -25,6 +25,7 @@ import InputText from "../../../Components/InputText";
 import Collapsible from "react-native-collapsible";
 import styles from './styles';
 import CheckBox from "react-native-check-box";
+import FlatButton from "../../../Components/SubmitButton";
 
 class DrillsList extends Component {
 
@@ -35,6 +36,7 @@ class DrillsList extends Component {
         showModal: false,
         showTagNameInput: false,
         showDrillNameInput: false,
+        memberToAssign: null,
         newDrillName: null,
         currentDrillEditorContent: null,
         currentDrillEditing: null,
@@ -924,7 +926,10 @@ class DrillsList extends Component {
         })
 
         this.props.navigation.addListener('didFocus', payload => {
-            this.setState({isAssigning: payload?.action?.params?.isAssigning});
+            this.setState({
+                isAssigning: payload?.action?.params?.isAssigning,
+                memberToAssign: payload?.action?.params?.memberToAssign
+            });
         })
 
     }
@@ -1081,7 +1086,7 @@ class DrillsList extends Component {
 
             return (
 
-                <View style={{
+                <View key={drillName} style={{
                     borderRadius: 5,
                     borderWidth: 2,
                     borderColor: this.state.drills[drillName].color,
@@ -1128,6 +1133,33 @@ class DrillsList extends Component {
 
     }
 
+    recieveDrills(){
+
+
+
+    }
+
+    sendDrills(){
+
+        const member = this.state.memberToAssign;
+        for(const drill of this.state.assignedDrills)
+            member.addDrillToAssign(drill);
+
+    }
+
+    confirmSend(){
+
+        Alert.alert("Assign Drills", "Are you sure you want to assign these drills?", [
+            {
+                text: 'Yes',
+                onPress: this.sendDrills.bind(this)
+            },
+            {
+                text: "No"
+            }
+        ])
+
+    }
 
     render() {
 
@@ -1164,7 +1196,16 @@ class DrillsList extends Component {
                 }
 
                 {
-                    (!isAssigning && this.state.canEditDrills) ? <NewButton onPress={() => this.addItem()}/> : null
+                    (!isAssigning && this.state.canEditDrills) ?
+                        <NewButton onPress={() => this.addItem()}/> :
+                        (
+                            <FlatButton text={"SEND!"} style={{
+                                position: 'absolute',
+                                bottom: 30,
+                                width: '90%',
+                                alignSelf: 'center'
+                            }} onPress={this.confirmSend.bind(this)}/>
+                        )
                 }
 
             </View>
