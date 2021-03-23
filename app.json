@@ -21,7 +21,6 @@
       "bundleIdentifier": "com.dacc.The-Edge"
     },
     "android": {
-      "useNextNotificationsApi": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
