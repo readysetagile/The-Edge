@@ -42,8 +42,9 @@ class DrillsList extends Component {
         currentDrillEditorContent: null,
         currentDrillEditing: null,
         canEditDrills: false,
-        isAssigning: true,
+        isAssigning: false,
     }
+
     editingNameTag = "";
     tagEditColor = null;
     currentDrillEditorContent = null
@@ -926,13 +927,16 @@ class DrillsList extends Component {
             this.setState({tags: allTags, drills: drills});
         })
 
-        this.props.navigation.addListener('didFocus', payload => {
+        this.focusListener = this.props.navigation.addListener('didFocus', payload => {
             this.setState({
                 isAssigning: payload?.action?.params?.isAssigning,
                 memberToAssign: payload?.action?.params?.memberToAssign
             });
         })
+    }
 
+    componentWillUnmount() {
+        this.focusListener?.remove();
     }
 
     onTagNameCancel = () => {
@@ -1152,6 +1156,9 @@ class DrillsList extends Component {
         for(const drill of this.state.assignedDrills){
             member.addAssignedDrill(this.newDrill(drill));
         }
+
+        this.props.navigation.navigate("Members");
+
     }
 
     confirmSend(){
