@@ -27,6 +27,8 @@ import styles from './styles';
 import CheckBox from "react-native-check-box";
 import FlatButton from "../../../Components/SubmitButton";
 import {Drill} from "../../../firebase/modules/Drills";
+import { Notifications } from 'expo';
+import * as Permissions from 'expo-permissions';
 
 class DrillsList extends Component {
 
@@ -1151,14 +1153,11 @@ class DrillsList extends Component {
     }
 
     sendDrills(){
-
         const member = this.state.memberToAssign;
         for(const drill of this.state.assignedDrills){
             member.addAssignedDrill(this.newDrill(drill));
         }
-
         this.props.navigation.navigate("Members");
-
     }
 
     confirmSend(){
@@ -1166,7 +1165,7 @@ class DrillsList extends Component {
         Alert.alert("Assign Drills", "Are you sure you want to assign these drills?", [
             {
                 text: 'Yes',
-                onPress: this.sendDrills.bind(this)
+                onPress: this.recieveDrills.bind(this)
             },
             {
                 text: "No"

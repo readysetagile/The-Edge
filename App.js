@@ -8,11 +8,40 @@ import Login from './routes/LoginStack';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import { MenuProvider } from 'react-native-popup-menu';
 import Navigator from './routes/TeamDrawer'
+import * as Notifications from 'expo-notifications';
+import * as Permissions from 'expo-permissions';
+const { Expo } = require("expo-server-sdk");
+
 // Set the configuration for your app
 
 export default class App extends Component {
 
+    registerForPushNotifications = async () => {
+        try {
+            const permission = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+            if (!permission.granted) return;
+            const token = await Notifications.getExpoPushTokenAsync();
+            console.log(token);
+        } catch (error) {
+            console.log('Error getting a token', error);
+        }
+    }
+
     componentDidMount () {
+
+
+        const sendPushNotification = async (targetExpoPushToken, message) => {
+            const expo = new Expo();
+            const chunks = expo.chunkPushNotifications([
+                {to: targetExpoPushToken, sound: "default", body: message}
+            ]);
+        }
+             (async () => {
+                const token = await Notifications.getExpoPushTokenAsync().data;
+                await sendPushNotification(token, "hello!")
+            })()
+
+        this.registerForPushNotifications();
         AppState.addEventListener('change',
             this.handleAppStateChange);
     }
