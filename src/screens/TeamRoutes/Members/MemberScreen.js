@@ -216,7 +216,7 @@ export default class MemberPage extends Component {
 
         const member = this.state.clickedMember;
         this.RBSheet.close();
-        console.log(member);
+        console.log(member, 'mmeber');
         this.props.navigation.navigate("Drills", {
             isAssigning: true,
             memberToAssign: member.member
