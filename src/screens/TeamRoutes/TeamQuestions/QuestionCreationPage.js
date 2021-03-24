@@ -6,11 +6,12 @@ import {Ionicons} from "@expo/vector-icons";
 import DropDownPicker from 'react-native-dropdown-picker';
 import {createUUID} from "../../../firebase/Util";
 import HiddenView from "../../../Components/HiddenView";
-import CheckBox from 'react-native-check-box'
+import CheckBox from 'react-native-check-box';
 import {Menu, MenuOption, MenuOptions, MenuTrigger} from 'react-native-popup-menu';
-import styles from './styles'
+import styles from './styles';
 import Edge from "../../../firebase";
 import GlobalData from '../../../GlobalData';
+import NewButton from "../../../Components/NewButton";
 
 class QuestionCreationPage extends Component {
 
@@ -18,7 +19,7 @@ class QuestionCreationPage extends Component {
         questionInfo: {
             required: true
         }
-    }
+    };
 
     constructor(props) {
         super(props);
@@ -32,13 +33,13 @@ class QuestionCreationPage extends Component {
      */
     updateQuestion(questionUUID, path, value) {
 
-        let questions = this.state.questionInfo
+        let questions = this.state.questionInfo;
         if (questions[questionUUID])
             questions[questionUUID][path] = value;
         else {
             questions[questionUUID] = {[path]: value};
         }
-        this.setState({questionInfo: questions})
+        this.setState({questionInfo: questions});
         this.props.navigation.setParams({questionInfo: questions});
 
     }
@@ -63,7 +64,7 @@ class QuestionCreationPage extends Component {
                     placeholder={"Short Answer Text"}
                     placeholderTextColor={"grey"}/>
             </View>
-        )
+        );
 
     }
 
@@ -87,7 +88,7 @@ class QuestionCreationPage extends Component {
                     placeholder={"Long Answer Text"}
                     placeholderTextColor={"grey"}/>
             </View>
-        )
+        );
     }
 
     /**
@@ -96,14 +97,14 @@ class QuestionCreationPage extends Component {
     componentDidMount() {
 
         Edge.teams.get(GlobalData.teamID).then(async team => {
-                const questions = team.getTeamQuestions();
-                let member = await team.getMember(GlobalData.profileID);
-                if (questions != null) {
-                    this.setState({questionInfo: questions, freezeScreen: !member.permissions.has("isCoach")})
-                    this.props.navigation.setParams({questionInfo: questions});
-                }
+            const questions = team.getTeamQuestions();
+            let member = await team.getMember(GlobalData.profileID);
+            if (questions != null) {
+                this.setState({questionInfo: questions, freezeScreen: !member.permissions.has("isCoach")});
+                this.props.navigation.setParams({questionInfo: questions});
+            }
 
-        })
+        });
 
 
     }
@@ -160,7 +161,7 @@ class QuestionCreationPage extends Component {
 
             </View>
 
-        )
+        );
 
     }
 
@@ -178,15 +179,15 @@ class QuestionCreationPage extends Component {
                 let question = this.state.questionInfo[uuid];
                 let multiChoices = question.multipleChoice;
                 if (choices.length > 1) {
-                    multiChoices.splice(index, 1)
+                    multiChoices.splice(index, 1);
                     question.multipleChoice = multiChoices;
                     this.updateQuestion(uuid, "multipleChoice", multiChoices);
                 } else if (multiChoices[index].option) {
-                    multiChoices[index].option = ""
+                    multiChoices[index].option = "";
                     this.updateQuestion(uuid, "multipleChoice", multiChoices);
                 }
             }}/>
-        )
+        );
 
     }
 
@@ -200,9 +201,9 @@ class QuestionCreationPage extends Component {
                        value={choice.option}
                        onChangeText={(val) => {
                            let question = this.state.questionInfo[uuid];
-                           let mc = question.multipleChoice
+                           let mc = question.multipleChoice;
                            mc[index].option = val;
-                           this.updateQuestion(uuid, "multipleChoice", mc)
+                           this.updateQuestion(uuid, "multipleChoice", mc);
                        }}/>
         );
 
@@ -248,7 +249,7 @@ class QuestionCreationPage extends Component {
 
             </View>
 
-        )
+        );
 
     }
 
@@ -265,10 +266,10 @@ class QuestionCreationPage extends Component {
             required: false,
             optionsOpened: false,
             isDisabled: false
-        }
+        };
 
         const uuid = createUUID('xxxx');
-        this.setState({questionInfo: {...this.state.questionInfo, [uuid]: newObj}})
+        this.setState({questionInfo: {...this.state.questionInfo, [uuid]: newObj}});
         this.props.navigation.setParams({questionInfo: {...this.state.questionInfo, [uuid]: newObj}});
 
     }
@@ -277,7 +278,7 @@ class QuestionCreationPage extends Component {
 
         let questions = this.state.questionInfo;
         delete questions[uuid];
-        this.setState({questionInfo: questions})
+        this.setState({questionInfo: questions});
 
     }
 
@@ -301,7 +302,7 @@ class QuestionCreationPage extends Component {
 
             </Menu>
 
-        )
+        );
 
     }
 
@@ -309,8 +310,8 @@ class QuestionCreationPage extends Component {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.setTeamQuestions(Object.assign({}, this.state.questionInfo));
-            alertUser ? Alert.alert("Questions Saved!", "Questions also save when you leave this page") : {}
-        })
+            alertUser ? Alert.alert("Questions Saved!", "Questions also save when you leave this page") : {};
+        });
     }
 
     render() {
@@ -323,8 +324,8 @@ class QuestionCreationPage extends Component {
                         Questions: {Object.keys(this.state.questionInfo).length - 1}</Text>
 
                     <Button title={"Save!"} color={'yellow'} style={{borderColor: 'red', padding: 10}} onPress={() => {
-                        if(!this.state.freezeScreen)
-                        this.saveQuestions(true);
+                        if (!this.state.freezeScreen)
+                            this.saveQuestions(true);
                     }}/>
 
                     <View style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
@@ -332,8 +333,8 @@ class QuestionCreationPage extends Component {
                         <CheckBox
                             isChecked={this.state.questionInfo.required}
                             onClick={() => {
-                                if(!this.state.freezeScreen) {
-                                    let questions = this.state.questionInfo
+                                if (!this.state.freezeScreen) {
+                                    let questions = this.state.questionInfo;
                                     questions.required = !questions.required;
                                     this.setState({questionInfo: questions});
                                 }
@@ -346,7 +347,7 @@ class QuestionCreationPage extends Component {
                 </View>
 
                 <ScrollView ref={ref => {
-                    this.scrollView = ref
+                    this.scrollView = ref;
                 }} onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true})}
                             style={{paddingBottom: 10}}>
 
@@ -369,7 +370,8 @@ class QuestionCreationPage extends Component {
                                         {this.generateCardOptions(values, uuid, index)}
                                     </Ionicons>
 
-                                    <View pointerEvents={(values.isDisabled || this.state.freezeScreen) ? 'none' : 'auto'}>
+                                    <View
+                                        pointerEvents={(values.isDisabled || this.state.freezeScreen) ? 'none' : 'auto'}>
 
                                         <TextInput
                                             style={{...styles.questionInput}}
@@ -378,7 +380,7 @@ class QuestionCreationPage extends Component {
                                             placeholder={"Question " + (index + 1)}
                                             placeholderTextColor={(values.required ? 'blue' : 'grey')}
                                             onChangeText={value => {
-                                                this.updateQuestion(uuid, 'question', value)
+                                                this.updateQuestion(uuid, 'question', value);
                                             }}
 
                                         />
@@ -390,7 +392,7 @@ class QuestionCreationPage extends Component {
                                                             {label: "Multiple Choice", value: "multipleChoice"},
                                                             {label: "Check Boxes", value: "checkBoxes"}
                                                         ]} onChangeItem={item => {
-                                            this.updateQuestion(uuid, 'type', item.value)
+                                            this.updateQuestion(uuid, 'type', item.value);
                                         }}/>
 
                                         <HiddenView hide={values.type !== 'shortAnswer'}>
@@ -428,21 +430,16 @@ class QuestionCreationPage extends Component {
                                     </View>
 
                                 </View>
-                            )
+                            );
 
 
                         })
                     }
 
                 </ScrollView>
-
-                <TouchableOpacity style={globalStyles.newButton}>
-                    <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}
-                              onPress={() => {
-                                  if(!this.state.freezeScreen)
-                                    this.addQuestion()
-                              }}/>
-                </TouchableOpacity>
+                {
+                    !this.state.freezeScreen ? <NewButton onPress={() => this.addQuestion()}/> : null
+                }
 
             </View>
         );

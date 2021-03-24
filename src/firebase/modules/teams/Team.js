@@ -2,6 +2,7 @@ import {createUUID} from "../../Util";
 import {firebase} from "../../config";
 import {Member} from "../member";
 import Edge from "../../index";
+import {Profile} from "../profiles";
 
 const DEFAULTTEAM = require('./model');
 
@@ -9,11 +10,13 @@ module.exports.Team = class Team {
 
     #reference
     _teamCode
+    modules
 
     constructor(teamObject) {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
+
             this.members = new Map(Object.entries(teamObject.members));
             this._teamCode = teamObject.inviteData.teamCode;
             this.teamName = teamObject.teamName;
@@ -22,6 +25,51 @@ module.exports.Team = class Team {
             this.#reference = firebase.database().ref("teams/" + this.id);
         }
 
+    }
+
+    addTagToDrill(drillID, tagID) {
+
+        const drillTags = this.modules.drills.drills[drillID].tags;
+        drillTags.push(tagID);
+        this.#reference.child('modules/drills/drills').child(drillID).update({tags: drillTags})
+
+    }
+
+    removeTagFromDrill(drillID, tagID) {
+
+        let drillTags = this.modules.drills.drills[drillID].tags;
+        drillTags = drillTags.filter(i => i !== tagID);
+        this.#reference.child('modules/drills/drills').child(drillID).update({tags: drillTags})
+
+    }
+
+    removeTag(tagID) {
+        delete this.modules.drills.tags[tagID];
+        this.#reference.child("modules/drills/tags").child(tagID).remove();
+
+    }
+
+    addTag(tagID, tag) {
+        if (tag.drills)
+            delete tag.drills;
+        this.modules.drills.tags[tagID] = tag;
+        this.#reference.child("modules/drills").update({tags: this.modules.drills.tags});
+    }
+
+    removeDrill(drillID) {
+        delete this.modules.drills.drills[drillID];
+        this.#reference.child("modules/drills/drills").child(drillID).remove();
+    }
+
+    setDrillTags(drillID, tags) {
+        const drill = this.modules.drills.drills[drillID];
+        drill.tags = tags
+        this.#reference.child('modules/drills/drills').update({[drillID]: tags})
+    }
+
+    addDrill(drillID, drill) {
+        this.modules.drills.drills[drillID] = drill;
+        this.#reference.child("modules/drills/drills").update({[drillID]: drill});
     }
 
     /**
@@ -49,6 +97,21 @@ module.exports.Team = class Team {
 
         this.members.delete(id);
         this.#reference.update({members: Object.fromEntries(this.members.entries())});
+    }
+
+    async getMembers(){
+
+        const members = this.members;
+        if(typeof members.entries().next().value === 'object') {
+            for (const [K, V] of members) {
+                const profile = new Profile((await Edge.users.get(V.accountID)).getProfile(V.id));
+                if(profile) {
+                    members.set(K, new Member(V, profile, this.id));
+                }
+            }
+        }
+        return members;
+
     }
 
     /**

@@ -10,6 +10,7 @@ import Edge from "../../../firebase";
 import {NavigationActions, StackActions} from "react-navigation";
 import Global from '../../../GlobalData';
 import {globalStyles} from "../../GlobalStyles";
+import NewButton from "../../../Components/NewButton";
 
 class HomeScreen extends Component {
 
@@ -94,9 +95,8 @@ class HomeScreen extends Component {
 
         this.setState({modalOpen: false})
         let team = null;
-        let code = teamCode
         for (let [K, V] of Edge.teams.teams) {
-            if (V.inviteData.teamCode === code) {
+            if (V.inviteData.teamCode === teamCode) {
                 team = await Edge.teams.get(V.id);
                 break;
             }
@@ -181,9 +181,7 @@ class HomeScreen extends Component {
                     )}
                 </ScrollView>
 
-                <TouchableOpacity style={globalStyles.newButton} onPress={() => this.newTeam()}>
-                    <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
-                </TouchableOpacity>
+                <NewButton onPress={() => this.newTeam()}/>
 
             </View>
         );

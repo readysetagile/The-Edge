@@ -47,8 +47,7 @@ export default class App extends Component {
             <MenuProvider>
                 <ActionSheetProvider>
                     <Login>
-                        <Navigator>
-                        </Navigator>
+                        <Navigator/>
                     </Login>
                 </ActionSheetProvider>
             </MenuProvider>

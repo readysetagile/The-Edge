@@ -20,6 +20,7 @@ import {FontAwesome5, Ionicons} from "@expo/vector-icons";
 import HiddenView from "../../../Components/HiddenView";
 import InviteForm from "./InviteForm";
 import RBSheet from "react-native-raw-bottom-sheet";
+import NewButton from "../../../Components/NewButton";
 
 export default class MemberPage extends Component {
 
@@ -30,15 +31,15 @@ export default class MemberPage extends Component {
         hiddenMembers: {},
         modalOpen: false,
         clickedMember: null
-    }
+    };
 
     constructor(props) {
         super(props);
         Edge.teams.get(Global.teamID).then(r => {
             firebase.database().ref("teams/" + r.id + "/members").on('value', snapshot => {
                 this.componentDidMount();
-            })
-        })
+            });
+        });
     }
 
     /**
@@ -50,10 +51,21 @@ export default class MemberPage extends Component {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
         const member = await team.getMember(profile.id);
-        this.setState({profile: profile, team: team, currMember: member})
-        let teamMembers = team.members;
-        let members = await this.generateMembers(teamMembers)
-        this.setState({members: members})
+
+        this.setState({profile: profile, team: team, currMember: member});
+
+        let teamMembers = new Map([...(await team.getMembers())].sort((a, b) => {//sorts alphabetically by username
+            const nameA = a[1].username.toUpperCase();
+            const nameB = b[1].username.toUpperCase();
+            if(nameA < nameB)
+                return 1;
+            if(nameA > nameB)
+                return -1;
+            return 0;
+        }));
+
+        let members = await this.generateMembers(teamMembers);
+        this.setState({members: members});
 
     }
 
@@ -67,10 +79,12 @@ export default class MemberPage extends Component {
         let memArr = [];
         let indx = 0;
         for (let [K, V] of members) {
-            let member = await this.state.team.getMember(K)
-            let memBox = await this.generateMemberBox(member, indx);
-            memArr.push(memBox)
-            indx++;
+            let member = await this.state.team.getMember(K);
+            if(member) {
+                let memBox = await this.generateMemberBox(member, indx);
+                memArr.push(memBox);
+                indx++;
+            }
         }
         return memArr;
 
@@ -84,7 +98,7 @@ export default class MemberPage extends Component {
      */
     async generateMemberBox(member, index) {
 
-        let profileImage = await member.profile.getProfilePicture();
+        let profileImage = await member.profile?.getProfilePicture();
         if (profileImage == null) profileImage = member.profile.avatar;
         return (
             <HiddenView hide={this.state.hiddenMembers[member.id]}
@@ -99,8 +113,8 @@ export default class MemberPage extends Component {
                                   onPress={async () => {
 
                                       if ((this.state.currMember?.permissions.has("isCoach"))) {
-                                          this.setState({clickedMember: {member: member, profileImage: profileImage}})
-                                          this.RBSheet.open()
+                                          this.setState({clickedMember: {member: member, profileImage: profileImage}});
+                                          this.RBSheet.open();
                                       }
                                   }}>
                     <View style={{flexDirection: 'row'}}>
@@ -121,7 +135,7 @@ export default class MemberPage extends Component {
     }
 
     inviteMembers() {
-        this.setState({modalOpen: true})
+        this.setState({modalOpen: true});
     }
 
     /**
@@ -139,12 +153,12 @@ export default class MemberPage extends Component {
             }
         } else {
             Object.keys(hiddenMembers).forEach(function (key) {
-                hiddenMembers[key] = false
+                hiddenMembers[key] = false;
             });
         }
 
         this.setState({hiddenMembers: hiddenMembers});
-        this.componentDidMount()
+        this.componentDidMount();
 
 
     }
@@ -172,7 +186,7 @@ export default class MemberPage extends Component {
         navigation.navigate("SeeMemberQuestions", {
             data: this.state.team.modules.teamQuestions,
             filledInData: this.state.clickedMember.member.teamAnswers, freezeScreen: true
-        })
+        });
 
     }
 
@@ -193,7 +207,7 @@ export default class MemberPage extends Component {
             {
                 text: "Cancel"
             }
-        ])
+        ]);
 
     }
 
@@ -281,7 +295,7 @@ export default class MemberPage extends Component {
 
                     <Text style={{fontSize: 15, alignSelf: 'center'}}>{this.state.members.length} Members</Text>
 
-                    <View style={{width: '30%', borderRadius: 5, borderWidth: 2, borderColor: 'gray', padding: 5}}>
+                    <View style={globalStyles.searchToolBar}>
                         <TextInput
                             placeholderTextColor={'#003f5c'}
                             placeholder='Search 🔎'
@@ -296,15 +310,12 @@ export default class MemberPage extends Component {
                 </ScrollView>
                 {
                     this.state.currMember?.permissions.has("isCoach") ?
-                        <TouchableOpacity style={globalStyles.newButton} onPress={() => this.inviteMembers()}>
-                            <Ionicons name={'add'} size={35} style={{alignSelf: 'center', color: 'gold'}}/>
-                        </TouchableOpacity>
+                        <NewButton onPress={() => this.inviteMembers()}/>
                         : <View/>
                 }
 
-
             </View>
-        )
+        );
 
     }
 
