@@ -1,4 +1,3 @@
-
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
 import {AppState} from "react-native";
@@ -6,8 +5,11 @@ import {firebase} from "./src/firebase/config";
 import Edge from "./src/firebase";
 import Login from './routes/LoginStack';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
-import { MenuProvider } from 'react-native-popup-menu';
+import {MenuProvider} from 'react-native-popup-menu';
 import Navigator from './routes/TeamDrawer'
+import {hasNotificationPermission} from "./src/firebase/Util";
+import * as Notifications from 'expo-notifications';
+
 // Set the configuration for your app
 
 export default class App extends Component {
@@ -15,16 +17,37 @@ export default class App extends Component {
     componentDidMount () {
         AppState.addEventListener('change',
             this.handleAppStateChange);
+
+        firebase.auth().onAuthStateChanged(async (firebaseUser) => {
+
+            if(firebaseUser){
+
+                const hasNotificationPermission = await hasNotificationPermission();
+                if(hasNotificationPermission){
+                    const token = await this.getPushToken();
+                    console.log(token, firebaseUser);
+                    //firebase.database().ref("Devices")
+                }
+
+            }
+
+        })
+        hasNotificationPermission().then(console.log);
+
     }
 
     componentWillUnmount () {
         AppState.removeEventListener('change', this.handleAppStateChange);
     }
 
+    getPushToken = async () => {
+        return await Notifications.getExpoPushTokenAsync();
+    }
+
     /**
      * Detects when the apps state changes for a logout.
      * When the user closes the app and they opted to not be remembered, we will log them out
-     * @todo Figure out how to make it so that it detects an actual app quit rather than app inactivity
+     * @TODO Figure out how to make it so that it detects an actual app quit rather than app inactivity
      * @param nextAppState the next state of the app
      */
     handleAppStateChange = (nextAppState) => {
