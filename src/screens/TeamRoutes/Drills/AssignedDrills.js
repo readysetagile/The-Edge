@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Modal} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import Edge from "../../../firebase";
@@ -94,31 +94,36 @@ class AssignedDrills extends Component {
                     }}>Drills Assigned to You</Text>
                 </View>
 
-                {
-                    Object.keys(this.state.assignedDrills).length < 0 ?
+                <ScrollView>
 
-                    Object.entries(this.state.assignedDrills).map(i => {
+                    {
+                        Object.keys(this.state.assignedDrills).length > 0 ?
 
-                        const content = i[1];
-                        if(content){
-                            return this.generateDrill(content);
-                        }
+                            Object.entries(this.state.assignedDrills).map(i => {
 
-                    })
-                        : (
-                            <View>
-                                <Text style={{
-                                    fontSize: 25,
-                                    alignSelf: 'center',
-                                    textAlign: 'center',
-                                    textShadowColor: 'rgba(0,0,0,.25)',
-                                    textShadowOffset: {width: -2, height: 1},
-                                    textShadowRadius: 2
-                                }}>
-                                    Lucky you! You have no drills to be completed!</Text>
-                            </View>
-                        )
-                }
+                                const content = i[1];
+                                if(content){
+                                    return this.generateDrill(content);
+                                }
+
+                            })
+                            : (
+                                <View>
+                                    <Text style={{
+                                        fontSize: 25,
+                                        alignSelf: 'center',
+                                        textAlign: 'center',
+                                        textShadowColor: 'rgba(0,0,0,.25)',
+                                        textShadowOffset: {width: -2, height: 1},
+                                        textShadowRadius: 2
+                                    }}>
+                                        Lucky you! You have no drills to be completed!</Text>
+                                </View>
+                            )
+                    }
+
+                </ScrollView>
+
 
             </View>
         );
