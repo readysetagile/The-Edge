@@ -79,7 +79,6 @@ class AssignedDrills extends Component {
     }
 
     render() {
-        //console.log(this.state.assignedDrills);
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
@@ -96,6 +95,8 @@ class AssignedDrills extends Component {
                 </View>
 
                 {
+                    Object.keys(this.state.assignedDrills).length < 0 ?
+
                     Object.entries(this.state.assignedDrills).map(i => {
 
                         const content = i[1];
@@ -104,6 +105,19 @@ class AssignedDrills extends Component {
                         }
 
                     })
+                        : (
+                            <View>
+                                <Text style={{
+                                    fontSize: 25,
+                                    alignSelf: 'center',
+                                    textAlign: 'center',
+                                    textShadowColor: 'rgba(0,0,0,.25)',
+                                    textShadowOffset: {width: -2, height: 1},
+                                    textShadowRadius: 2
+                                }}>
+                                    Lucky you! You have no drills to be completed!</Text>
+                            </View>
+                        )
                 }
 
             </View>
