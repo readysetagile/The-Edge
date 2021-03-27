@@ -18,6 +18,22 @@ export function createUUID(string = 'xxxx-xxxx-xxxx-xxxx') {
     return uuid;
 }
 
+export async function sendNotifications(expo, messages) {
+    const chunks = expo.chunkPushNotifications(messages);
+    const tickets = [];
+    for (const chunk of chunks) {
+        try {
+            const ticketChunk = await expo.sendPushNotificationsAsync(chunk);
+            tickets.push(...ticketChunk);
+        } catch (error) {
+            console.error("error sending notifications", error);
+        }
+    }
+
+    return tickets;
+}
+
+
 export async function hasNotificationPermission(){
     try {
         const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);

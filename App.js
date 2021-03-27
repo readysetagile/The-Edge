@@ -7,7 +7,6 @@ import Login from './routes/LoginStack';
 import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {MenuProvider} from 'react-native-popup-menu';
 import Navigator from './routes/TeamDrawer'
-import {hasNotificationPermission} from "./src/firebase/Util";
 import * as Notifications from 'expo-notifications';
 
 // Set the configuration for your app
@@ -18,21 +17,22 @@ export default class App extends Component {
         AppState.addEventListener('change',
             this.handleAppStateChange);
 
-        firebase.auth().onAuthStateChanged(async (firebaseUser) => {
-
-            if(firebaseUser){
-
-                const hasPerms = await hasNotificationPermission();
-                console.log(hasPerms);
-                if(hasPerms){
-                    const token = await this.getPushToken();
-                    console.log(token, firebaseUser, 1);
-                    await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushToken: token.data});
-                }
-
-            }
-
-        })
+        // firebase.auth().onAuthStateChanged(async (firebaseUser) => {
+        //
+        //     if(firebaseUser){
+        //
+        //         const hasPerms = await hasNotificationPermission();
+        //         console.log(hasPerms);
+        //         if(hasPerms){
+        //             const token = await this.getPushToken();
+        //             console.log(token, firebaseUser, 1);
+        //             await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushToken: token.data});
+        //             await sendNotifications(new Expo(), "Hi there!");
+        //         }
+        //
+        //     }
+        //
+        // })
 
     }
 
