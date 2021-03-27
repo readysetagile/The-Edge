@@ -1139,8 +1139,7 @@ class DrillsList extends Component {
     }
 
     recieveDrills(){
-
-
+        //TODO: send the notification to the member
 
     }
 
@@ -1154,7 +1153,8 @@ class DrillsList extends Component {
 
         const member = this.state.memberToAssign;
         for(const drill of this.state.assignedDrills){
-            member.addAssignedDrill(this.newDrill(drill));
+            if(!Object.values(member.assignedDrills).some(aDrill => aDrill.drillName === drill))
+                member.addAssignedDrill(this.newDrill(drill));
         }
 
         this.props.navigation.navigate("Members");
@@ -1212,6 +1212,7 @@ class DrillsList extends Component {
                 {
                     (!isAssigning && this.state.canEditDrills) ?
                         <NewButton onPress={() => this.addItem()}/> :
+                        isAssigning ?
                         (
                             <FlatButton text={"SEND!"} style={{
                                 position: 'absolute',
@@ -1219,7 +1220,7 @@ class DrillsList extends Component {
                                 width: '90%',
                                 alignSelf: 'center'
                             }} onPress={this.confirmSend.bind(this)}/>
-                        )
+                        ) : null
                 }
 
             </View>

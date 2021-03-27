@@ -97,7 +97,7 @@ class AssignedDrills extends Component {
                 <ScrollView>
 
                     {
-                        Object.keys(this.state.assignedDrills).length > 0 ?
+                        Object.keys(this.state.assignedDrills).length-1 > 0 ?
 
                             Object.entries(this.state.assignedDrills).map(i => {
 
