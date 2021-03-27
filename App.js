@@ -22,17 +22,17 @@ export default class App extends Component {
 
             if(firebaseUser){
 
-                const hasNotificationPermission = await hasNotificationPermission();
-                if(hasNotificationPermission){
+                const hasPerms = await hasNotificationPermission();
+                console.log(hasPerms);
+                if(hasPerms){
                     const token = await this.getPushToken();
-                    console.log(token, firebaseUser);
-                    //firebase.database().ref("Devices")
+                    console.log(token, firebaseUser, 1);
+                    await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushToken: token.data});
                 }
 
             }
 
         })
-        hasNotificationPermission().then(console.log);
 
     }
 
