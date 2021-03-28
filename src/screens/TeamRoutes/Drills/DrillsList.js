@@ -1153,7 +1153,7 @@ class DrillsList extends Component {
 
         const member = this.state.memberToAssign;
         for(const drill of this.state.assignedDrills){
-            if(!Object.values(member.assignedDrills).some(aDrill => aDrill.drillName === drill))
+            if(!member.assignedDrills || !Object.values(member.assignedDrills).some(aDrill => aDrill.drillName === drill))
                 member.addAssignedDrill(this.newDrill(drill));
         }
 

@@ -11,13 +11,14 @@ const screens = {
         screen: DrillsList,
         navigationOptions: ({navigation}) => {
             return {
+
                 headerTitle: () => (
+
                     <View style={{flex: 1, flexDirection: 'row', justifyContent: 'space-between'}}>
                     <HeaderBurgerNav title="Team Drills" onPress={() => openMenu(navigation)}/>
                     <Ionicons name={'barbell-outline'} size={25} color={'blue'} style={{alignSelf: 'center', right: 35}}
                               onPress={() => {
-                                  console.log(1);
-                                  navigation.push("AssignedDrills")
+                                  navigation.navigate("AssignedDrills")
                               }}
                     />
                 </View>
