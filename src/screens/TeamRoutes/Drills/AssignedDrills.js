@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, ScrollView, Modal} from 'react-native';
+import {View, Text, TouchableOpacity, ScrollView, Modal, Alert} from 'react-native';
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import Edge from "../../../firebase";
@@ -39,7 +39,7 @@ class AssignedDrills extends Component {
 
     setDrillClicked(drill){
         this.setState({showModal: true,
-            lastDrillClicked: drill.drillName})
+            lastDrillClicked: drill.id})
     }
 
     generateDrill(drill){
@@ -58,16 +58,53 @@ class AssignedDrills extends Component {
 
     }
 
+    completeDrill() {
+
+        Edge.teams.get(GlobalData.teamID).then(team => {
+
+            team.getMember(GlobalData.profileID).then(member => {
+
+                member.getDrill(this.state.lastDrillClicked).delete();
+                const assignedDrills = this.state.assignedDrills;
+                delete assignedDrills[this.state.lastDrillClicked];
+                this.setState({showModal: false, assignedDrills: assignedDrills})
+
+            });
+        });
+    }
+
+    markDrillAsComplete = () => {
+
+        Alert.alert("Mark as Complete?", "Mark this drill as complete to remove it!", [
+            {
+                text: "Yes",
+                onPress: this.completeDrill.bind(this)
+            },
+            {
+                text: "Cancel"
+            }
+        ])
+
+    }
+
     createDrillViewer(){
 
-        if(this.state.lastDrillClicked) {
-            const content = this.state.drills[this.state.lastDrillClicked].content;
+        if(this.state.lastDrillClicked && this.state.assignedDrills[this.state.lastDrillClicked]?.drillName) {
+            const content = this.state.drills[this.state.assignedDrills[this.state.lastDrillClicked].drillName].content;
 
             return (
                 <View style={globalStyles.modalContent}>
-                    <Ionicons style={{...globalStyles.closeModal(3), padding: 15}}
-                              name={"close"} size={24}
-                              onPress={() => this.setState({showModal: false})}/>
+                    <View style={{flexDirection: 'row', justifyContent: 'space-between', padding: 15}}>
+
+                        <Ionicons style={{...globalStyles.closeModal(3)}}
+                                  name={"close"} size={24}
+                                  onPress={() => this.setState({showModal: false})}/>
+
+                        <Ionicons style={{...globalStyles.closeModal(3), marginRight: 20}}
+                                  name={"checkmark-circle-outline"} size={24}
+                                  onPress={this.markDrillAsComplete}/>
+
+                    </View>
 
                     <NewDrill isReadOnly={true} content={content}/>
 

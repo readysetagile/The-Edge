@@ -27,6 +27,9 @@ module.exports.Drill = class Drill{
 
     }
 
+    delete(){
+        this.#ref.remove();
+    }
 
     /**
      *

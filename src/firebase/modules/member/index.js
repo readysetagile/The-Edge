@@ -1,5 +1,6 @@
 import {firebase} from "../../config";
 import {Profile} from "../profiles";
+import {Drill} from "../Drills";
 
 const DEFAULTMEMBER = require("./model");
 
@@ -38,7 +39,7 @@ module.exports.Member = class Member {
      * @returns {Drill}
      */
     getDrill(drillID){
-        return this._assignedDrills[drillID];
+        return new Drill(this._assignedDrills[drillID]);
     }
 
     /**
