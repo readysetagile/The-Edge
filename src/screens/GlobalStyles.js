@@ -106,6 +106,19 @@ export const globalStyles = {
         borderWidth: 2,
         borderColor: 'gray',
         padding: 5
+    },
+    notification: function(absolute=true, size=20){
+        return {
+            backgroundColor: 'red',
+            color: 'white',
+            fontSize: size,
+            alignSelf: 'center',
+            padding: 2,
+            fontWeight: 'bold',
+            position: absolute ? 'absolute' : 'relative',
+            right: 7,
+            bottom: 7
+        }
     }
 
 

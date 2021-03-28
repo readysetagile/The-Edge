@@ -4,22 +4,37 @@ import React, {Component} from 'react';
 import Global from '../../../GlobalData';
 import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
-
+import GlobalData from '../../../GlobalData'
+import {globalStyles} from "../../GlobalStyles";
 export default class DashboardScreen extends Component {
 
     state = {
         profile: null,
-        team: null
+        team: null,
+        alerts:{
+            drillAlertSize: 0
+        }
     }
 
     constructor(props) {
         super(props);
+
     }
 
     async componentDidMount() {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
-        this.setState({profile: profile, team: team})
+        this.setState({profile: profile, team: team});
+
+        firebase.database().ref("teams/"+GlobalData.teamID+"/members/"+GlobalData.profileID+"/assignedDrills")
+            .on('value', snap => {
+                if(snap?.val() != null) {
+                    const alertSize = this.state.alerts;
+                    alertSize.drillAlertSize = Object.keys(snap.val()).length - 1;
+                    this.setState({alerts: alertSize});
+                }
+            })
+
     }
 
     render() {
@@ -38,15 +53,22 @@ export default class DashboardScreen extends Component {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity>
+
                     <TouchableOpacity style={[styles.buttonStyle, styles.drillsColor]} onPress={() => navigation.navigate("Drills")}>
                         <Image
                             source={{uri: 'https://grid.gograph.com/softball-vector-clipart_gg91304766.jpg'}}
                             style={styles.imageStyle}
                         />
-                        <Text style={styles.buttonsText}>Drills</Text>
+                        <View style={{flexDirection: 'row'}}>
+                            <Text style={styles.buttonsText}>Drills</Text>
+                        </View>
+
+                        {this.state.alerts.drillAlertSize ? <Text style={globalStyles.notification(true, 20)}>{this.state.alerts.drillAlertSize}</Text> : null}
+
                     </TouchableOpacity>
+
                 </TouchableOpacity>
-                <TouchableOpacity onPress={() => navigation.navigate("Questions")} onPress={() => navigation.navigate("Questions")}>
+                <TouchableOpacity onPress={() => navigation.navigate("Questions")}>
                     <View style={[styles.buttonStyle, styles.graphsColor]}>
                         <Image
                             source={{uri: 'https://grid.gograph.com/softball-vector-clipart_gg91304766.jpg'}}
