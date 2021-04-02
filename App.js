@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
-import {AppState} from "react-native";
+import {AppState, Text} from "react-native";
 import {firebase} from "./src/firebase/config";
 import Edge from "./src/firebase";
 import Login from './routes/LoginStack';
@@ -14,8 +14,7 @@ import * as Notifications from 'expo-notifications';
 export default class App extends Component {
 
     componentDidMount () {
-        AppState.addEventListener('change',
-            this.handleAppStateChange);
+        AppState.addEventListener('change', this.handleAppStateChange);
 
         // firebase.auth().onAuthStateChanged(async (firebaseUser) => {
         //
@@ -66,7 +65,6 @@ export default class App extends Component {
 
     render () {
         return (
-
             <MenuProvider>
                 <ActionSheetProvider>
                     <Login>
