@@ -8,6 +8,7 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {MenuProvider} from 'react-native-popup-menu';
 import Navigator from './routes/TeamDrawer'
 import * as Notifications from 'expo-notifications';
+import {getPushNotificationPermissions} from "./src/firebase/Util";
 
 // Set the configuration for your app
 
@@ -16,6 +17,7 @@ export default class App extends Component {
     componentDidMount () {
         AppState.addEventListener('change', this.handleAppStateChange);
 
+        getPushNotificationPermissions().then(console.log)
         // firebase.auth().onAuthStateChanged(async (firebaseUser) => {
         //
         //     if(firebaseUser){
