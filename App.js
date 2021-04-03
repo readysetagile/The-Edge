@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, {Component} from 'react';
-import {AppState} from "react-native";
+import {AppState, Text} from "react-native";
 import {firebase} from "./src/firebase/config";
 import Edge from "./src/firebase";
 import Login from './routes/LoginStack';
@@ -8,7 +8,9 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {MenuProvider} from 'react-native-popup-menu';
 import Navigator from './routes/TeamDrawer'
 import * as Notifications from 'expo-notifications';
-import {hasNotificationPermission} from "./src/firebase/Util";
+import {getPushNotificationPermissions, hasNotificationPermission} from "./src/firebase/Util";
+import { Expo } from 'expo-server-sdk';
+// Set the configuration for your app
 
 export default class App extends Component {
 

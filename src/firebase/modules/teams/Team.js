@@ -95,7 +95,7 @@ module.exports.Team = class Team {
     removeMember(id) {
 
         this.members.delete(id);
-        this.#reference.child("members").child(id).remove();
+        this.#reference.update({members: Object.fromEntries(this.members.entries())});
     }
 
     async getMembers(){
