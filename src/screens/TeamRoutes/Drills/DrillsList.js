@@ -1141,8 +1141,6 @@ class DrillsList extends Component {
     }
 
     receiveDrills(){
-        //TODO: send the notification to the member
-
 
         const expo = new Expo();
 
@@ -1151,7 +1149,7 @@ class DrillsList extends Component {
         firebase.database().ref("Devices").child(member.accountID).once('value', res => {
 
             const value = res.val()?.pushTokens
-            if(value && Array.isArray(value)){
+            if (value && Array.isArray(value)) {
 
                 Edge.teams.get(GlobalData.teamID).then(team => {
 
@@ -1163,13 +1161,13 @@ class DrillsList extends Component {
                     }]
 
                     const chunks = expo.chunkPushNotifications(notificationData);
-                    for(const chunk of chunks){
+                    for (const chunk of chunks) {
                         expo.sendPushNotificationsAsync(chunk).catch(console.error);
                     }
 
                 })
 
-                }
+            }
 
         });
 

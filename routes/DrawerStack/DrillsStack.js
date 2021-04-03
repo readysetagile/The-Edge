@@ -11,11 +11,10 @@ import {globalStyles} from "../../src/screens/GlobalStyles";
 
 let numAssigned = 0;
 
-firebase.database().ref("teams/"+GlobalData.teamID+"/members/"+GlobalData.profileID+"/assignedDrills").on('value', snap => {
+firebase.database().ref("teams/"+GlobalData.teamID+"/members/"+GlobalData.profileID+"/assignedDrills")
+    .on('value', snap => {
     if(snap?.val() != null){
-
         numAssigned = Object.keys(snap.val()).length-1;
-
     }
 })
 
