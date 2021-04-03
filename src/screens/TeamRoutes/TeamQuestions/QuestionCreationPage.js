@@ -284,6 +284,7 @@ class QuestionCreationPage extends Component {
 
     generateCardOptions(choice, uuid) {
 
+        if(!this.state.freezeScreen)
         return (
 
             <Menu opened={choice.optionsOpened}
@@ -303,6 +304,8 @@ class QuestionCreationPage extends Component {
             </Menu>
 
         );
+
+        return null;
 
     }
 
@@ -364,11 +367,11 @@ class QuestionCreationPage extends Component {
                                     }}
                                     key={uuid} opacity={values.isDisabled ? .5 : 1}>
 
-                                    <Ionicons name={'ellipsis-vertical'} size={25}
-                                              style={{position: 'absolute', marginTop: 20, right: 5}}
-                                              onPress={() => this.updateQuestion(uuid, "optionsOpened", true)}>
-                                        {this.generateCardOptions(values, uuid, index)}
-                                    </Ionicons>
+                                        <Ionicons name={'ellipsis-vertical'} size={25}
+                                                  style={{position: 'absolute', marginTop: 20, right: 5}}
+                                                  onPress={() => this.updateQuestion(uuid, "optionsOpened", true)}>
+                                            {this.generateCardOptions(values, uuid, index)}
+                                        </Ionicons>
 
                                     <View
                                         pointerEvents={(values.isDisabled || this.state.freezeScreen) ? 'none' : 'auto'}>

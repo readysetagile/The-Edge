@@ -24,7 +24,7 @@ export default class App extends Component {
 
                 const hasPerms = await hasNotificationPermission();
                 if(hasPerms){
-                    await firebase.database().ref("Devices").child(firebaseUser.uid).once('value', async snap => {
+                    await firebase.database().ref("Devices").child(firebaseUser.uid).child("pushTokens").once('value', async snap => {
 
                         if(snap.val() && Array.isArray(snap.val())){
                             const arr = new Set(snap.val());
