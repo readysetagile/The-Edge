@@ -27,6 +27,8 @@ import styles from './styles';
 import CheckBox from "react-native-check-box";
 import FlatButton from "../../../Components/SubmitButton";
 import {Drill} from "../../../firebase/modules/Drills";
+import Expo from "expo-server-sdk";
+import {firebase} from '../../../firebase/config'
 
 class DrillsList extends Component {
 
@@ -1138,8 +1140,38 @@ class DrillsList extends Component {
 
     }
 
-    recieveDrills(){
+    receiveDrills(){
         //TODO: send the notification to the member
+
+
+        const expo = new Expo();
+
+        const member = this.state.memberToAssign;
+
+        firebase.database().ref("Devices").child(member.accountID).once('value', res => {
+
+            const value = res.val()?.pushTokens
+            if(value && Array.isArray(value)){
+
+                Edge.teams.get(GlobalData.teamID).then(team => {
+
+                    const notificationData = [{
+                        to: value,
+                        sound: 'default',
+                        title: 'Drills Assigned in ' + team.teamName,
+                        body: `${member.username} has been assigned new drills!`,
+                    }]
+
+                    const chunks = expo.chunkPushNotifications(notificationData);
+                    for(const chunk of chunks){
+                        expo.sendPushNotificationsAsync(chunk).catch(console.error);
+                    }
+
+                })
+
+                }
+
+        });
 
     }
 
@@ -1156,6 +1188,7 @@ class DrillsList extends Component {
             if(!member.assignedDrills || !Object.values(member.assignedDrills).some(aDrill => aDrill.drillName === drill))
                 member.addAssignedDrill(this.newDrill(drill));
         }
+        this.receiveDrills();
 
         this.props.navigation.navigate("Members");
 

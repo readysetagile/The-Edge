@@ -17,21 +17,6 @@ export default class App extends Component {
     componentDidMount () {
         AppState.addEventListener('change', this.handleAppStateChange);
 
-        // getPushNotificationPermissions().then(console.log)
-        // let expo = new Expo();
-        //
-        // let msg = [{
-        //     to: "ExponentPushToken[vUaWPaHcpT5iigaUT10gqo]",
-        //     sound: 'default',
-        //     body: 'This is a test notification',
-        //     data: { withSome: 'data' },
-        // }]
-        // let chunks = expo.chunkPushNotifications(msg);
-        // setTimeout(() => {
-        //     expo.sendPushNotificationsAsync(chu nks[0]).then(console.log);
-        //
-        // }, 2000)
-
         firebase.auth().onAuthStateChanged(async (firebaseUser) => {
 
             const token = await this.getPushToken();

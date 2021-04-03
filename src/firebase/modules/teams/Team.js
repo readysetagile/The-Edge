@@ -16,7 +16,6 @@ module.exports.Team = class Team {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
-
             this.members = new Map(Object.entries(teamObject.members));
             this._teamCode = teamObject.inviteData.teamCode;
             this.teamName = teamObject.teamName;
