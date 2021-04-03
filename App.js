@@ -8,8 +8,7 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {MenuProvider} from 'react-native-popup-menu';
 import Navigator from './routes/TeamDrawer'
 import * as Notifications from 'expo-notifications';
-import {getPushNotificationPermissions, hasNotificationPermission} from "./src/firebase/Util";
-import { Expo } from 'expo-server-sdk';
+import {hasNotificationPermission} from "./src/firebase/Util";
 // Set the configuration for your app
 
 export default class App extends Component {
@@ -24,9 +23,9 @@ export default class App extends Component {
 
                 const hasPerms = await hasNotificationPermission();
                 if(hasPerms){
-                    await firebase.database().ref("Devices").child(firebaseUser.uid).child("pushTokens").once('value', async snap => {
+                    await firebase.database().ref("Devices").child(firebaseUser.uid).once('value', async snap => {
 
-                        if(snap.val() && Array.isArray(snap.val())){
+                        if(snap.val() && Array.isArray(snap.val().pushTokens)){
                             const arr = new Set(snap.val());
                             arr.add(token.data);
                             await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushTokens: arr});
@@ -40,7 +39,7 @@ export default class App extends Component {
 
                 const user = firebase.auth().currentUser.uid;
                 await firebase.database().ref("Devices").child(user).once('value', async snap => {
-                    if(snap.val() && Array.isArray(snap.val())){
+                    if(snap.val() && Array.isArray(snap.val().pushTokens)){
                         const tokens = snap.val().filter(i => i !== token.data);
                         await firebase.database().ref("Devices").child(user).update({pushTokens: tokens});
                     }

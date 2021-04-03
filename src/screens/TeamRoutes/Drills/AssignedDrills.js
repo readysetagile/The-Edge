@@ -154,7 +154,7 @@ class AssignedDrills extends Component {
                                         textShadowOffset: {width: -2, height: 1},
                                         textShadowRadius: 2
                                     }}>
-                                        Lucky you! You have no drills to be completed!</Text>
+                                        Lucky you! You have no drills to complete!</Text>
                                 </View>
                             )
                     }
