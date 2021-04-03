@@ -25,20 +25,28 @@ import InputText from "../../../Components/InputText";
 import Collapsible from "react-native-collapsible";
 import styles from './styles';
 import CheckBox from "react-native-check-box";
+import FlatButton from "../../../Components/SubmitButton";
+import {Drill} from "../../../firebase/modules/Drills";
+import Expo from "expo-server-sdk";
+import {firebase} from '../../../firebase/config'
 
 class DrillsList extends Component {
 
     state = {
         tags: {},
         drills: {},
+        assignedDrills: [],
         showModal: false,
         showTagNameInput: false,
         showDrillNameInput: false,
+        memberToAssign: null,
         newDrillName: null,
         currentDrillEditorContent: null,
         currentDrillEditing: null,
-        canEditDrills: false
+        canEditDrills: false,
+        isAssigning: false,
     }
+
     editingNameTag = "";
     tagEditColor = null;
     currentDrillEditorContent = null
@@ -404,13 +412,59 @@ class DrillsList extends Component {
     generateDrill(drill) {
 
         if (drill) {
-            return this.state.canEditDrills ? this.generateDrillMenu(drill) : (
-                <TouchableOpacity onPress={() => this.setDrillViewing(drill)} key={drill.name}>
-                    {this.generateDillView(drill)}
-                </TouchableOpacity>
 
-            )
+            if(!this.state.isAssigning && this.state.canEditDrills){
+                return this.generateDrillMenu(drill);
+            }else if(this.state.isAssigning){
+                return this.clickDrillContent(drill);
+
+            }else{
+                return (
+                    <TouchableOpacity onPress={() => this.setDrillViewing(drill)} key={drill.name}>
+                        {this.generateDillView(drill)}
+                    </TouchableOpacity>
+                )
+            }
+
         } else return null;
+    }
+
+    /**
+     * Toggles if a drill is assigned
+     * @param drill the drill to assign
+     */
+    toggleDrillToAssign(drill){
+
+        let assignedDrills = this.state.assignedDrills;
+        if(!assignedDrills.includes(drill.name))
+            assignedDrills.push(drill.name);
+        else assignedDrills = assignedDrills.filter(i => i !== drill.name);
+
+        this.setState({assignedDrills: assignedDrills});
+    }
+
+    clickDrillContent(drill){
+
+        const style = {
+            ...styles.itemContainer
+        }
+        if(this.state.assignedDrills.includes(drill.name)){
+            style['backgroundColor'] = '#bada55'
+        }
+
+        return(
+            <TouchableOpacity onPress={this.toggleDrillToAssign.bind(this, drill)} key={drill.name}>
+
+                <View style={style}>
+
+                    <FontAwesome name={'file'} size={24} color={drill.color} style={{alignSelf: 'center'}}/>
+                    <Text style={{alignSelf: 'center', paddingLeft: 10, fontSize: 20}}>{drill.name}</Text>
+
+                </View>
+
+            </TouchableOpacity>
+        )
+
     }
 
     /**
@@ -441,7 +495,7 @@ class DrillsList extends Component {
             }} onClose={() => {
                 this.changeDrillName(drill, this.editingNameTag);
                 //if (this.colorDidChange)
-                    this.updateItemColor(drill, drill.color, 'drill');
+                this.updateItemColor(drill, drill.color, 'drill');
             }}>
 
                 <MenuTrigger triggerOnLongPress={true} onAlternativeAction={this.setDrillViewing.bind(this, drill)}>
@@ -469,27 +523,27 @@ class DrillsList extends Component {
                         {this.createColorSliders(drill, this.changeDrillColor.bind(this))}
                     </MenuOption>
 
-                        <MenuOption disableTouchable={true}>
+                    <MenuOption disableTouchable={true}>
 
-                            {Object.keys(this.state.tags).length-1 ?
-                                <View>
+                        {Object.keys(this.state.tags).length - 1 ?
+                            <View>
 
-                                    <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
+                                <Text style={{fontSize: 15, color: 'grey', fontWeight: 'bold'}}>Tags:</Text>
 
-                                    <View style={{height: 100}}>
+                                <View style={{height: 100}}>
 
-                                        <ScrollView style={{padding: 5}}>
+                                    <ScrollView style={{padding: 5}}>
 
-                                            {this.generateDrillTags(drill)}
+                                        {this.generateDrillTags(drill)}
 
-                                        </ScrollView>
+                                    </ScrollView>
 
-                                    </View>
+                                </View>
 
-                                </View> : null
-                            }
+                            </View> : null
+                        }
 
-                        </MenuOption>
+                    </MenuOption>
 
 
                     <MenuOption onSelect={() => {
@@ -632,20 +686,20 @@ class DrillsList extends Component {
         const tags = this.state.tags, drills = this.state.drills;
         Edge.teams.get(GlobalData.teamID).then(team => {
 
-            if(tag.drills){
+            if (tag.drills) {
 
-            const tagDrills = tag.drills;
-            for(const drill of tagDrills){
+                const tagDrills = tag.drills;
+                for (const drill of tagDrills) {
 
-                const stateDrill = drills[drill];
-                stateDrill.tags = stateDrill.tags.filter(i => i !== tag.name);
-                drills[drill] = stateDrill;
-                team.addDrill(stateDrill.name, stateDrill);
+                    const stateDrill = drills[drill];
+                    stateDrill.tags = stateDrill.tags.filter(i => i !== tag.name);
+                    drills[drill] = stateDrill;
+                    team.addDrill(stateDrill.name, stateDrill);
 
+                }
             }
-        }
-        delete tags[tag.name];
-        this.setState({tags: tags, drills});
+            delete tags[tag.name];
+            this.setState({tags: tags, drills});
             team.removeTag(tag.name);
         })
 
@@ -760,7 +814,7 @@ class DrillsList extends Component {
 
                             if (team.modules.drills.drills.hasOwnProperty(this.state.currentDrillEditing)) {
 
-                                if(this.state.currentDrillEditorContent !== this.state.drills[this.state.currentDrillEditing]) {
+                                if (this.state.currentDrillEditorContent !== this.state.drills[this.state.currentDrillEditing]) {
                                     this.state.drills[this.state.currentDrillEditing].content = this.state.currentDrillEditorContent;
                                     team.addDrill(this.state.currentDrillEditing, this.state.drills[this.state.currentDrillEditing]);
                                 }
@@ -875,6 +929,16 @@ class DrillsList extends Component {
             this.setState({tags: allTags, drills: drills});
         })
 
+        this.focusListener = this.props.navigation.addListener('didFocus', payload => {
+            this.setState({
+                isAssigning: payload?.action?.params?.isAssigning,
+                memberToAssign: payload?.action?.params?.memberToAssign
+            });
+        })
+    }
+
+    componentWillUnmount() {
+        this.focusListener?.remove();
     }
 
     onTagNameCancel = () => {
@@ -979,7 +1043,6 @@ class DrillsList extends Component {
     memberHasPermissionToEditDrills() {
 
         return new Promise(resolve => {
-
             Edge.teams.get(GlobalData.teamID).then(r => {
                 r.getMember(GlobalData.profileID).then(member => {
                     resolve(member.permissions.has("editDrills") || member.permissions.has("isCoach"));
@@ -990,9 +1053,15 @@ class DrillsList extends Component {
 
     }
 
-    render() {
-        return (
-            <View style={{...globalStyles.container, backgroundColor: colors.background}}>
+    /**
+     * Gets the jsx elements to input a tag name and the drill creation element
+     * @param isAssigning if the user is currently assigning drills to members
+     * @returns {JSX.Element|null} the element to be given
+     */
+    getContentUI(isAssigning) {
+
+        return !isAssigning ?
+            <View>
 
                 <InputText title={"Name this Tag!"} description={"What do you want this tag to be called?"}
                            placeholder={"Tag Name"} onTextChange={this.handleTagNameChange}
@@ -1007,13 +1076,145 @@ class DrillsList extends Component {
                     </TouchableWithoutFeedback>
                 </Modal>
 
-                <View style={globalStyles.topToolBar}>
-                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total
-                        Drills: {Object.keys(this.state.drills).length - 1}</Text>
-                    <Text style={{alignSelf: 'center', fontSize: 20}}>Total
-                        Tags: {Object.keys(this.state.tags).length - 1}</Text>
+            </View> : null
+    }
+
+    removeAssignedDrill(drillName) {
+
+        let assignedDrills = this.state.assignedDrills;
+        assignedDrills = assignedDrills.filter(i => i !== drillName);
+        this.setState({assignedDrills: assignedDrills})
+
+    }
+
+    getAssignedDrills(){
+
+        return this.state.assignedDrills.map(drillName => {
+
+            return (
+
+                <View key={drillName} style={{
+                    borderRadius: 5,
+                    borderWidth: 2,
+                    borderColor: this.state.drills[drillName].color,
+                    flexDirection: 'row',
+                    alignItems:'center',
+                    margin: 5,
+                }}>
+
+                    <Text style={{
+                        textAlign: 'center',
+                        fontSize: 15,
+                        padding: 5,
+                        color: 'white',
+                        fontWeight: 'bold'
+                    }}>{drillName}</Text>
+
+                    <Ionicons name={'close'} size={20} color={'red'} onPress={this.removeAssignedDrill.bind(this, drillName)}/>
 
                 </View>
+
+            )
+
+        })
+
+    }
+
+    getToolBarContent(isAssigning){
+
+        return !isAssigning ?
+            <View style={globalStyles.topToolBar}>
+            <Text style={{alignSelf: 'center', fontSize: 20}}>Total
+                Drills: {Object.keys(this.state.drills).length - 1}</Text>
+            <Text style={{alignSelf: 'center', fontSize: 20}}>Total
+                Tags: {Object.keys(this.state.tags).length - 1}</Text>
+        </View>
+            : <View style={{...globalStyles.topToolBar,
+                backgroundColor: '#89cff0',
+                justifyContent: 'space-equally', flexWrap: 'wrap'
+            }}>
+
+                {this.getAssignedDrills()}
+
+            </View>
+
+    }
+
+    receiveDrills(){
+
+        const expo = new Expo();
+
+        const member = this.state.memberToAssign;
+
+        firebase.database().ref("Devices").child(member.accountID).once('value', res => {
+
+            const value = res.val()?.pushTokens
+            if (value && Array.isArray(value)) {
+
+                Edge.teams.get(GlobalData.teamID).then(team => {
+
+                    const notificationData = [{
+                        to: value,
+                        sound: 'default',
+                        title: 'Drills Assigned in ' + team.teamName,
+                        body: `${member.username} has been assigned new drills!`,
+                    }]
+
+                    const chunks = expo.chunkPushNotifications(notificationData);
+                    for (const chunk of chunks) {
+                        expo.sendPushNotificationsAsync(chunk).catch(console.error);
+                    }
+
+                })
+
+            }
+
+        });
+
+    }
+
+    newDrill(drillName){
+
+        return Drill.createDrill(GlobalData.teamID, GlobalData.profileID, this.state.memberToAssign, drillName);
+
+    }
+
+    sendDrills(){
+
+        const member = this.state.memberToAssign;
+        for(const drill of this.state.assignedDrills){
+            if(!member.assignedDrills || !Object.values(member.assignedDrills).some(aDrill => aDrill.drillName === drill))
+                member.addAssignedDrill(this.newDrill(drill));
+        }
+        this.receiveDrills();
+
+        this.props.navigation.navigate("Members");
+
+    }
+
+    confirmSend(){
+
+        Alert.alert("Assign Drills", "Are you sure you want to assign these drills?", [
+            {
+                text: 'Yes',
+                onPress: this.sendDrills.bind(this)
+            },
+            {
+                text: "No"
+            }
+        ])
+
+    }
+
+    render() {
+
+        const isAssigning = this.state.isAssigning;
+
+        return (
+            <View style={{...globalStyles.container, backgroundColor: colors.background}}>
+
+                {this.getContentUI(isAssigning)}
+                {this.getToolBarContent(isAssigning)}
 
                 {
                     Object.entries(this.state.drills)?.map(i => {
@@ -1040,7 +1241,17 @@ class DrillsList extends Component {
                 }
 
                 {
-                    this.state.canEditDrills ? <NewButton onPress={() => this.addItem()}/> : <View/>
+                    (!isAssigning && this.state.canEditDrills) ?
+                        <NewButton onPress={() => this.addItem()}/> :
+                        isAssigning ?
+                        (
+                            <FlatButton text={"SEND!"} style={{
+                                position: 'absolute',
+                                bottom: 30,
+                                width: '90%',
+                                alignSelf: 'center'
+                            }} onPress={this.confirmSend.bind(this)}/>
+                        ) : null
                 }
 
             </View>

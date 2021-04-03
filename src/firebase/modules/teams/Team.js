@@ -16,7 +16,6 @@ module.exports.Team = class Team {
         if (teamObject) {
             this.id = teamObject.id;
             this.modules = teamObject.modules;
-
             this.members = new Map(Object.entries(teamObject.members));
             this._teamCode = teamObject.inviteData.teamCode;
             this.teamName = teamObject.teamName;
@@ -96,7 +95,7 @@ module.exports.Team = class Team {
     removeMember(id) {
 
         this.members.delete(id);
-        this.#reference.update({members: Object.fromEntries(this.members.entries())});
+        this.#reference.child("members").child(id).remove();
     }
 
     async getMembers(){
@@ -106,7 +105,7 @@ module.exports.Team = class Team {
             for (const [K, V] of members) {
                 const profile = new Profile((await Edge.users.get(V.accountID)).getProfile(V.id));
                 if(profile) {
-                    members.set(K, new Member(V, profile, this.id));
+                    members.set(K, new Member(V, profile, this));
                 }
             }
         }

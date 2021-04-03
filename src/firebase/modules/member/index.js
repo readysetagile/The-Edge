@@ -1,5 +1,6 @@
 import {firebase} from "../../config";
 import {Profile} from "../profiles";
+import {Drill} from "../Drills";
 
 const DEFAULTMEMBER = require("./model");
 
@@ -9,6 +10,7 @@ module.exports.Member = class Member {
     #team;
     #ref;
     #_permissions
+    _assignedDrills
 
     constructor(memberObj, profile, team) {
 
@@ -21,7 +23,23 @@ module.exports.Member = class Member {
         this._profile = profile;
         this.#team = team;
         this.accountID = memberObj.accountID;
+        this._assignedDrills = memberObj.assignedDrills;
         this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
+    }
+
+    addAssignedDrill(drillObj){
+        const drills = this._assignedDrills;
+        drills[drillObj.id] = drillObj;
+        this.#ref.child("assignedDrills").update(drills);
+    }
+
+    /**
+     * Gets a drill from this member
+     * @param drillID the id of the drill
+     * @returns {Drill}
+     */
+    getDrill(drillID){
+        return new Drill(this._assignedDrills[drillID]);
     }
 
     /**
@@ -77,6 +95,11 @@ module.exports.Member = class Member {
         if(this._profile)
             return new Profile(this._profile);
 
+    }
+
+
+    get assignedDrills() {
+        return this._assignedDrills;
     }
 
     /**

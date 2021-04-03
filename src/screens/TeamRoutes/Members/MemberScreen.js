@@ -211,6 +211,17 @@ export default class MemberPage extends Component {
 
     }
 
+
+    assignDrill(){
+
+        const member = this.state.clickedMember;
+        this.RBSheet.close();
+        this.props.navigation.navigate("Drills", {
+            isAssigning: true,
+            memberToAssign: member.member
+        })
+    }
+
     render() {
 
         return (
@@ -248,13 +259,12 @@ export default class MemberPage extends Component {
                                 backgroundColor: colors.inputBox,
                                 flexDirection: 'row',
                                 justifyContent: 'space-evenly',
-                                flex: .8,
+                                flex: .9,
                                 borderRadius: 10
                             }}>
                                 <View style={{justifyContent: 'center'}}>
                                     <Ionicons name={"person-remove-outline"} style={{alignSelf: 'center'}}
-                                              size={30} onPress={() => this.removeMember()}/>
-
+                                              size={30} onPress={this.removeMember.bind(this)}/>
                                     <Text style={{textAlign: 'center'}}>Remove</Text>
                                 </View>
 
@@ -263,9 +273,15 @@ export default class MemberPage extends Component {
                                     <Text style={{textAlign: 'center'}}>Message</Text>
                                 </View>
 
+                                <View style={{justifyContent: 'center'}}>
+                                    <Ionicons name={"add-circle-outline"} size={30} style={{alignSelf: 'center'}}
+                                              onPress={this.assignDrill.bind(this)}/>
+                                    <Text style={{textAlign: 'center'}}>Assign Drills</Text>
+                                </View>
+
                             </View>
 
-                            <Ionicons name={"ellipsis-horizontal"} size={30}/>
+                            {/*<Ionicons name={"ellipsis-horizontal"} size={30}/>*/}
                         </View>
 
                         <Text style={{
