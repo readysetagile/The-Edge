@@ -8,8 +8,8 @@ import {ActionSheetProvider} from '@expo/react-native-action-sheet';
 import {MenuProvider} from 'react-native-popup-menu';
 import Navigator from './routes/TeamDrawer'
 import * as Notifications from 'expo-notifications';
-import {getPushNotificationPermissions} from "./src/firebase/Util";
-
+import {getPushNotificationPermissions, hasNotificationPermission} from "./src/firebase/Util";
+import { Expo } from 'expo-server-sdk';
 // Set the configuration for your app
 
 export default class App extends Component {
@@ -17,23 +17,36 @@ export default class App extends Component {
     componentDidMount () {
         AppState.addEventListener('change', this.handleAppStateChange);
 
-        getPushNotificationPermissions().then(console.log)
-        // firebase.auth().onAuthStateChanged(async (firebaseUser) => {
+        // getPushNotificationPermissions().then(console.log)
+        // let expo = new Expo();
         //
-        //     if(firebaseUser){
+        // let msg = [{
+        //     to: "ExponentPushToken[vUaWPaHcpT5iigaUT10gqo]",
+        //     sound: 'default',
+        //     body: 'This is a test notification',
+        //     data: { withSome: 'data' },
+        // }]
+        // let chunks = expo.chunkPushNotifications(msg);
+        // setTimeout(() => {
+        //     expo.sendPushNotificationsAsync(chunks[0]).then(console.log);
         //
-        //         const hasPerms = await hasNotificationPermission();
-        //         console.log(hasPerms);
-        //         if(hasPerms){
-        //             const token = await this.getPushToken();
-        //             console.log(token, firebaseUser, 1);
-        //             await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushToken: token.data});
-        //             await sendNotifications(new Expo(), "Hi there!");
-        //         }
-        //
-        //     }
-        //
-        // })
+        // }, 2000)
+
+        firebase.auth().onAuthStateChanged(async (firebaseUser) => {
+
+            if(firebaseUser){//log in
+
+                const hasPerms = await hasNotificationPermission();
+                if(hasPerms){
+                    const token = await this.getPushToken();
+                    await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushToken: token.data});
+                }
+
+            }else{//the user has logged out
+                await firebase.database().ref("Devices").child(firebase.auth().currentUser.uid).remove();
+            }
+
+        })
 
     }
 
