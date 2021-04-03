@@ -28,22 +28,39 @@ export default class App extends Component {
         // }]
         // let chunks = expo.chunkPushNotifications(msg);
         // setTimeout(() => {
-        //     expo.sendPushNotificationsAsync(chunks[0]).then(console.log);
+        //     expo.sendPushNotificationsAsync(chu nks[0]).then(console.log);
         //
         // }, 2000)
 
         firebase.auth().onAuthStateChanged(async (firebaseUser) => {
 
+            const token = await this.getPushToken();
             if(firebaseUser){//log in
 
                 const hasPerms = await hasNotificationPermission();
                 if(hasPerms){
-                    const token = await this.getPushToken();
-                    await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushToken: token.data});
+                    await firebase.database().ref("Devices").child(firebaseUser.uid).once('value', async snap => {
+
+                        if(snap.val() && Array.isArray(snap.val())){
+                            const arr = new Set(snap.val());
+                            arr.add(token.data);
+                            await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushTokens: arr});
+                        }else{
+                            await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushTokens: [token.data]});
+                        }
+                    })
                 }
 
             }else{//the user has logged out
-                await firebase.database().ref("Devices").child(firebase.auth().currentUser.uid).remove();
+
+                const user = firebase.auth().currentUser.uid;
+                await firebase.database().ref("Devices").child(user).once('value', async snap => {
+                    if(snap.val() && Array.isArray(snap.val())){
+                        const tokens = snap.val().filter(i => i !== token.data);
+                        await firebase.database().ref("Devices").child(user).update({pushTokens: tokens});
+                    }
+
+                });
             }
 
         })
