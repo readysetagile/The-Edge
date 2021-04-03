@@ -13,7 +13,7 @@ import {Profile} from "../src/firebase/modules/profiles";
 import DrillsStack from "./DrawerStack/DrillsStack";
 
 
-const navigateToHome = ({navigation}) => {
+export const navigateToHome = ({navigation}) => {
     const resetAction = StackActions.reset({
         index: 0,
         actions: [NavigationActions.navigate({routeName: 'Login'})],

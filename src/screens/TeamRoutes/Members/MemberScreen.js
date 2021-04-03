@@ -22,7 +22,7 @@ import InviteForm from "./InviteForm";
 import RBSheet from "react-native-raw-bottom-sheet";
 import NewButton from "../../../Components/NewButton";
 
-export default class MemberPage extends Component {
+export default class MemberScreen extends Component {
 
     state = {
         profile: null,
