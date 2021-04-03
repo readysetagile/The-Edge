@@ -50,6 +50,7 @@ export async function getPushNotificationPermissions(){
     if (finalStatus !== 'granted') {
         return;
     }
+    console.log(finalStatus)
 
     // Get the token that uniquely identifies this device
     console.log("Notification Token: ", await Notifications.getExpoPushTokenAsync());

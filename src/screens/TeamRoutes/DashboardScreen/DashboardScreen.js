@@ -6,7 +6,6 @@ import Edge from "../../../firebase";
 import {firebase} from "../../../firebase/config";
 import GlobalData from '../../../GlobalData'
 import {globalStyles} from "../../GlobalStyles";
-import {navigateToHome} from "../../../../routes/TeamDrawer";
 export default class DashboardScreen extends Component {
 
     state = {
@@ -26,24 +25,6 @@ export default class DashboardScreen extends Component {
         const profile = (await Edge.users.get(firebase.auth().currentUser.uid)).getProfile(Global.profileID);
         const team = await Edge.teams.get(Global.teamID);
         this.setState({profile: profile, team: team});
-
-        this.enableEvents();
-
-    }
-
-    enableEvents(){
-
-        firebase.database().ref("teams/"+GlobalData.teamID+"/members").on('child_removed', res => {
-
-            console.log(res.val(), 'value')
-            const member = res.val();
-
-            console.log(member.id === GlobalData.profileID && GlobalData.teamID === this.state.team.id)
-            if(member.id === GlobalData.profileID && GlobalData.teamID === this.state.team.id){
-                navigateToHome(this.props)
-            }
-
-        })
 
         firebase.database().ref("teams/"+GlobalData.teamID+"/members/"+GlobalData.profileID+"/assignedDrills")
             .on('value', snap => {

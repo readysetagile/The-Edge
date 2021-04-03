@@ -16,7 +16,7 @@ class Profile {
     constructor(profileObject) {
         if(profileObject) {
             this.accountUUID = profileObject.accountUUID;
-            this.profileUUID = profileObject?.id || profileObject.profileUUID;
+            this.profileUUID = profileObject.id;
             this._username = profileObject.username;
             this._avatar = profileObject.avatar;
             this._teams = profileObject.teams ? new Map(Object.entries(profileObject.teams)) : new Map();
@@ -98,7 +98,7 @@ class Profile {
      */
     removeTeam(teamId) {
         this._teams.delete(teamId);
-        this.#reference.child(this.profileUUID).child("teams").child(teamId).remove();
+        this.#reference.child(this.profileUUID).update({teams: Object.fromEntries(this._teams.entries())})
     }
 
     /**
