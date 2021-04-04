@@ -11,6 +11,7 @@ import Edge from "../src/firebase";
 import {firebase} from '../src/firebase/config'
 import {Profile} from "../src/firebase/modules/profiles";
 import DrillsStack from "./DrawerStack/DrillsStack";
+import CalendarStack from "./DrawerStack/CalendarStack";
 
 
 export const navigateToHome = ({navigation}) => {
@@ -70,6 +71,9 @@ const TeamDrawerNavigation = createDrawerNavigator({
     },
     Drills:{
         screen: DrillsStack
+    },
+    Calendar:{
+        screen: CalendarStack
     }
 
 }, DrawerConfig)

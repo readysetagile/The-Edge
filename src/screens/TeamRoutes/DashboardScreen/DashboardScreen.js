@@ -106,13 +106,14 @@ export default class DashboardScreen extends Component {
                         <Text style={styles.buttonsText}>QUESTIONS</Text>
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity>
+
+                <TouchableOpacity onPress={() => navigation.navigate("Calendar")}>
                     <View style={[styles.buttonStyle, styles.challengesColor]}>
                         <Image
                             source={{uri: 'https://grid.gograph.com/softball-vector-clipart_gg91304766.jpg'}}
                             style={styles.imageStyle}
                         />
-                        <Text style={styles.buttonsText}>STUDENTS</Text>
+                        <Text style={styles.buttonsText}>Calendar</Text>
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity>
