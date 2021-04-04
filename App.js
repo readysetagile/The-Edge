@@ -19,19 +19,23 @@ export default class App extends Component {
         firebase.auth().onAuthStateChanged(async (firebaseUser) => {
 
             const token = await this.getPushToken();
-            if(firebaseUser){//log in
+            if(token && firebaseUser){//log in
 
                 const hasPerms = await hasNotificationPermission();
                 if(hasPerms){
-                    await firebase.database().ref("Devices").child(firebaseUser.uid).once('value', async snap => {
+                    await firebase.database().ref("Devices").once('value', async snap => {
 
-                        if(snap.val() && Array.isArray(snap.val().pushTokens)){
-                            const arr = new Set(snap.val());
-                            arr.add(token.data);
-                            await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushTokens: arr});
+                        if(snap.val()[firebaseUser.uid]?.pushTokens){
+                            const tokens = snap.val()[firebaseUser.uid].pushTokens
+                            if(Array.isArray(tokens)){
+                                const tokenSet = new Set(tokens.filter(Boolean));
+                                tokenSet.add(token.data);
+                                await firebase.database().ref("Devices").child(firebaseUser.uid).set({pushTokens: Array.from(tokenSet)})
+                            }
                         }else{
-                            await firebase.database().ref("Devices").child(firebaseUser.uid).update({pushTokens: [token.data]});
+                            await firebase.database().ref("Devices").child(firebaseUser.uid).set({pushTokens: [token.data]})
                         }
+
                     })
                 }
 
@@ -41,7 +45,7 @@ export default class App extends Component {
                 await firebase.database().ref("Devices").child(user).once('value', async snap => {
                     if(snap.val() && Array.isArray(snap.val().pushTokens)){
                         const tokens = snap.val().filter(i => i !== token.data);
-                        await firebase.database().ref("Devices").child(user).update({pushTokens: tokens});
+                        await firebase.database().ref("Devices").child(user).set({pushTokens: tokens});
                     }
 
                 });
