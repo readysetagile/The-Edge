@@ -74,3 +74,4 @@ web-build/
 
 # @end expo-cli
 node_modules/.bin/atob
+.expo/packager-info.json
