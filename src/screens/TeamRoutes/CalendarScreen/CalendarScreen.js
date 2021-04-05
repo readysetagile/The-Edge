@@ -49,33 +49,6 @@ class CalendarScreen extends Component {
         return date.toISOString().split('T')[0];
     }
 
-    loadItems(day) {
-        setTimeout(() => {
-            console.log(day, 'loaded');
-            // for (let i = -15; i < 85; i++) {
-            //     const time = day.timestamp + i * 24 * 60 * 60 * 1000;
-            //     const strTime = this.timeToString(time);
-            //     if (!this.state.items[strTime]) {
-            //         this.state.items[strTime] = [];
-            //         const numItems = Math.floor(Math.random() * 3 + 1);
-            //         for (let j = 0; j < numItems; j++) {
-            //             this.state.items[strTime].push({
-            //                 name: 'Item for ' + strTime + ' #' + j,
-            //                 height: Math.max(50, Math.floor(Math.random() * 150))
-            //             });
-            //         }
-            //     }
-            // }
-            // const newItems = {};
-            // Object.keys(this.state.items).forEach(key => {
-            //     newItems[key] = this.state.items[key];
-            // });
-            // this.setState({
-            //     items: newItems
-            // });
-        }, 1000);
-    }
-
     render() {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
@@ -115,7 +88,6 @@ class CalendarScreen extends Component {
             </View>
         );
     }}
-    loadItemsForMonth={this.loadItems.bind(this)}
     renderDay={(day, item) => {
         if (item?.time)
             return (<Text>{item.time}</Text>);
