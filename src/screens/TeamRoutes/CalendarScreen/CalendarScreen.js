@@ -27,13 +27,16 @@ class CalendarScreen extends Component {
         );
     }
 
+    componentDidMount() {
+
+    }
 
     render() {
         return (
             <View style={{...globalStyles.container, backgroundColor: colors.background}}>
 
                 <Agenda
-
+                    isDefaultViewCalendar={true}
                     rowHasChanged={(r1, r2) => (r1.text !== r2.text)}
                     style={{borderRadius: 10}}
                     theme={{
