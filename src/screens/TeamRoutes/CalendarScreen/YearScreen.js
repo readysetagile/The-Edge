@@ -1,8 +1,10 @@
 import React, {Component} from 'react';
-import {View, FlatList, TouchableOpacity, Text} from 'react-native'
+import {View, FlatList, TouchableOpacity, Text, SafeAreaView} from 'react-native'
 import {Calendar} from "react-native-calendars";
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
+import {firebase} from '../../../firebase/config';
+
 class YearScreen extends Component {
 
     dates = {
@@ -20,11 +22,28 @@ class YearScreen extends Component {
         11: 'Dec'
     }
 
-    generateMonth(year, month){
+    state = {
+        YEARS_FUTURE: 3,
+        YEARS_PAST: 3
+    }
+
+    componentDidMount() {
+
+        firebase.database().ref("GLOBAL_SETTINGS")
+            .child("CALENDAR").once('value', res => {
+            this.setState({
+                YEARS_FUTURE: res.YEARS_FUTURE,
+                YEARS_PAST: res.YEARS_PAST
+            })
+        });
+
+    }
+
+    generateMonth(year, month) {
 
         const date = new Date(year, month, 1);
 
-        return(
+        return (
 
             <TouchableOpacity key={month} style={{
                 width: '28%',
@@ -35,7 +54,8 @@ class YearScreen extends Component {
 
                     <Calendar
                         style={{
-                            padding: 10
+                            padding: 10,
+                            borderRadius: 10
                         }}
                         theme={{
                             calendarBackground: "#F3CCFF",
@@ -45,18 +65,18 @@ class YearScreen extends Component {
                             textSectionTitleColor: 'darkgreen',
                             textDayFontSize: 10,
 
-                            'stylesheet.calendar.main':{
+                            'stylesheet.calendar.main': {
 
-                                monthView:{
+                                monthView: {
                                     flex: 1,
                                     backgroundColor: "#F3CCFF"
                                 },
-                                week:{
+                                week: {
                                     flex: 1,
                                     flexDirection: 'row',
                                     justifyContent: 'space-around',
                                 },
-                                container:{
+                                container: {
                                     width: '100%',
                                     height: '100%',
                                     backgroundColor: "#F3CCFF",
@@ -65,12 +85,9 @@ class YearScreen extends Component {
                             }
 
                         }}
-                        //Button Yes
-                        //'src/calendar/day/basic/index.js'
                         disableTouchEvent={true}
                         disabledByDefault={false}
                         current={date}
-                        //hideExtraDays={false}
                         hideArrows={true}
                         // If hideArrows=false and hideExtraDays=false do not switch month when tapping on greyed out
                         // day from another month that is visible in calendar page. Default = false
@@ -86,13 +103,9 @@ class YearScreen extends Component {
                         // Disable right arrow. Default = false
                         disableArrowRight={true}
                         // Disable all touch events for disabled days. can be override with disableTouchEvent in markedDates
-                        disableAllTouchEventsForDisabledDays={false}
+                        disableAllTouchEventsForDisabledDays={true}
                         // Replace default month and year title with custom one. the function receive a date as parameter.
-                        renderHeader={(dateGiven) => {
-                            return(
-                                <Text style={{fontWeight: '500', fontSize: 25}}>{this.dates[month]}</Text>
-                            )
-                        }}
+                        renderHeader={this.generateMonthName.bind(this, month)}
                         // Enable the option to swipe between months. Default = false
                         enableSwipeMonths={false}
                     />
@@ -105,18 +118,25 @@ class YearScreen extends Component {
 
     }
 
-    generateYear(date){
+    generateMonthName(monthNum) {
+        return (
+            <Text style={{fontWeight: '500', fontSize: 25}}>{this.dates[monthNum]}</Text>
+        )
+    }
 
+    generateYear = (yearNum) => {
+        const date = yearNum.item.date;
         const months = [];
-        for(let i = 0; i < 12; i++){
-            months.push(this.generateMonth(date.getFullYear(), i));
+        for (let i = 0; i < 12; i++) {
+            months.push(this.generateMonth(date, i));
         }
 
-        return(
+        return (
             <View style={{
                 flex: 1,
+                backgroundColor: 'orange'
             }}>
-                <Text style={{fontSize: 35, fontWeight: 'bold'}}>{new Date(date).getFullYear()}</Text>
+                <Text style={{fontSize: 35, fontWeight: 'bold', left: 20}}>{date}</Text>
                 <View style={{flexWrap: 'wrap', flexDirection: 'row', width: '100%',}}>
                     {months}
                 </View>
@@ -125,12 +145,39 @@ class YearScreen extends Component {
 
     }
 
+    generateYears() {
+
+        const data = [];
+        const currDate = new Date();
+        const currentYear = currDate.getFullYear();
+        for (let i = this.state.YEARS_PAST; i >= 0; i--) {
+            data.push({
+                date: currentYear-i
+            })
+        }
+
+        return (
+            
+                <FlatList
+                    style={{backgroundColor: 'red'}}
+                    data={data}
+                    renderItem={(item) => {
+                        console.log(item)
+                        return <Text>hi</Text>
+                    }}
+                    keyExtractor={(item) => item.date.toString()}
+                />
+
+        );
+
+    }
+
 
     render() {
         return (
-            <View style={{flex: 1, backgroundColor: colors.background}}>
-                {this.generateYear(new Date())}
-            </View>
+            <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
+                {this.generateYears()}
+            </SafeAreaView>
         );
     }
 }
