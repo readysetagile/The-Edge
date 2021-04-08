@@ -1,28 +1,37 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, Alert} from 'react-native';
-import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
-import {globalStyles} from "../../GlobalStyles";
+import {Dimensions, View, Text, TouchableOpacity} from "react-native";
+import EventCalendar from 'react-native-events-calendar'
+import {Calendar, Agenda} from 'react-native-calendars';
 import colors from "../../styles";
-import NewButton from "../../../Components/NewButton";
 
+
+let { width } = Dimensions.get('window')
 
 class CalendarScreen extends Component {
-
-    state={
-        items: {
-            '2021-04-04': [
+    constructor(props) {
+        super(props);
+        this.state = {
+            events: [
                 {
-                name: 'item 1 - any js object',
-                height: 50,
-                time: '10:30'
+                    start: '2017-09-06 22:30:00',
+                    end: '2017-09-06 23:30:00',
+                    title: 'Dr. Mariana Joseph',
+                    summary: '3412 Piedmont Rd NE, GA 3032',
+                    color: 'green',
                 },
                 {
-                    name: 'item 2',
-                    height: 50,
-                    time: '10:35'
-                }
-                ]
-        }
+                    start: '2017-09-07 00:30:00',
+                    end: '2017-09-07 01:30:00',
+                    title: 'Dr. Mariana Joseph',
+                    summary: '3412 Piedmont Rd NE, GA',
+                    color: 'red',
+                },
+            ],
+        };
+    }
+
+    _eventTapped(event) {
+        console.log((event));
     }
 
     renderItem(item) {
@@ -44,79 +53,58 @@ class CalendarScreen extends Component {
         );
     }
 
-    timeToString(time) {
-        const date = new Date(time);
-        return date.toISOString().split('T')[0];
-    }
-
     render() {
         return (
-            <View style={{...globalStyles.container, backgroundColor: colors.background}}>
+            <View style={{flex: 1, marginTop: 20}}>
 
-                <Agenda
+                <Calendar
 
-    isDefaultViewCalendar={true}
-    rowHasChanged={(r1, r2) => (r1.text !== r2.text)}
-    style={{borderRadius: 10}}
-    theme={{
-        calendarBackground: "#F3CCFF",
-        arrowColor: '#5EA952',
-        dayTextColor: 'black',
-        monthTextColor: 'red',
-        textSectionTitleColor: 'darkgreen',
-        'stylesheet.agenda.main': {
-            reservations: {
-                backgroundColor: colors.inputBox,
-                flex: 1,
-                marginTop: 104
-            }
-        }
-    }}
-    items={this.state.items}
-    renderItem={this.renderItem.bind(this)}
-    renderEmptyData = {() => {
-        return (
-            <View>
-                <Text>This is empty date!</Text>
-            </View>
-        );
-    }}
-    renderEmptyDate={() => {
-        return (
-            <View>
-                <Text>This is empty date!</Text>
-            </View>
-        );
-    }}
-    renderDay={(day, item) => {
-        if (item?.time)
-            return (<Text>{item.time}</Text>);
-    }}
-    // Initially visible month. Default = Date()
-    // Handler which gets executed on day press. Default = undefined
-    onDayPress={(day) => {
-        console.log('selected day', day)
-    }}
-    // Handler which gets executed on day long press. Default = undefined
-    onDayLongPress={(day) => {
-        console.log('selected day', day)
-    }}
-    monthFormat={'yyyy MM'}
-    hideArrows={true}
-    hideExtraDays={true}
-    firstDay={1}
-    renderHeader={(dateGiven) => {
-        const date = new Date(dateGiven);
-        const month = date.toLocaleString('default', {month: 'long'});
-        return (
-            <Text style={{fontWeight: '500', fontSize: 25}}>{month + " - " + date.getFullYear()}</Text>
-        )
-    }}
-    />
+                    markingType={'period'}
+                    isDefaultViewCalendar={true}
+                    rowHasChanged={(r1, r2) => (r1.text !== r2.text)}
+                    style={{borderRadius: 10}}
+                    theme={{
+                        calendarBackground: "#F3CCFF",
+                        arrowColor: '#5EA952',
+                        dayTextColor: 'black',
+                        monthTextColor: 'red',
+                        textSectionTitleColor: 'darkgreen'
+                    }}
+                    items={this.state.items}
+                    renderItem={this.renderItem.bind(this)}
+
+                    // Initially visible month. Default = Date()
+                    // Handler which gets executed on day press. Default = undefined
+                    onDayPress={(day) => {
+                        console.log('selected day', day)
+                    }}
+                    // Handler which gets executed on day long press. Default = undefined
+                    onDayLongPress={(day) => {
+                        console.log('selected day', day)
+                    }}
+                    monthFormat={'yyyy MM'}
+                    hideArrows={true}
+                    hideExtraDays={true}
+                    firstDay={1}
+                    renderHeader={(dateGiven) => {
+                        const date = new Date(dateGiven);
+                        const month = date.toLocaleString('default', {month: 'long'});
+                        return (
+                            <Text style={{fontWeight: '500', fontSize: 25}}>{month + " - " + date.getFullYear()}</Text>
+                        )
+                    }}
+                />
+                {/*<EventCalendar*/}
+                {/*    eventTapped={this._eventTapped.bind(this)}*/}
+                {/*    events={this.state.events}*/}
+                {/*    width={width}*/}
+                {/*    initDate={'2017-09-07'}*/}
+                {/*    upperCaseHeader*/}
+                {/*    uppercase*/}
+                {/*    scrollToFirst={false}*/}
+                {/*/>*/}
             </View>
         );
     }
 }
-
-
 export default CalendarScreen;
