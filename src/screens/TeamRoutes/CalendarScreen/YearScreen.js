@@ -27,6 +27,9 @@ class YearScreen extends Component {
     }
 
 
+    /**
+     * Calls the firebase for past and future times
+     */
     componentDidMount() {
         firebase.database().ref("GLOBAL_SETTINGS")
             .child("CALENDAR").once('value', res => {
@@ -37,10 +40,15 @@ class YearScreen extends Component {
         });
     }
 
+    goToMonth(yearNum, monthNum){
+        console.log(yearNum, monthNum);
+    }
 
-    generateMonth(month){
+    generateMonth(yearNum, month){
         return (
-            <TouchableOpacity key={month} style={{
+            <TouchableOpacity
+                onPress={this.goToMonth.bind(this, yearNum, month)}
+                key={month} style={{
                 width: '28%',
                 height: 150,
                 margin: 10,
@@ -58,10 +66,10 @@ class YearScreen extends Component {
     }
 
 
-    generateYear = () => {
+    generateYear = (yearNum) => {
         const months = [];
         for (let i = 0; i < 12; i++) {
-            months.push(this.generateMonth(i));
+            months.push(this.generateMonth(yearNum, i));
         }
 
         return (
@@ -76,12 +84,11 @@ class YearScreen extends Component {
     generateYears() {
 
         const yearNum = new Date().getFullYear();
-        const year = this.generateYear(yearNum);
         const years = [];
 
         for(let i = yearNum-this.state.YEARS_PAST; i <= yearNum+this.state.YEARS_FUTURE; i++){
             years.push({
-                year: year,
+                year: this.generateYear(i),
                 yearNum: i
             });
         }
