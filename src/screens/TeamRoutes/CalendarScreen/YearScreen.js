@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
-import {View, FlatList, TouchableOpacity, Text, SafeAreaView, ScrollView} from 'react-native'
-import {Calendar} from "react-native-calendars";
-import {globalStyles} from "../../GlobalStyles";
+import {View, TouchableOpacity, Text, SafeAreaView, ScrollView} from 'react-native'
 import colors from "../../styles";
-import {firebase} from '../../../firebase/config';
 import {Ionicons} from "@expo/vector-icons";
 
 class YearScreen extends Component {
@@ -31,6 +28,8 @@ class YearScreen extends Component {
 
     componentDidMount() {
 
+        //TODO: figure out re-rendering lists
+
         // firebase.database().ref("GLOBAL_SETTINGS")
         //     .child("CALENDAR").once('value', res => {
         //     this.setState({
@@ -41,74 +40,6 @@ class YearScreen extends Component {
 
     }
 
-    /*generateMonth(year, month) {
-
-        const date = new Date(year, month, 1);
-
-        return (
-
-            <TouchableOpacity key={month} style={{
-                width: '28%',
-                height: 150,
-                margin: 10,
-            }}>
-                <View pointerEvents={'none'}>
-
-                    <Calendar
-                        style={{
-                            padding: 10,
-                            borderRadius: 10
-                        }}
-                        // theme={{
-                        //     calendarBackground: "#F3CCFF",
-                        //     arrowColor: '#5EA952',
-                        //     dayTextColor: 'black',
-                        //     monthTextColor: 'red',
-                        //     textSectionTitleColor: 'darkgreen',
-                        //     textDayFontSize: 10,
-                        //
-                        //     'stylesheet.calendar.main': {
-                        //
-                        //         monthView: {
-                        //             flex: 1,
-                        //             backgroundColor: "#F3CCFF"
-                        //         },
-                        //         week: {
-                        //             flex: 1,
-                        //             flexDirection: 'row',
-                        //             justifyContent: 'space-around',
-                        //         },
-                        //         container: {
-                        //             width: '100%',
-                        //             height: '100%',
-                        //             backgroundColor: "#F3CCFF",
-                        //         }
-                        //
-                        //     }
-                        //
-                        // }}
-                        disableTouchEvent={true}
-                        disabledByDefault={false}
-                        current={date}
-                        hideArrows={true}
-                        disableMonthChange={true}
-                        firstDay={0}
-                        hideDayNames={true}
-                        showWeekNumbers={false}
-                        disableArrowLeft={true}
-                        disableArrowRight={true}
-                        disableAllTouchEventsForDisabledDays={true}
-                        renderHeader={this.generateMonthName.bind(this, month)}
-                        enableSwipeMonths={false}
-                    />
-
-                </View>
-
-            </TouchableOpacity>
-
-        )
-
-    }*/
 
     generateMonth(month){
         return (
@@ -129,17 +60,10 @@ class YearScreen extends Component {
         )
     }
 
-    generateMonthName(monthNum) {
-        return (
-            <Text style={{fontWeight: '500', fontSize: 25}}>{this.dates[monthNum]}</Text>
-        )
-    }
 
-    generateYear = (yearNum) => {
-        const date = yearNum;
+    generateYear = () => {
         const months = [];
         for (let i = 0; i < 12; i++) {
-            //months.push(this.generateMonth(date, i));
             months.push(this.generateMonth(i));
         }
 
@@ -159,7 +83,7 @@ class YearScreen extends Component {
         const year = this.generateYear(yearNum);
         const years = [];
 
-        for(let i = yearNum-this.state.YEARS_PAST; i < yearNum+this.state.YEARS_FUTURE; i++){
+        for(let i = yearNum-this.state.YEARS_PAST; i <= yearNum+this.state.YEARS_FUTURE; i++){
             years.push({
                 year: year,
                 yearNum: i
@@ -176,7 +100,7 @@ class YearScreen extends Component {
 
                     return(
 
-                        <View style={{
+                        <View key={i.yearNum} style={{
                             flex: 1,
                         }}>
                             <Text style={{fontSize: 35, fontWeight: 'bold', left: 20}}>{i.yearNum}</Text>
@@ -188,13 +112,6 @@ class YearScreen extends Component {
                 })}
 
             </ScrollView>
-
-            // <FlatList
-            //     data={data}
-            //     renderItem={this.generateYear}
-            //     keyExtractor={(item) => item.date.toString()}
-            //     extraData={this.state.YEARS_PAST}
-            // />
 
         );
 
