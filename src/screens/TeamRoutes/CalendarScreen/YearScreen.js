@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, Text, SafeAreaView, ScrollView} from 'react-native'
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
+import {firebase} from '../../../firebase/config'
 
 class YearScreen extends Component {
 
@@ -21,23 +22,19 @@ class YearScreen extends Component {
     }
 
     state = {
-        YEARS_FUTURE: 3,
-        YEARS_PAST: 3,
-        yearData: null
+        YEARS_FUTURE: 0,
+        YEARS_PAST: 0,
     }
 
+
     componentDidMount() {
-
-        //TODO: figure out re-rendering lists
-
-        // firebase.database().ref("GLOBAL_SETTINGS")
-        //     .child("CALENDAR").once('value', res => {
-        //     this.setState({
-        //         YEARS_FUTURE: res.YEARS_FUTURE,
-        //         YEARS_PAST: res.YEARS_PAST,
-        //     })
-        // });
-
+        firebase.database().ref("GLOBAL_SETTINGS")
+            .child("CALENDAR").once('value', res => {
+            this.setState({
+                YEARS_FUTURE: res.val().YEARS_FUTURE,
+                YEARS_PAST: res.val().YEARS_PAST,
+            })
+        });
     }
 
 
@@ -68,11 +65,10 @@ class YearScreen extends Component {
         }
 
         return (
-                <View style={{flexWrap: 'wrap', flexDirection: 'row', width: '100%',}}>
-                    {months}
-                </View>
+            <View style={{flexWrap: 'wrap', flexDirection: 'row', width: '100%',}}>
+                {months}
+            </View>
         )
-
     }
 
 
@@ -87,34 +83,24 @@ class YearScreen extends Component {
             years.push({
                 year: year,
                 yearNum: i
-            })
+            });
         }
 
 
         return (
-
-
             <ScrollView>
-
                 {years.map(i => {
-
                     return(
-
                         <View key={i.yearNum} style={{
                             flex: 1,
                         }}>
                             <Text style={{fontSize: 35, fontWeight: 'bold', left: 20}}>{i.yearNum}</Text>
                             {i.year}
                         </View>
-
                     )
-
                 })}
-
             </ScrollView>
-
         );
-
     }
 
 
