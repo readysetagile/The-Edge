@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, TouchableOpacity, Text, SafeAreaView, ScrollView} from 'react-native'
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
-import {firebase} from '../../../firebase/config'
+
 class YearScreen extends Component {
 
     dates = {
@@ -21,34 +21,29 @@ class YearScreen extends Component {
     }
 
     state = {
-        YEARS_FUTURE: 0,
-        YEARS_PAST: 0,
+        YEARS_FUTURE: 3,
+        YEARS_PAST: 3,
+        yearData: null
     }
 
     componentDidMount() {
-        if (this
+
         //TODO: figure out re-rendering lists
-        firebase.database().ref("GLOBAL_SETTINGS")
-            .child("CALENDAR").once('value', res => {
-            this.setState({
-                YEARS_FUTURE: res.YEARS_FUTURE,
-                YEARS_PAST: res.YEARS_PAST,
-            })
-        });
+
+        // firebase.database().ref("GLOBAL_SETTINGS")
+        //     .child("CALENDAR").once('value', res => {
+        //     this.setState({
+        //         YEARS_FUTURE: res.YEARS_FUTURE,
+        //         YEARS_PAST: res.YEARS_PAST,
+        //     })
+        // });
 
     }
 
-    goToMonth(year, monthNumPressed){
 
-        console.log(year, monthNumPressed)
-
-    }
-
-    generateMonth(yearNum, month){
+    generateMonth(month){
         return (
-            <TouchableOpacity
-                onPress={this.goToMonth.bind(this, yearNum, month)}
-                key={month} style={{
+            <TouchableOpacity key={month} style={{
                 width: '28%',
                 height: 150,
                 margin: 10,
@@ -66,10 +61,10 @@ class YearScreen extends Component {
     }
 
 
-    generateYear = (yearNum) => {
+    generateYear = () => {
         const months = [];
         for (let i = 0; i < 12; i++) {
-            months.push(this.generateMonth(yearNum, i));
+            months.push(this.generateMonth(i));
         }
 
         return (
@@ -85,11 +80,12 @@ class YearScreen extends Component {
     generateYears() {
 
         const yearNum = new Date().getFullYear();
+        const year = this.generateYear(yearNum);
         const years = [];
 
         for(let i = yearNum-this.state.YEARS_PAST; i <= yearNum+this.state.YEARS_FUTURE; i++){
             years.push({
-                year: this.generateYear(i),
+                year: year,
                 yearNum: i
             })
         }
@@ -125,7 +121,7 @@ class YearScreen extends Component {
     render() {
         return (
             <SafeAreaView style={{flex: 1, backgroundColor: colors.background}}>
-                {this.componentDidMount()}
+                {this.generateYears()}
             </SafeAreaView>
         );
     }
