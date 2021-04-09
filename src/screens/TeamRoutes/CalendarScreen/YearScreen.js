@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, Text, SafeAreaView, ScrollView} from 'react-native'
+import {View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList} from 'react-native'
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
 import {firebase} from '../../../firebase/config'
@@ -21,9 +21,13 @@ class YearScreen extends Component {
         11: 'Dec'
     }
 
+    calendarRef = null;
+
+
     state = {
         YEARS_FUTURE: 0,
         YEARS_PAST: 0,
+        years: []
     }
 
 
@@ -36,6 +40,10 @@ class YearScreen extends Component {
             this.setState({
                 YEARS_FUTURE: res.val().YEARS_FUTURE,
                 YEARS_PAST: res.val().YEARS_PAST,
+            }, () => {
+                setTimeout(() => {
+                    this.flatListRef.scrollToIndex({index: (this.state.YEARS_PAST), animated: false})
+                }, 100)
             })
         });
     }
@@ -49,9 +57,10 @@ class YearScreen extends Component {
             <TouchableOpacity
                 onPress={this.goToMonth.bind(this, yearNum, month)}
                 key={month} style={{
-                width: '28%',
+                alignSelf: 'center',
+                width: '27.5%',
                 height: 150,
-                margin: 10,
+                margin: '2.85%',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
                 borderRadius: 15,
@@ -67,25 +76,35 @@ class YearScreen extends Component {
 
 
     generateYear = (yearNum) => {
+
         const months = [];
         for (let i = 0; i < 12; i++) {
             months.push(this.generateMonth(yearNum, i));
         }
 
         return (
-            <View style={{flexWrap: 'wrap', flexDirection: 'row', width: '100%',}}>
+            <View style={{flex:1, flexWrap: 'wrap', flexDirection: 'row'}}>
                 {months}
             </View>
         )
     }
 
 
+    generateYearInList = (data) => {
+        return(
+            <View style={{
+                flex: 1,
+            }}>
+                <Text style={{fontSize: 35, fontWeight: 'bold', left: 20}}>{data.item.yearNum}</Text>
+                {data.item.year}
+            </View>
+        )
+
+    }
 
     generateYears() {
-
         const yearNum = new Date().getFullYear();
         const years = [];
-
         for(let i = yearNum-this.state.YEARS_PAST; i <= yearNum+this.state.YEARS_FUTURE; i++){
             years.push({
                 year: this.generateYear(i),
@@ -93,21 +112,16 @@ class YearScreen extends Component {
             });
         }
 
+        return(
+            <FlatList
+                ref={(ref) => { this.flatListRef = ref; }}
+                data={years}
+                renderItem={this.generateYearInList}
+                keyExtractor={(item) => item.yearNum.toString()}
+            >
+            </FlatList>
+        )
 
-        return (
-            <ScrollView>
-                {years.map(i => {
-                    return(
-                        <View key={i.yearNum} style={{
-                            flex: 1,
-                        }}>
-                            <Text style={{fontSize: 35, fontWeight: 'bold', left: 20}}>{i.yearNum}</Text>
-                            {i.year}
-                        </View>
-                    )
-                })}
-            </ScrollView>
-        );
     }
 
 

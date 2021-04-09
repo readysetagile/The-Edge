@@ -33,15 +33,6 @@ const screens = {
             }
         }
     }
-    
-    // Calendar: {
-    //     screen: CalendarScreen,
-    //     navigationOptions: ({navigation}) => {
-    //         return {
-    //             headerTitle: () => <HeaderBurgerNav title={"Calendar"} onPress={() => openMenu(navigation)}/>
-    //         }
-    //     }
-    // }
 }
 
 const CalendarStack = createStackNavigator(screens, {
