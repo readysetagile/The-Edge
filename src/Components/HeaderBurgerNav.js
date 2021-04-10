@@ -2,12 +2,12 @@ import React from 'react';
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {Ionicons} from "@expo/vector-icons";
 
-export default function HeaderBurgerNav({title, onPress}) {
+export default function HeaderBurgerNav({title, onPress, leftSide=true}) {
     return (
 
         <View style={styles.header}>
 
-            <TouchableOpacity onPress={onPress} style={styles.iconTouch}>
+            <TouchableOpacity onPress={onPress} style={(leftSide ? styles.iconTouchLeft : styles.iconTouchRight)}>
                 <Ionicons name="menu" size={30} style={{color: '#0000ff'}}/>
             </TouchableOpacity>
             <View style={styles.header}>
@@ -32,9 +32,14 @@ const styles = StyleSheet.create({
         color: '#333',
         letterSpacing: 1
     },
-    iconTouch: {
+    iconTouchLeft: {
         position: 'absolute',
         left: 10,
+        zIndex: 1
+    },
+    iconTouchRight: {
+        position: 'absolute',
+        right: 0,
         zIndex: 1
     }
 });

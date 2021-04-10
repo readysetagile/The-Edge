@@ -1,15 +1,14 @@
 import React from 'react'
-import {createStackNavigator} from 'react-navigation-stack';
-import {CalendarScreen} from "../../src/screens";
+import {Text} from 'react-native'
+import {createStackNavigator, HeaderBackButton} from 'react-navigation-stack';
 import HeaderBurgerNav from '../../src/Components/HeaderBurgerNav';
 import {openMenu} from "../../src/firebase/Util";
-import YearScreen from "../../src/screens/TeamRoutes/CalendarScreen/YearScreen";
-import MonthScreen from "../../src/screens/TeamRoutes/CalendarScreen/MonthScreen";
 import DayScreen from "../../src/screens/TeamRoutes/CalendarScreen/DayScreen";
+import {MonthScreen, YearScreen} from "../../src/screens";
 
 const screens = {
     
-    Calendar: {
+    YearScreen: {
         screen: YearScreen,
             navigationOptions: ({navigation}) => {
                 return {
@@ -21,7 +20,10 @@ const screens = {
         screen: MonthScreen,
         navigationOptions: ({navigation}) => {
             return {
-                headerTitle: () => <HeaderBurgerNav title={"Calendar - Month"} onPress={() => openMenu(navigation)}/>
+                headerTitle: () => <HeaderBurgerNav leftSide={false} title={"Calendar - Month"} onPress={() => openMenu(navigation)}/>,
+                headerLeft: () => {
+                    return <HeaderBackButton onPress={() => navigation.navigate("YearScreen")} label={navigation.getParam("yearNum")}/>
+                }
             }
         }
     },

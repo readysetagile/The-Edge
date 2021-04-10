@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, Text, SafeAreaView, ScrollView, FlatList} from 'react-native'
+import {View, TouchableOpacity, Text, SafeAreaView, FlatList} from 'react-native'
 import colors from "../../styles";
 import {Ionicons} from "@expo/vector-icons";
 import {firebase} from '../../../firebase/config'
@@ -21,15 +21,12 @@ class YearScreen extends Component {
         11: 'Dec'
     }
 
-    calendarRef = null;
-
-
     state = {
         YEARS_FUTURE: 0,
         YEARS_PAST: 0,
         years: []
     }
-
+    flatListRef
 
     /**
      * Calls the firebase for past and future times
@@ -42,6 +39,7 @@ class YearScreen extends Component {
                 YEARS_PAST: res.val().YEARS_PAST,
             }, () => {
                 setTimeout(() => {
+                    if(this.flatListRef)
                     this.flatListRef.scrollToIndex({index: (this.state.YEARS_PAST), animated: false})
                 }, 100)
             })
@@ -49,7 +47,10 @@ class YearScreen extends Component {
     }
 
     goToMonth(yearNum, monthNum){
-        console.log(yearNum, monthNum);
+
+        const {navigation} = this.props;
+        navigation.navigate("MonthScreen", {yearNum: yearNum, monthNum: monthNum});
+
     }
 
     generateMonth(yearNum, month){
