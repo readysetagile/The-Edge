@@ -49,7 +49,11 @@ class YearScreen extends Component {
     goToMonth(yearNum, monthNum){
 
         const {navigation} = this.props;
-        navigation.navigate("MonthScreen", {yearNum: yearNum, monthNum: monthNum});
+        navigation.navigate("MonthScreen", {yearNum: yearNum,
+            monthNum: monthNum,
+            minDate: this.state.YEARS_PAST,
+            maxDate: this.state.YEARS_FUTURE
+        });
 
     }
 
