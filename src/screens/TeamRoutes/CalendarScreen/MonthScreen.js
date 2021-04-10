@@ -16,7 +16,8 @@ class MonthScreen extends Component {
         maxDate: 0,
         minDate: 0,
         monthNum: 0,
-        yearNum: 0
+        yearNum: 0,
+        events: null
     }
 
     constructor(props) {
@@ -30,16 +31,7 @@ class MonthScreen extends Component {
 
             team.getMember(GlobalData.profileID).then(member => {
 
-                console.log(member.id)
-                member.createEvent({
-                    startTime: 250,
-                    endTime: 290,
-                    title: "Event here",
-                    memberID: member.id,
-                    teamID: team.id,
-                    location: "right here right now",
-                    summary: "all the time"
-                })
+
 
             })
 
@@ -49,6 +41,14 @@ class MonthScreen extends Component {
 
     componentDidMount() {
 
+        Edge.teams.get(GlobalData.teamID).then(team => {
+            team.getMember(GlobalData.profileID).then(member => {
+                this.setState({
+                    events: member.getCalendarEvents()
+                })
+            })
+        })
+
         const params = this.props.navigation.state.params
         setTimeout(() => {
             const agenda = this.agendaRef;
@@ -57,10 +57,14 @@ class MonthScreen extends Component {
 
     }
 
+    generateDay(day){
+
+        console.log(day);
+
+    }
+
     render() {
 
-        console.log(1)
-        this.createEvent();
         return (
             <View style={[globalStyles.container, {padding: 0, backgroundColor: colors.background}]}>
 
@@ -81,10 +85,12 @@ class MonthScreen extends Component {
                             name: 'item 1 - any js object',
                             height: 50,
                             time: '10:30'
-                        }, {name: 'item 2', height: 50, time: '10:35'}]
+                        }, {name: 'item 2', height: 50, time: '10:35'}
+                        ]
                     }}
                     pastScrollRange={this.state.minDate * 12 + (new Date().getMonth())}
                     futureScrollRange={this.state.maxDate * 12 + (11 - new Date().getMonth())}
+
                     renderEmptyDate={() => {
                         return (
                             <View>
@@ -92,9 +98,17 @@ class MonthScreen extends Component {
                             </View>
                         );
                     }}
+                    renderEmptyData={() => {
+                        return (
+                            <View>
+                                <Text>This is empty date!</Text>
+                            </View>
+                        );
+                    }}
                     renderDay={(day, item) => {
-                        if (item?.time)
-                            return (<Text>{item.time}</Text>);
+                        if(day){
+                            this.generateDay(day);
+                        }
                     }}
                     monthFormat={'yyyy MM'}
                     hideArrows={true}

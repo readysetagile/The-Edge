@@ -29,10 +29,20 @@ module.exports.Member = class Member {
         this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
     }
 
+    getCalendarEvents(){
+
+        if(this.calendarEvents.entries().next().value instanceof Event){
+            return this._calendarEvents;
+        }else{
+            this._calendarEvents = new Map(Array.from(this._calendarEvents, ([K, V]) => [K, new Event(V)]));
+            return this._calendarEvents;
+        }
+
+    }
+
     createEvent(eventObj){
 
         const event = Event.createEvent(eventObj);
-        console.log(event)
         this.calendarEvents.set(event.id, event);
         event.save();
 

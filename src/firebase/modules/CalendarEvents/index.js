@@ -8,21 +8,21 @@ module.exports.Event = class Event{
 
     constructor(eventObj) {
 
-        this.id = eventObj.id;
-        this.startTime = eventObj.startTime;
-        this.endTime = eventObj.endTime;
-        this.title = eventObj.title;
-        this.body = eventObj.body;
-        this.memberID = eventObj.memberID;
-        this.teamID = eventObj.teamID;
-        this.#ref = firebase.database()
-            .ref("teams").child(this.teamID)
-            .child("members").child(this.memberID)
-            .child("calendarEvents").child(this.id);
+        if(eventObj) {
+            this.id = eventObj.id;
+            this.startTime = eventObj.startTime;
+            this.endTime = eventObj.endTime;
+            this.title = eventObj.title;
+            this.body = eventObj.body;
+            this.memberID = eventObj.memberID;
+            this.teamID = eventObj.teamID;
+            this.#ref = firebase.database()
+                .ref("teams").child(this.teamID)
+                .child("members").child(this.memberID)
+                .child("calendarEvents").child(this.id);
+        }
 
     }
-
-    
 
     save(){
         this.#ref.update(this);
