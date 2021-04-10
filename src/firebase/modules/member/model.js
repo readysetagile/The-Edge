@@ -10,7 +10,7 @@ module.exports = {
     teamAnswers: {
         _: 0
     },
-    userNotes: {
+    calendarEvents: {
         _: 0
     },
     assignedDrills: {

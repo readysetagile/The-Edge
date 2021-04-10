@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import {Text, View} from 'react-native'
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
+import Edge from '../../../firebase';
 import {Agenda} from 'react-native-calendars';
+import EventCalendar from 'react-native-events-calendar';
+import GlobalData from "../../../GlobalData";
 
 class MonthScreen extends Component {
 
@@ -21,6 +24,29 @@ class MonthScreen extends Component {
         this.state = props.navigation.state.params;
     }
 
+    createEvent(){
+
+        Edge.teams.get(GlobalData.teamID).then(team => {
+
+            team.getMember(GlobalData.profileID).then(member => {
+
+                console.log(member.id)
+                member.createEvent({
+                    startTime: 250,
+                    endTime: 290,
+                    title: "Event here",
+                    memberID: member.id,
+                    teamID: team.id,
+                    location: "right here right now",
+                    summary: "all the time"
+                })
+
+            })
+
+        })
+
+    }
+
     componentDidMount() {
 
         const params = this.props.navigation.state.params
@@ -33,6 +59,8 @@ class MonthScreen extends Component {
 
     render() {
 
+        console.log(1)
+        this.createEvent();
         return (
             <View style={[globalStyles.container, {padding: 0, backgroundColor: colors.background}]}>
 

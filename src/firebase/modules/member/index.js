@@ -1,7 +1,7 @@
 import {firebase} from "../../config";
 import {Profile} from "../profiles";
 import {Drill} from "../Drills";
-
+import {Event} from '../CalendarEvents';
 const DEFAULTMEMBER = require("./model");
 
 module.exports.Member = class Member {
@@ -9,8 +9,9 @@ module.exports.Member = class Member {
     _profile;
     #team;
     #ref;
-    #_permissions
-    _assignedDrills
+    #_permissions;
+    _assignedDrills;
+    _calendarEvents;
 
     constructor(memberObj, profile, team) {
 
@@ -20,11 +21,21 @@ module.exports.Member = class Member {
         this.userNotes = memberObj.userNotes;
         this.username = memberObj.username;
         this.#_permissions = new Map(Object.entries(memberObj.permissions));
+        this._calendarEvents = new Map(Object.entries(memberObj.calendarEvents));
         this._profile = profile;
         this.#team = team;
         this.accountID = memberObj.accountID;
         this._assignedDrills = memberObj.assignedDrills;
         this.#ref = firebase.database().ref('teams/' + this.#team.id + "/members/" + this.id);
+    }
+
+    createEvent(eventObj){
+
+        const event = Event.createEvent(eventObj);
+        console.log(event)
+        this.calendarEvents.set(event.id, event);
+        event.save();
+
     }
 
     addAssignedDrill(drillObj){
@@ -100,6 +111,11 @@ module.exports.Member = class Member {
 
     get assignedDrills() {
         return this._assignedDrills;
+    }
+
+
+    get calendarEvents() {
+        return this._calendarEvents;
     }
 
     /**
