@@ -79,6 +79,7 @@ class MonthScreen extends Component {
 
     }
 
+
     _eventTapped(event) {
         console.log(event);
     }
@@ -112,15 +113,19 @@ class MonthScreen extends Component {
                     renderEmptyData={() => {
                         return (
                             <EventCalendar
+                                ref={(ref) => this.eventRef = ref}
                                 eventTapped={this._eventTapped.bind(this)}
                                 events={this.state.events}
                                 width={Dimensions.get("window").width}
-                                initDate={'2017-09-07'}
                                 scrollToFirst
                                 upperCaseHeader
                                 headerIconLeft={null}
                                 headerIconRight={null}
+                                initDate={this.state.initDate}
                                 uppercase
+                                onScrollToDay={(d) => {
+                                    this.agendaRef.chooseDay(new Date(d));
+                                }}
                             />
                         );
                     }}
@@ -132,6 +137,17 @@ class MonthScreen extends Component {
                     monthFormat={'yyyy MM'}
                     hideArrows={true}
                     hideExtraDays={true}
+                    onDayPress={(day) => {
+                        console.log(day)
+                        const newDate = new Date(day.timestamp);
+                        //const newTStamp = day.timestamp + (24*60*60*100*1000);
+                        newDate.setDate(newDate.getDate() + 1);
+                        this.setState({
+                            initDate: day.timestamp
+                        })
+                        this.eventRef._goToDate(newDate);
+
+                    }}
                     firstDay={1}
                     disableAllTouchEventsForDisabledDays={true}
                     renderHeader={(dateGiven) => {
