@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native'
+import {Text, View} from 'react-native'
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
-import {Calendar, Agenda} from 'react-native-calendars';
-import EventCalendar from 'react-native-events-calendar'
+import {Agenda} from 'react-native-calendars';
 
 class MonthScreen extends Component {
 
     maxDate;
     minDate;
 
-    state={
+    state = {
         maxDate: 0,
         minDate: 0,
         monthNum: 0,
@@ -56,32 +55,35 @@ class MonthScreen extends Component {
                             time: '10:30'
                         }, {name: 'item 2', height: 50, time: '10:35'}]
                     }}
-                    pastScrollRange={this.state.minDate*12 + (new Date().getMonth())}
-                    futureScrollRange={this.state.maxDate*12 + (11 - new Date().getMonth())}
+                    pastScrollRange={this.state.minDate * 12 + (new Date().getMonth())}
+                    futureScrollRange={this.state.maxDate * 12 + (11 - new Date().getMonth())}
                     renderEmptyDate={() => {
                         return (
-                            <View >
+                            <View>
                                 <Text>This is empty date!</Text>
                             </View>
                         );
                     }}
                     renderDay={(day, item) => {
-                        if(item?.time)
+                        if (item?.time)
                             return (<Text>{item.time}</Text>);
                     }}
-                monthFormat={'yyyy MM'}
-                hideArrows={true}
-                hideExtraDays={true}
-                firstDay={1}
-                disableAllTouchEventsForDisabledDays={true}
-                renderHeader={(dateGiven) => {
-                const date = new Date(dateGiven);
-                const month = new Intl.DateTimeFormat('en', { month: 'short' })
-                return (
-                    <Text style={{fontWeight: '500', fontSize: 25}}>{month.format(date) + " - " + date.getFullYear()}</Text>
-                )
-            }}
-/>
+                    monthFormat={'yyyy MM'}
+                    hideArrows={true}
+                    hideExtraDays={true}
+                    firstDay={1}
+                    disableAllTouchEventsForDisabledDays={true}
+                    renderHeader={(dateGiven) => {
+                        const date = new Date(dateGiven);
+                        const month = new Intl.DateTimeFormat('en', {month: 'short'})
+                        return (
+                            <Text style={{
+                                fontWeight: '500',
+                                fontSize: 25
+                            }}>{month.format(date) + " - " + date.getFullYear()}</Text>
+                        )
+                    }}
+                />
 
             </View>
         );
