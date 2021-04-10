@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View} from 'react-native'
+import {Text, View, Dimensions} from 'react-native'
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import Edge from '../../../firebase';
@@ -17,7 +17,8 @@ class MonthScreen extends Component {
         minDate: 0,
         monthNum: 0,
         yearNum: 0,
-        events: null
+        events: null,
+        eventItems: null,
     }
 
     constructor(props) {
@@ -43,8 +44,23 @@ class MonthScreen extends Component {
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.getMember(GlobalData.profileID).then(member => {
+
+                const events = member.getCalendarEvents();
+                const eventMaps = {};
+
+                for(const [K, V] of events){
+                    if(V?.startDate){
+                        if (eventMaps[V.startDate]) {
+                            eventMaps[V.startDate].push(V.id);
+                        }else{
+                            eventMaps[V.startDate] = [V.id];
+                        }
+                    }
+                }
+
                 this.setState({
-                    events: member.getCalendarEvents()
+                    events: events,
+                    eventItems: eventMaps
                 })
             })
         })
@@ -61,6 +77,10 @@ class MonthScreen extends Component {
 
         console.log(day);
 
+    }
+
+    _eventTapped(event) {
+        console.log(event);
     }
 
     render() {
@@ -80,33 +100,32 @@ class MonthScreen extends Component {
                         monthTextColor: 'red',
                         textSectionTitleColor: 'darkgreen'
                     }}
-                    items={{
-                        '2021-04-04': [{
-                            name: 'item 1 - any js object',
-                            height: 50,
-                            time: '10:30'
-                        }, {name: 'item 2', height: 50, time: '10:35'}
-                        ]
-                    }}
+                    items={{}}
                     pastScrollRange={this.state.minDate * 12 + (new Date().getMonth())}
                     futureScrollRange={this.state.maxDate * 12 + (11 - new Date().getMonth())}
 
                     renderEmptyDate={() => {
                         return (
-                            <View>
-                                <Text>This is empty date!</Text>
-                            </View>
+                            <EventCalendar/>
                         );
                     }}
                     renderEmptyData={() => {
                         return (
-                            <View>
-                                <Text>This is empty date!</Text>
-                            </View>
+                            <EventCalendar
+                                eventTapped={this._eventTapped.bind(this)}
+                                events={this.state.events}
+                                width={Dimensions.get("window").width}
+                                initDate={'2017-09-07'}
+                                scrollToFirst
+                                upperCaseHeader
+                                headerIconLeft={null}
+                                headerIconRight={null}
+                                uppercase
+                            />
                         );
                     }}
                     renderDay={(day, item) => {
-                        if(day){
+                        if (day) {
                             this.generateDay(day);
                         }
                     }}

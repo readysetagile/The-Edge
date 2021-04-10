@@ -10,6 +10,8 @@ module.exports.Event = class Event{
 
         if(eventObj) {
             this.id = eventObj.id;
+            this.startDate = eventObj.startDate;
+            this.endDate = eventObj.endDate;
             this.startTime = eventObj.startTime;
             this.endTime = eventObj.endTime;
             this.title = eventObj.title;
@@ -34,6 +36,8 @@ module.exports.Event = class Event{
         event.id = createUUID('xxx-xxx-xxx');
         event.startTime = eventObj.startTime;
         event.endTime = eventObj.endTime;
+        event.startDate = eventObj.startDate;
+        event.endDate = eventObj.endDate;
         event.title = eventObj.title;
         event.teamID = eventObj.teamID;
         event.memberID = eventObj.memberID;
