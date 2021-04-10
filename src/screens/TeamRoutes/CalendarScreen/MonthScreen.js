@@ -138,15 +138,15 @@ class MonthScreen extends Component {
                     hideArrows={true}
                     hideExtraDays={true}
                     onDayPress={(day) => {
-                        console.log(day)
                         const newDate = new Date(day.timestamp);
-                        //const newTStamp = day.timestamp + (24*60*60*100*1000);
                         newDate.setDate(newDate.getDate() + 1);
+                        newDate.setFullYear(newDate.getFullYear());
                         this.setState({
-                            initDate: day.timestamp
+                            initDate: newDate.getTime()
+                        }, () => {
+                            this.eventRef._goToDate(newDate);
                         })
-                        this.eventRef._goToDate(newDate);
-
+                        
                     }}
                     firstDay={1}
                     disableAllTouchEventsForDisabledDays={true}
@@ -160,7 +160,7 @@ class MonthScreen extends Component {
                             }}>{month.format(date) + " - " + date.getFullYear()}</Text>
                         )
                     }}
-                />
+                /> 
 
             </View>
         );
