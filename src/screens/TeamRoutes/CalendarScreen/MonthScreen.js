@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions} from 'react-native'
+import {Text, View, Dimensions, TouchableWithoutFeedback, Keyboard, Modal} from 'react-native'
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import Edge from '../../../firebase';
@@ -7,6 +7,9 @@ import {Agenda} from 'react-native-calendars';
 import EventCalendar from 'react-native-events-calendar';
 import GlobalData from "../../../GlobalData";
 import {Ionicons} from "@expo/vector-icons";
+import styles from "../../LoginRoutes/HomeScreen/styles";
+import TeamCreateForm from "../../LoginRoutes/HomeScreen/TeamCreateForm";
+import NewEventForm from "./EventForm";
 
 class MonthScreen extends Component {
 
@@ -20,11 +23,20 @@ class MonthScreen extends Component {
         yearNum: 0,
         events: null,
         eventItems: null,
+        modalOpen: false,
     }
 
     constructor(props) {
         super(props);
-        this.state = props.navigation.state.params;
+        this.state = {
+            maxDate: props.navigation.state.params.maxDate,
+            minDate: props.navigation.state.params.minDate,
+            monthNum: 0,
+            yearNum: 0,
+            events: null,
+            eventItems: null,
+            modalOpen: false,
+        }
     }
 
     createEvent(){
@@ -85,14 +97,28 @@ class MonthScreen extends Component {
         console.log(event);
     }
 
+    createEventFromForm = () => {
+
+    }
+
     newEvent = () => {
-        console.log(1)
+        this.setState({modalOpen: true})
     }
 
     render() {
 
         return (
             <View style={[globalStyles.container, {padding: 0, backgroundColor: colors.background}]}>
+
+                <Modal visible={this.state.modalOpen} animationType={'slide'}>
+                    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                        <View style={globalStyles.modalContent}>
+                            <Ionicons style={globalStyles.closeModal()} name={"close"} size={24}
+                                      onPress={() => this.setState({modalOpen: false})}/>
+                            <NewEventForm onSubmit={this.createEventFromForm}/>
+                        </View>
+                    </TouchableWithoutFeedback>
+                </Modal>
 
                 <Agenda
                     ref={(ref) => this.agendaRef = ref}
