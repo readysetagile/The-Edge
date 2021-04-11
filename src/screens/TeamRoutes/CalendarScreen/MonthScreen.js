@@ -8,10 +8,13 @@ import EventCalendar from 'react-native-events-calendar';
 import GlobalData from "../../../GlobalData";
 import {Ionicons} from "@expo/vector-icons";
 import styles from "../../LoginRoutes/HomeScreen/styles";
-import TeamCreateForm from "../../LoginRoutes/HomeScreen/TeamCreateForm";
+import * as AddCalendarEvent from 'react-native-add-calendar-event';
+import moment from 'moment';
+
 import NewEventForm from "./EventForm";
 
 class MonthScreen extends Component {
+
 
     maxDate;
     minDate;
@@ -28,6 +31,7 @@ class MonthScreen extends Component {
 
     constructor(props) {
         super(props);
+
         this.state = {
             maxDate: props.navigation.state.params.maxDate,
             minDate: props.navigation.state.params.minDate,
