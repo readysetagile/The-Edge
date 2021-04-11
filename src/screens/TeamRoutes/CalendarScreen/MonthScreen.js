@@ -6,6 +6,7 @@ import Edge from '../../../firebase';
 import {Agenda} from 'react-native-calendars';
 import EventCalendar from 'react-native-events-calendar';
 import GlobalData from "../../../GlobalData";
+import {Ionicons} from "@expo/vector-icons";
 
 class MonthScreen extends Component {
 
@@ -68,8 +69,8 @@ class MonthScreen extends Component {
         const params = this.props.navigation.state.params
         setTimeout(() => {
             const agenda = this.agendaRef;
-            agenda.calendar.scrollToMonth(new Date(params.yearNum, params.monthNum, 2))
-        }, 100)
+            agenda.calendar.scrollToMonth(new Date(params.yearNum, params.monthNum))
+        }, 200)
 
     }
 
@@ -82,6 +83,10 @@ class MonthScreen extends Component {
 
     _eventTapped(event) {
         console.log(event);
+    }
+
+    newEvent = () => {
+        console.log(1)
     }
 
     render() {
@@ -119,8 +124,12 @@ class MonthScreen extends Component {
                                 width={Dimensions.get("window").width}
                                 scrollToFirst
                                 upperCaseHeader
+                                headerIconRight={(<Ionicons name={'add'}
+                                                            size={25}
+                                                            color={'blue'}
+                                                            style={{position: 'absolute', right: 20}}
+                                                            onPress={this.newEvent}/>)}
                                 headerIconLeft={null}
-                                headerIconRight={null}
                                 initDate={this.state.initDate}
                                 uppercase
                                 onScrollToDay={(d) => {
@@ -146,7 +155,7 @@ class MonthScreen extends Component {
                         }, () => {
                             this.eventRef._goToDate(newDate);
                         })
-                        
+
                     }}
                     firstDay={1}
                     disableAllTouchEventsForDisabledDays={true}
@@ -160,7 +169,7 @@ class MonthScreen extends Component {
                             }}>{month.format(date) + " - " + date.getFullYear()}</Text>
                         )
                     }}
-                /> 
+                />
 
             </View>
         );

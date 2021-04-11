@@ -9,6 +9,5 @@ export {default as QuestionCreationPage} from './TeamRoutes/TeamQuestions/Questi
 export {default as ViewQuestions} from './TeamRoutes/TeamQuestions/ViewQuestions';
 export {default as DrillsList} from './TeamRoutes/Drills/DrillsList';
 export {default as AssignedDrills} from "./TeamRoutes/Drills/AssignedDrills";
-export {default as CalendarScreen} from "./TeamRoutes/CalendarScreen/CalendarScreen"
 export {default as YearScreen} from "../../src/screens/TeamRoutes/CalendarScreen/YearScreen";
 export {default as MonthScreen} from "../../src/screens/TeamRoutes/CalendarScreen/MonthScreen"
