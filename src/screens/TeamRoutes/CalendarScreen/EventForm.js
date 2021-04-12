@@ -13,7 +13,7 @@ export default function NewEventForm({onSubmit}) {
         <View style={globalStyles.modalView()}>
 
             <Formik
-                initialValues={{"title": '', "location": ''}}
+                initialValues={{"title": '', "location": '', summary: ''}}
                 //validationSchema={TeamSchema}
                 onSubmit={(values, actions) => {
                     actions.resetForm();
@@ -45,8 +45,8 @@ export default function NewEventForm({onSubmit}) {
                             multiline={true}
                             placeholderTextColor={'#003f5c'}
                             placeholder='Summary'
-                            onChangeText={props.handleChange('location')}
-                            onBlur={props.handleBlur('location')}
+                            onChangeText={props.handleChange('summary')}
+                            onBlur={props.handleBlur('summary')}
                         />
 
                         <View style={styles.inputBox}>
