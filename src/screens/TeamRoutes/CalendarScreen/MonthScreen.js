@@ -11,6 +11,7 @@ import styles from "../../LoginRoutes/HomeScreen/styles";
 import TeamCreateForm from "../../LoginRoutes/HomeScreen/TeamCreateForm";
 import NewEventForm from "./EventForm";
 
+
 class MonthScreen extends Component {
 
     maxDate;
@@ -38,6 +39,7 @@ class MonthScreen extends Component {
             modalOpen: false,
         }
     }
+
 
     createEvent(){
 

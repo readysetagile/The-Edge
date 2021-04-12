@@ -3,6 +3,9 @@ import {Formik} from 'formik';
 import {View, Text, TextInput} from 'react-native';
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
+import styles from './styles'
+import DateTimePicker from '@react-native-community/datetimepicker';
+import RNDateTimePicker from "@react-native-community/datetimepicker";
 
 export default function NewEventForm({onSubmit}) {
 
@@ -38,6 +41,68 @@ export default function NewEventForm({onSubmit}) {
                             value={props.values.title}
                             onBlur={props.handleBlur('location')}
                         />
+
+                        <View style={styles.inputBox}>
+                            <Text style={styles.inputFontSize}>Start Date:</Text>
+                            <View>
+                                <DateTimePicker
+                                    style={{width: 80}}
+                                    testID="dateTimePicker"
+                                    value={new Date()}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={console.log}
+                                />
+                            </View>
+                        </View>
+
+                        <View style={styles.inputBox}>
+                            <Text style={styles.inputFontSize}>Start Time:</Text>
+                            <View>
+                                <DateTimePicker
+                                    style={{width: 90}}
+                                    testID="dateTimePicker"
+                                    value={new Date()}
+                                    mode={'time'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={console.log}
+                                />
+                            </View>
+                        </View>
+
+
+                        <View style={{...styles.inputBox, marginTop: 5}}>
+                            <Text style={styles.inputFontSize}>End Date:</Text>
+                            <View>
+                                <DateTimePicker
+                                    style={{width: 80}}
+                                    testID="dateTimePicker"
+                                    value={new Date()}
+                                    mode={'date'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={console.log}
+                                />
+                            </View>
+                        </View>
+
+                        <View style={styles.inputBox}>
+                            <Text style={styles.inputFontSize}>End Time:</Text>
+                            <View>
+                                <DateTimePicker
+                                    style={{width: 90}}
+                                    testID="dateTimePicker"
+                                    value={new Date()}
+                                    mode={'time'}
+                                    is24Hour={true}
+                                    display="default"
+                                    onChange={console.log}
+                                />
+                            </View>
+                        </View>
+
 
                     </View>
                 )}
