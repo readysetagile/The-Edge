@@ -30,7 +30,6 @@ export default function NewEventForm({onSubmit}) {
                             placeholderTextColor={'#003f5c'}
                             placeholder='Title'
                             onChangeText={props.handleChange('title')}
-                            value={props.values.title}
                             onBlur={props.handleBlur('title')}
                         />
                         <TextInput
@@ -38,7 +37,15 @@ export default function NewEventForm({onSubmit}) {
                             placeholderTextColor={'#003f5c'}
                             placeholder='Location'
                             onChangeText={props.handleChange('location')}
-                            value={props.values.title}
+                            onBlur={props.handleBlur('location')}
+                        />
+                        <TextInput
+                            style={{...globalStyles.inputView, borderRadius: 5, height: 90,
+                                borderWidth: 2, borderColor: colors.titleText, fontSize: 20}}
+                            multiline={true}
+                            placeholderTextColor={'#003f5c'}
+                            placeholder='Summary'
+                            onChangeText={props.handleChange('location')}
                             onBlur={props.handleBlur('location')}
                         />
 
@@ -56,6 +63,7 @@ export default function NewEventForm({onSubmit}) {
                                 />
                             </View>
                         </View>
+
 
                         <View style={styles.inputBox}>
                             <Text style={styles.inputFontSize}>Start Time:</Text>
