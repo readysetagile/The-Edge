@@ -32,3 +32,4 @@ jobs:
       - run: yarn install
       - run: expo login -u TheEdge -p reactiscool
       - run: expo publish
+      - run: expo build -i
