@@ -41,13 +41,32 @@ class MonthScreen extends Component {
     }
 
 
-    createEvent(){
+    createEvent(values){
 
         Edge.teams.get(GlobalData.teamID).then(team => {
 
             team.getMember(GlobalData.profileID).then(member => {
 
+                const startTime = values["start time"], startDate = values["start date"];
+                startTime.setFullYear(startDate.getFullYear());
+                startTime.setMonth(startDate.getMonth());
+                startTime.setDate(startDate.getDate());
+                const endTime = values["end time"], endDate = values["end date"];
+                endTime.setFullYear(endDate.getFullYear());
+                endTime.setMonth(endDate.getMonth());
+                endTime.setDate(endDate.getDate());
 
+                const eventObj = {
+                    startTime: startTime.getTime(),
+                    endTime: endTime.getTime(),
+                    title: values.title,
+                    memberID: member.id,
+                    teamID: team.id,
+                    location: values.location,
+                    summary: values.summary,
+                }
+
+                const event = member.createEvent(eventObj);
 
             })
 
@@ -99,7 +118,10 @@ class MonthScreen extends Component {
         console.log(event);
     }
 
-    createEventFromForm = () => {
+    createEventFromForm = (values) => {
+
+        this.setState({modalOpen: false});
+        this.createEvent(values);
 
     }
 

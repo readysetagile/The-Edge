@@ -45,6 +45,7 @@ module.exports.Member = class Member {
         const event = Event.createEvent(eventObj);
         this.calendarEvents.set(event.id, event);
         event.save();
+        return event;
 
     }
 
