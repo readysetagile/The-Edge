@@ -22,8 +22,8 @@ class MonthScreen extends Component {
         minDate: 0,
         monthNum: 0,
         yearNum: 0,
-        events: null,
-        eventItems: null,
+        events: new Map(),
+        eventItems: {},
         modalOpen: false,
     }
 
@@ -43,30 +43,34 @@ class MonthScreen extends Component {
 
     createEvent(values){
 
-        Edge.teams.get(GlobalData.teamID).then(team => {
+        return new Promise(resolve => {
 
-            team.getMember(GlobalData.profileID).then(member => {
+            Edge.teams.get(GlobalData.teamID).then(team => {
 
-                const startTime = values["start time"], startDate = values["start date"];
-                startTime.setFullYear(startDate.getFullYear());
-                startTime.setMonth(startDate.getMonth());
-                startTime.setDate(startDate.getDate());
-                const endTime = values["end time"], endDate = values["end date"];
-                endTime.setFullYear(endDate.getFullYear());
-                endTime.setMonth(endDate.getMonth());
-                endTime.setDate(endDate.getDate());
+                team.getMember(GlobalData.profileID).then(member => {
 
-                const eventObj = {
-                    startTime: startTime.getTime(),
-                    endTime: endTime.getTime(),
-                    title: values.title,
-                    memberID: member.id,
-                    teamID: team.id,
-                    location: values.location,
-                    summary: values.summary,
-                }
+                    const startTime = values["start time"], startDate = values["start date"];
+                    startTime.setFullYear(startDate.getFullYear());
+                    startTime.setMonth(startDate.getMonth());
+                    startTime.setDate(startDate.getDate());
+                    const endTime = values["end time"], endDate = values["end date"];
+                    endTime.setFullYear(endDate.getFullYear());
+                    endTime.setMonth(endDate.getMonth());
+                    endTime.setDate(endDate.getDate());
 
-                const event = member.createEvent(eventObj);
+                    const eventObj = {
+                        startTime: startTime.getTime(),
+                        endTime: endTime.getTime(),
+                        title: values.title,
+                        memberID: member.id,
+                        teamID: team.id,
+                        location: values.location,
+                        summary: values.summary,
+                    }
+
+                    resolve(member.createEvent(eventObj));
+
+                })
 
             })
 
@@ -83,18 +87,27 @@ class MonthScreen extends Component {
                 const eventMaps = {};
 
                 for(const [K, V] of events){
-                    if(V?.startDate){
-                        if (eventMaps[V.startDate]) {
-                            eventMaps[V.startDate].push(V.id);
+                    if(V?.startTime){
+                        const date = new Date(V.startTime)
+                        if (eventMaps[date.toDateString()]) {
+                            eventMaps[date.toDateString()].push(V.id);
                         }else{
-                            eventMaps[V.startDate] = [V.id];
+                            eventMaps[date.toDateString()] = [V.id];
                         }
                     }
                 }
 
+                    const eventItems = Object.assign(...Object.entries(eventMaps).map(([k, v]) => {
+                        const key = k.split(" ");
+                        const stringFormatted = `${key[3]}-${new Date(Date.parse("2020-" + key[2] + "-01")).getMonth()}-${key[2]}`;
+                        return {[stringFormatted]: v}
+                    }))
+                console.log(eventItems, 1)
+
                 this.setState({
                     events: events,
-                    eventItems: eventMaps
+                    eventItems: eventMaps,
+                    eventShowing: eventItems
                 })
             })
         })
@@ -118,16 +131,83 @@ class MonthScreen extends Component {
         console.log(event);
     }
 
+    addEventToState(event){
+
+        const events = this.state.eventItems;
+        const eventDate = new Date(event.startTime);
+        let dateEvents = events[eventDate.toDateString()];
+        if(Array.isArray(dateEvents)){
+            dateEvents.push(event.id);
+        }else dateEvents = [event.id];
+        events[eventDate.toDateString()] = dateEvents;
+        const allEvents = this.state.events;
+        allEvents.set(event.id, event);
+        this.setState({
+            eventItems: events,
+            events: allEvents
+        })
+
+    }
+
     createEventFromForm = (values) => {
 
         this.setState({modalOpen: false});
-        this.createEvent(values);
+        this.createEvent(values).then(event => {
+
+            this.addEventToState(event);
+
+        })
 
     }
 
     newEvent = () => {
         this.setState({modalOpen: true})
     }
+
+    renderCalendar(day, item){
+        if((day && item) || (!day && !item)) {
+
+            const items = [];
+            if(day){
+                const date = new Date(day.timestamp);
+                const itemToAdd = this.state.eventItems[date.toDateString()];
+                for (let element of itemToAdd) {
+                    const stateElement = this.state.events.get(element);
+                    items.push({
+                        start: stateElement.startTime,
+                        end: stateElement.endTime,
+                        title: stateElement.title,
+                        summary: stateElement.body.summary
+                    })
+
+                }
+
+            }
+
+            return (
+                <EventCalendar
+                    ref={(ref) => this.eventRef = ref}
+                    eventTapped={this._eventTapped.bind(this)}
+                    events={items}
+                    width={Dimensions.get("window").width}
+                    scrollToFirst
+                    upperCaseHeader
+                    headerIconRight={(<Ionicons name={'add'}
+                                                size={25}
+                                                color={'blue'}
+                                                style={{position: 'absolute', right: 20}}
+                                                onPress={this.newEvent}/>)}
+                    headerIconLeft={null}
+                    initDate={this.state.initDate}
+                    uppercase
+                    onScrollToDay={(d) => {
+                        this.agendaRef.chooseDay(new Date(d));
+                    }}
+                />
+            )
+        }
+    }
+
 
     render() {
 
@@ -156,43 +236,13 @@ class MonthScreen extends Component {
                         monthTextColor: 'red',
                         textSectionTitleColor: 'darkgreen'
                     }}
-                    items={{}}
+
+                    items={this.state.eventShowing}
                     pastScrollRange={this.state.minDate * 12 + (new Date().getMonth())}
                     futureScrollRange={this.state.maxDate * 12 + (11 - new Date().getMonth())}
-
-                    renderEmptyDate={() => {
-                        return (
-                            <EventCalendar/>
-                        );
-                    }}
-                    renderEmptyData={() => {
-                        return (
-                            <EventCalendar
-                                ref={(ref) => this.eventRef = ref}
-                                eventTapped={this._eventTapped.bind(this)}
-                                events={this.state.events}
-                                width={Dimensions.get("window").width}
-                                scrollToFirst
-                                upperCaseHeader
-                                headerIconRight={(<Ionicons name={'add'}
-                                                            size={25}
-                                                            color={'blue'}
-                                                            style={{position: 'absolute', right: 20}}
-                                                            onPress={this.newEvent}/>)}
-                                headerIconLeft={null}
-                                initDate={this.state.initDate}
-                                uppercase
-                                onScrollToDay={(d) => {
-                                    this.agendaRef.chooseDay(new Date(d));
-                                }}
-                            />
-                        );
-                    }}
-                    renderDay={(day, item) => {
-                        if (day) {
-                            this.generateDay(day);
-                        }
-                    }}
+                    renderEmptyDate={this.renderCalendar.bind(this)}
+                    renderEmptyData={this.renderCalendar.bind(this)}
+                    renderDay={this.renderCalendar.bind(this)}
                     monthFormat={'yyyy MM'}
                     hideArrows={true}
                     hideExtraDays={true}
