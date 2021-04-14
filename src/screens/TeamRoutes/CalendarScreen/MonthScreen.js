@@ -34,8 +34,8 @@ class MonthScreen extends Component {
             minDate: props.navigation.state.params.minDate,
             monthNum: 0,
             yearNum: 0,
-            events: null,
-            eventItems: null,
+            events: new Map(),
+            eventItems: {},
             modalOpen: false,
         }
     }
@@ -99,6 +99,7 @@ class MonthScreen extends Component {
 
                     const eventItems = Object.assign(...Object.entries(eventMaps).map(([k, v]) => {
                         const key = k.split(" ");
+                        console.log(key)
                         const stringFormatted = `${key[3]}-${new Date(Date.parse("2020-" + key[2] + "-01")).getMonth()}-${key[2]}`;
                         return {[stringFormatted]: v}
                     }))
@@ -135,6 +136,7 @@ class MonthScreen extends Component {
 
         const events = this.state.eventItems;
         const eventDate = new Date(event.startTime);
+        console.log(eventDate, event)
         let dateEvents = events[eventDate.toDateString()];
         if(Array.isArray(dateEvents)){
             dateEvents.push(event.id);
