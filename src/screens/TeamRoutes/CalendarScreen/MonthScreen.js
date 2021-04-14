@@ -80,6 +80,8 @@ class MonthScreen extends Component {
 
     componentDidMount() {
 
+        //yyyy-mm-dd
+
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.getMember(GlobalData.profileID).then(member => {
 
@@ -88,27 +90,24 @@ class MonthScreen extends Component {
 
                 for(const [K, V] of events){
                     if(V?.startTime){
+
                         const date = new Date(V.startTime)
-                        if (eventMaps[date.toDateString()]) {
-                            eventMaps[date.toDateString()].push(V.id);
+                        const month = '0' + (date.getMonth()+1), day = '0' + (date.getDate());
+
+                        const dateString = date.getFullYear() + '-' + month.slice(-2) + '-' + day.slice(-2);
+
+                        if (eventMaps.hasOwnProperty(dateString)) {
+                            eventMaps[dateString].push(V.id);
                         }else{
-                            eventMaps[date.toDateString()] = [V.id];
+                            eventMaps[dateString] = [V.id];
                         }
                     }
                 }
 
-                    const eventItems = Object.assign(...Object.entries(eventMaps).map(([k, v]) => {
-                        const key = k.split(" ");
-                        console.log(key)
-                        const stringFormatted = `${key[3]}-${new Date(Date.parse("2020-" + key[2] + "-01")).getMonth()}-${key[2]}`;
-                        return {[stringFormatted]: v}
-                    }))
-                console.log(eventItems, 1)
-
+                console.log(eventMaps)
                 this.setState({
                     events: events,
                     eventItems: eventMaps,
-                    eventShowing: eventItems
                 })
             })
         })
@@ -136,7 +135,6 @@ class MonthScreen extends Component {
 
         const events = this.state.eventItems;
         const eventDate = new Date(event.startTime);
-        console.log(eventDate, event)
         let dateEvents = events[eventDate.toDateString()];
         if(Array.isArray(dateEvents)){
             dateEvents.push(event.id);
@@ -166,13 +164,20 @@ class MonthScreen extends Component {
         this.setState({modalOpen: true})
     }
 
+    static convertDateToDateString(date){
+        const month = '0' + (date.getMonth()+1), day = '0' + (date.getDate());
+        return date.getFullYear() + '-' + month.slice(-2) + '-' + day.slice(-2);
+    }
+
     renderCalendar(day, item){
         if((day && item) || (!day && !item)) {
 
             const items = [];
             if(day){
                 const date = new Date(day.timestamp);
-                const itemToAdd = this.state.eventItems[date.toDateString()];
+                date.setDate(date.getDate()+1);
+
+                const itemToAdd = this.state.eventItems[MonthScreen.convertDateToDateString(date)];
                 for (let element of itemToAdd) {
                     const stateElement = this.state.events.get(element);
                     items.push({
@@ -183,7 +188,6 @@ class MonthScreen extends Component {
                     })
 
                 }
-
             }
 
             return (
@@ -239,7 +243,7 @@ class MonthScreen extends Component {
                         textSectionTitleColor: 'darkgreen'
                     }}
 
-                    items={this.state.eventShowing}
+                    items={this.state.eventItems}
                     pastScrollRange={this.state.minDate * 12 + (new Date().getMonth())}
                     futureScrollRange={this.state.maxDate * 12 + (11 - new Date().getMonth())}
                     renderEmptyDate={this.renderCalendar.bind(this)}
