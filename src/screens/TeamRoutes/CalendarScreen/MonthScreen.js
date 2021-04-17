@@ -104,7 +104,6 @@ class MonthScreen extends Component {
                     }
                 }
 
-                console.log(eventMaps)
                 this.setState({
                     events: events,
                     eventItems: eventMaps,
@@ -135,17 +134,23 @@ class MonthScreen extends Component {
 
         const events = this.state.eventItems;
         const eventDate = new Date(event.startTime);
-        let dateEvents = events[eventDate.toDateString()];
+        const dateString = MonthScreen.convertDateToDateString(eventDate);
+        let dateEvents = events[dateString];
+        console.log(dateEvents);
+
         if(Array.isArray(dateEvents)){
             dateEvents.push(event.id);
         }else dateEvents = [event.id];
-        events[eventDate.toDateString()] = dateEvents;
+
+        events[dateString] = dateEvents;
         const allEvents = this.state.events;
         allEvents.set(event.id, event);
+        console.log(allEvents);
+
         this.setState({
             eventItems: events,
             events: allEvents
-        })
+        });
 
     }
 
@@ -170,7 +175,8 @@ class MonthScreen extends Component {
     }
 
     renderCalendar(day, item){
-        if((day && item) || (!day && !item)) {
+        console.log(day, item)
+        if((day && item)) {
 
             const items = [];
             if(day){
@@ -190,33 +196,41 @@ class MonthScreen extends Component {
                 }
             }
 
-            return (
-                <EventCalendar
-                    ref={(ref) => this.eventRef = ref}
-                    eventTapped={this._eventTapped.bind(this)}
-                    events={items}
-                    width={Dimensions.get("window").width}
-                    scrollToFirst
-                    upperCaseHeader
-                    headerIconRight={(<Ionicons name={'add'}
-                                                size={25}
-                                                color={'blue'}
-                                                style={{position: 'absolute', right: 20}}
-                                                onPress={this.newEvent}/>)}
-                    headerIconLeft={null}
-                    initDate={this.state.initDate}
-                    uppercase
-                    onScrollToDay={(d) => {
-                        this.agendaRef.chooseDay(new Date(d));
-                    }}
-                />
-            )
+            return this.renderEventCalendar(items);
+
         }
+    }
+
+    renderEventCalendar(items=undefined){
+
+        return (
+            <EventCalendar
+                ref={(ref) => this.eventRef = ref}
+                eventTapped={this._eventTapped.bind(this)}
+                events={items}
+                width={Dimensions.get("window").width}
+                scrollToFirst={true}
+                upperCaseHeader
+                headerIconRight={(<Ionicons name={'add'}
+                                            size={25}
+                                            color={'blue'}
+                                            style={{position: 'absolute', right: 20}}
+                                            onPress={this.newEvent}/>)}
+                headerIconLeft={null}
+                initDate={this.state.initDate}
+                uppercase
+                // onScrollToDay={(d) => {
+                //     this.agendaRef.chooseDay(new Date(d));
+                // }}
+            />
+        )
+
     }
 
 
     render() {
 
+        const date = new Date();
         return (
             <View style={[globalStyles.container, {padding: 0, backgroundColor: colors.background}]}>
 
@@ -233,8 +247,7 @@ class MonthScreen extends Component {
                 <Agenda
                     ref={(ref) => this.agendaRef = ref}
                     isDefaultViewCalendar={true}
-                    rowHasChanged={(r1, r2) => (r1.text !== r2.text)}
-                    style={{borderRadius: 10}}
+                    rowHasChanged={(r1, r2) => (r1 !== r2)}
                     theme={{
                         calendarBackground: "#F3CCFF",
                         arrowColor: '#5EA952',
@@ -244,10 +257,10 @@ class MonthScreen extends Component {
                     }}
 
                     items={this.state.eventItems}
-                    pastScrollRange={this.state.minDate * 12 + (new Date().getMonth())}
-                    futureScrollRange={this.state.maxDate * 12 + (11 - new Date().getMonth())}
-                    renderEmptyDate={this.renderCalendar.bind(this)}
-                    renderEmptyData={this.renderCalendar.bind(this)}
+                    pastScrollRange={this.state.minDate * 12 + (date.getMonth())}
+                    futureScrollRange={this.state.maxDate * 12 + (11 - date.getMonth())}
+                    renderEmptyDate={this.renderEventCalendar.bind(this)}
+                    renderEmptyData={this.renderEventCalendar.bind(this)}
                     renderDay={this.renderCalendar.bind(this)}
                     monthFormat={'yyyy MM'}
                     hideArrows={true}
@@ -259,7 +272,7 @@ class MonthScreen extends Component {
                         this.setState({
                             initDate: newDate.getTime()
                         }, () => {
-                            this.eventRef._goToDate(newDate);
+                            this.eventRef?._goToDate(newDate);
                         })
 
                     }}
