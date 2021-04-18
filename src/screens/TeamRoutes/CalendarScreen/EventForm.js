@@ -11,6 +11,10 @@ import * as yup from "yup";
 export default function NewEventForm({onSubmit}) {
 
     const currDate = new Date();
+    const [startDate, setStartDate] = useState(currDate);
+    const [startTime, setStartTime] = useState(currDate);
+    const [endDate, setEndDate] = useState(currDate);
+    const [endTime, setEndTime] = useState(currDate);
 
     const EventSchema = yup.object({
 
@@ -81,11 +85,12 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 80}}
                                     testID="dateTimePicker"
-                                    value={currDate}
+                                    value={startDate}
                                     mode={'date'}
                                     is24Hour={true}
                                     display="default"
                                     onChange={(component, time) => {
+                                        setStartDate(time);
                                         props.setFieldValue("start date", time)
                                     }}
                                 />
@@ -99,11 +104,14 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 90}}
                                     testID="dateTimePicker"
-                                    value={currDate}
+                                    value={startTime}
                                     mode={'time'}
                                     is24Hour={true}
                                     display="default"
-                                    onChange={(component, time) => props.setFieldValue("start time", time)}
+                                    onChange={(component, time) => {
+                                        setStartTime(time);
+                                        props.setFieldValue("start time", time)
+                                    }}
                                 />
                             </View>
                         </View>
@@ -115,11 +123,14 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 80}}
                                     testID="dateTimePicker"
-                                    value={currDate}
+                                    value={endDate}
                                     mode={'date'}
                                     is24Hour={true}
                                     display="default"
-                                    onChange={(component, time) => props.setFieldValue("end date", time)}
+                                    onChange={(component, time) => {
+                                        setEndDate(time);
+                                        props.setFieldValue("end date", time)
+                                    }}
                                 />
                             </View>
                         </View>
@@ -130,11 +141,14 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 90}}
                                     testID="dateTimePicker"
-                                    value={currDate}
+                                    value={endTime}
                                     mode={'time'}
                                     is24Hour={true}
                                     display="default"
-                                    onChange={(component, time) => props.setFieldValue("end time", time)}
+                                    onChange={(component, time) => {
+                                        setEndTime(time);
+                                        props.setFieldValue("end time", time)
+                                    }}
                                 />
                             </View>
                         </View>
