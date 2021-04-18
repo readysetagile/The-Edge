@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {Alert, Dimensions, Keyboard, Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
+import {Keyboard, Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import Edge from '../../../firebase';
 import {Agenda} from 'react-native-calendars';
-import EventCalendar from 'react-native-events-calendar';
 import GlobalData from "../../../GlobalData";
 import {Ionicons} from "@expo/vector-icons";
 import moment from 'moment';
@@ -24,7 +23,8 @@ class MonthScreen extends Component {
         events: new Map(),
         eventItems: {},
         modalOpen: false,
-        items: {}
+        items: {},
+        animatedEvents: {}
     }
 
     constructor(props) {
@@ -37,7 +37,8 @@ class MonthScreen extends Component {
             events: new Map(),
             eventItems: {},
             modalOpen: false,
-            items: {}
+            items: {},
+            animatedEvents: {}
         }
     }
 
@@ -200,6 +201,7 @@ class MonthScreen extends Component {
     renderItem(item) {
         const event = this.state.events.get(item);
         return (
+
             <TouchableOpacity
                 style={{
                     backgroundColor: '#F3CCFF',
@@ -208,9 +210,8 @@ class MonthScreen extends Component {
                     padding: 10,
                     marginRight: 10,
                     marginTop: 17,
-                }}
-                onPress={() => Alert.alert(event.title)}
-            >
+                }}>
+
                 <Text style={{color: 'black', alignSelf: 'center', fontWeight: "700"}}>{event.title}</Text>
 
                 <Ionicons name={'pencil'} size={18} color={'blue'} style={{position: 'absolute', right: 20, top: 10}}
@@ -241,7 +242,9 @@ class MonthScreen extends Component {
 
                 <Text style={{marginTop: 5}}>End:</Text>
                 <Text style={{backgroundColor: 'white'}}>{this.timeToFriendlyString(event.endTime)}</Text>
+
             </TouchableOpacity>
+
         );
     }
 
@@ -298,7 +301,6 @@ class MonthScreen extends Component {
                     renderItem={this.renderItem.bind(this)}
                     renderEmptyDate={this.renderEmptyDate.bind(this)}
                     renderEmptyData={this.renderEmptyDate.bind(this)}
-                    //renderDay={this.loadItems.bind(this)}
                     loadItemsForMonth={this.loadItems.bind(this)}
                     monthFormat={'yyyy MM'}
                     hideArrows={true}
@@ -309,10 +311,7 @@ class MonthScreen extends Component {
                         newDate.setFullYear(newDate.getFullYear());
                         this.setState({
                             initDate: newDate.getTime()
-                        }, () => {
-                            this.eventRef?._goToDate(newDate);
                         })
-
                     }}
                     firstDay={1}
                     disableAllTouchEventsForDisabledDays={true}

@@ -85,7 +85,9 @@ export default function NewEventForm({onSubmit}) {
                                     mode={'date'}
                                     is24Hour={true}
                                     display="default"
-                                    onChange={(component, time) => props.setFieldValue("start date", time)}
+                                    onChange={(component, time) => {
+                                        props.setFieldValue("start date", time)
+                                    }}
                                 />
                             </View>
                         </View>
