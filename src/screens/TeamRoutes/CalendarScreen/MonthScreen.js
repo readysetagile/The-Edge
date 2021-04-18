@@ -127,15 +127,6 @@ class MonthScreen extends Component {
 
     }
 
-    generateDay(day) {
-
-        console.log(day);
-
-    }
-
-    _eventTapped(event) {
-        console.log(event);
-    }
 
     addEventToState(event) {
 
@@ -143,7 +134,6 @@ class MonthScreen extends Component {
         const eventDate = new Date(event.startTime);
         const dateString = MonthScreen.convertDateToDateString(eventDate);
         let dateEvents = events[dateString];
-        console.log(dateEvents);
 
         if (Array.isArray(dateEvents)) {
             dateEvents.push(event.id);
@@ -152,7 +142,6 @@ class MonthScreen extends Component {
         events[dateString] = dateEvents;
         const allEvents = this.state.events;
         allEvents.set(event.id, event);
-        console.log(allEvents);
 
         this.setState({
             eventItems: events,
@@ -172,64 +161,6 @@ class MonthScreen extends Component {
         })
 
     }
-
-    newEvent = () => {
-        this.setState({modalOpen: true})
-    }
-
-    renderCalendar(day, item) {
-        //console.log(day, item)
-        if ((day && item)) {
-
-            const items = [];
-            if (day) {
-                const date = new Date(day.timestamp);
-                date.setDate(date.getDate() + 1);
-
-                const itemToAdd = this.state.eventItems[MonthScreen.convertDateToDateString(date)];
-                for (let element of itemToAdd) {
-                    const stateElement = this.state.events.get(element);
-                    items.push({
-                        start: stateElement.startTime,
-                        end: stateElement.endTime,
-                        title: stateElement.title,
-                        summary: stateElement.body.summary
-                    })
-
-                }
-            }
-
-            return this.renderEventCalendar(items);
-
-        }
-    }
-
-    renderEventCalendar(items = undefined) {
-
-        return (
-            <EventCalendar
-                ref={(ref) => this.eventRef = ref}
-                eventTapped={this._eventTapped.bind(this)}
-                events={items}
-                width={Dimensions.get("window").width}
-                scrollToFirst={true}
-                upperCaseHeader
-                headerIconRight={(<Ionicons name={'add'}
-                                            size={25}
-                                            color={'blue'}
-                                            style={{position: 'absolute', right: 20}}
-                                            onPress={this.newEvent}/>)}
-                headerIconLeft={null}
-                initDate={this.state.initDate}
-                uppercase
-                // onScrollToDay={(d) => {
-                //     this.agendaRef.chooseDay(new Date(d));
-                // }}
-            />
-        )
-
-    }
-
 
     loadItems(day) {
         setTimeout(() => {
