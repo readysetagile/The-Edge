@@ -11,26 +11,34 @@ import * as yup from "yup";
 export default function NewEventForm({onSubmit, event}) {
 
     const currDate = new Date();
-    const [startDate, setStartDate] = useState(currDate);
-    const [startTime, setStartTime] = useState(currDate);
-    const [endDate, setEndDate] = useState(currDate);
-    const [endTime, setEndTime] = useState(currDate);
+
+    const startingTime = new Date(event?.startTime || currDate);
+    const endingTime = new Date(event?.endTime || currDate);
+
+    const [startDate, setStartDate] = useState(startingTime);
+    const [startTime, setStartTime] = useState(startingTime);
+    const [endDate, setEndDate] = useState(endingTime);
+    const [endTime, setEndTime] = useState(endingTime);
 
     const EventSchema = yup.object({
 
         title: yup.string().required().min(1),
         location: yup.string(),
         summary: yup.string(),
-        "start date": yup.date(),
-        "start time": yup.date(),
+        "start date": yup.date().test('dateChecker', 'Make sure the start date is before the end date', (val) => {
+            if(val.toDateString() === endDate.toDateString()) return true;
+            return val.getTime() < endDate.getTime();
+        }),
+        "start time": yup.date().test('timeChecker', 'Make sure the start time is before the end time', (val) => {
+            if(startDate.toDateString() === endDate.toDateString())
+                return val.toTimeString() <= endTime.toTimeString();
+            return true;
+        }),
         "end date": yup.date(),
         "end time": yup.date()
 
     })
 
-    const startingTime = new Date(event?.startTime || currDate);
-    const endingTime = new Date(event?.endTime || currDate);
-    console.log(event, 1)
     return (
         <View style={globalStyles.modalView()}>
             <Formik
@@ -55,7 +63,6 @@ export default function NewEventForm({onSubmit, event}) {
                         <Text style={{color: colors.titleText, fontSize: 30, fontWeight: 'bold', padding: 20}}>
                             {event ? "Editing Event" : "New Event"}
                         </Text>
-
                         <TextInput
                             style={[globalStyles.inputView, {marginBottom: 0}]}
                             placeholderTextColor={'#003f5c'}
@@ -104,7 +111,6 @@ export default function NewEventForm({onSubmit, event}) {
                             </View>
                         </View>
 
-
                         <View style={styles.inputBox}>
                             <Text style={styles.inputFontSize}>Start Time:</Text>
                             <View>
@@ -122,7 +128,6 @@ export default function NewEventForm({onSubmit, event}) {
                                 />
                             </View>
                         </View>
-
 
                         <View style={{...styles.inputBox, marginTop: 5}}>
                             <Text style={styles.inputFontSize}>End Date:</Text>
@@ -159,6 +164,10 @@ export default function NewEventForm({onSubmit, event}) {
                                 />
                             </View>
                         </View>
+
+                        <Text style={{...globalStyles.errorText, marginBottom: 0, marginTop: 5}}>{props.errors["start date"]}</Text>
+                        <Text style={{...globalStyles.errorText, marginBottom: 0, marginTop: 0}}>{props.errors["start time"]}</Text>
+
 
                         <FlatButton text={"Done"} style={{padding: 20, width: '100%'}} onPress={props.handleSubmit}/>
 

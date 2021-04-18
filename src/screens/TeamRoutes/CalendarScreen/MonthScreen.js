@@ -187,8 +187,8 @@ class MonthScreen extends Component {
         startTime = this.combineTimes(startTime, startDate);
         endTime = this.combineTimes(endTime, endDate);
 
-        event.startTime = startTime;
-        event.endTime = endTime;
+        event.startTime = startTime.getTime();
+        event.endTime = endTime.getTime();
         event.title = values.title;
         event.body = {
             location: values.location,
