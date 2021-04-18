@@ -47,6 +47,13 @@ class MonthScreen extends Component {
         return date.getFullYear() + '-' + month.slice(-2) + '-' + day.slice(-2);
     }
 
+    combineTimes(startTime, startDate){
+        startTime.setFullYear(startDate.getFullYear());
+        startTime.setMonth(startDate.getMonth());
+        startTime.setDate(startDate.getDate());
+        return startTime;
+    }
+
     createEvent(values) {
 
         return new Promise(resolve => {
@@ -55,14 +62,10 @@ class MonthScreen extends Component {
 
                 team.getMember(GlobalData.profileID).then(member => {
 
-                    const startTime = values["start time"], startDate = values["start date"];
-                    startTime.setFullYear(startDate.getFullYear());
-                    startTime.setMonth(startDate.getMonth());
-                    startTime.setDate(startDate.getDate());
-                    const endTime = values["end time"], endDate = values["end date"];
-                    endTime.setFullYear(endDate.getFullYear());
-                    endTime.setMonth(endDate.getMonth());
-                    endTime.setDate(endDate.getDate());
+                    let startTime = values["start time"], startDate = values["start date"];
+                    startTime = this.combineTimes(startTime, startDate)
+                    let endTime = values["end time"], endDate = values["end date"];
+                    endTime = this.combineTimes(endTime, endDate);
 
                     const eventObj = {
                         startTime: startTime.getTime(),
@@ -153,13 +156,31 @@ class MonthScreen extends Component {
 
     createEventFromForm = (values) => {
 
-        this.setState({modalOpen: false});
+        const eventID = this.state.editingEventID;
+        this.setState({modalOpen: false, editingEventID: null});
         this.props.navigation.setParams({
             modalOpen: false
         })
-        this.createEvent(values).then(event => {
-            this.addEventToState(event);
-        })
+        if(!eventID) {
+            this.createEvent(values).then(event => {
+                this.addEventToState(event);
+            })
+        }else{
+            const event = this.state.events.get(eventID);
+            let startTime = values['start time'], startDate = values['start date'];
+            let endTime = values['end time'], endDate = values['end date'];
+            startTime = this.combineTimes(startTime, startDate);
+            endTime = this.combineTimes(endTime, endDate);
+
+            event.startTime = startTime;
+            event.endTime = endTime;
+            event.title = values.title;
+            event.body = {
+                location: values.location,
+                summary: values.summary,
+            };
+            event.save();
+        }
 
     }
 

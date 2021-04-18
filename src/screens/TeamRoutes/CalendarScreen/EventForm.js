@@ -55,7 +55,7 @@ export default function NewEventForm({onSubmit, event}) {
                         <Text style={{color: colors.titleText, fontSize: 30, fontWeight: 'bold', padding: 20}}>
                             {event ? "Editing Event" : "New Event"}
                         </Text>
-                        
+
                         <TextInput
                             style={[globalStyles.inputView, {marginBottom: 0}]}
                             placeholderTextColor={'#003f5c'}
@@ -161,7 +161,6 @@ export default function NewEventForm({onSubmit, event}) {
                         </View>
 
                         <FlatButton text={"Done"} style={{padding: 20, width: '100%'}} onPress={props.handleSubmit}/>
-
 
                     </View>
                 )}
