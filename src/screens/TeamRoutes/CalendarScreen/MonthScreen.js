@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Alert} from 'react-native'
+import {Alert, Dimensions, Keyboard, Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native'
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import Edge from '../../../firebase';
@@ -8,8 +8,6 @@ import EventCalendar from 'react-native-events-calendar';
 import GlobalData from "../../../GlobalData";
 import {Ionicons} from "@expo/vector-icons";
 import moment from 'moment';
-import styles from "../../LoginRoutes/HomeScreen/styles";
-import TeamCreateForm from "../../LoginRoutes/HomeScreen/TeamCreateForm";
 import NewEventForm from "./EventForm";
 
 
@@ -43,8 +41,12 @@ class MonthScreen extends Component {
         }
     }
 
+    static convertDateToDateString(date) {
+        const month = '0' + (date.getMonth() + 1), day = '0' + (date.getDate());
+        return date.getFullYear() + '-' + month.slice(-2) + '-' + day.slice(-2);
+    }
 
-    createEvent(values){
+    createEvent(values) {
 
         return new Promise(resolve => {
 
@@ -94,17 +96,17 @@ class MonthScreen extends Component {
                 const events = member.getCalendarEvents();
                 const eventMaps = {};
 
-                for(const [K, V] of events){
-                    if(V?.startTime){
+                for (const [K, V] of events) {
+                    if (V?.startTime) {
 
                         const date = new Date(V.startTime)
-                        const month = '0' + (date.getMonth()+1), day = '0' + (date.getDate());
+                        const month = '0' + (date.getMonth() + 1), day = '0' + (date.getDate());
 
                         const dateString = date.getFullYear() + '-' + month.slice(-2) + '-' + day.slice(-2);
 
                         if (eventMaps.hasOwnProperty(dateString)) {
                             eventMaps[dateString].push(V.id);
-                        }else{
+                        } else {
                             eventMaps[dateString] = [V.id];
                         }
                     }
@@ -125,18 +127,17 @@ class MonthScreen extends Component {
 
     }
 
-    generateDay(day){
+    generateDay(day) {
 
         console.log(day);
 
     }
 
-
     _eventTapped(event) {
         console.log(event);
     }
 
-    addEventToState(event){
+    addEventToState(event) {
 
         const events = this.state.eventItems;
         const eventDate = new Date(event.startTime);
@@ -144,9 +145,9 @@ class MonthScreen extends Component {
         let dateEvents = events[dateString];
         console.log(dateEvents);
 
-        if(Array.isArray(dateEvents)){
+        if (Array.isArray(dateEvents)) {
             dateEvents.push(event.id);
-        }else dateEvents = [event.id];
+        } else dateEvents = [event.id];
 
         events[dateString] = dateEvents;
         const allEvents = this.state.events;
@@ -176,19 +177,14 @@ class MonthScreen extends Component {
         this.setState({modalOpen: true})
     }
 
-    static convertDateToDateString(date){
-        const month = '0' + (date.getMonth()+1), day = '0' + (date.getDate());
-        return date.getFullYear() + '-' + month.slice(-2) + '-' + day.slice(-2);
-    }
-
-    renderCalendar(day, item){
+    renderCalendar(day, item) {
         //console.log(day, item)
-        if((day && item)) {
+        if ((day && item)) {
 
             const items = [];
-            if(day){
+            if (day) {
                 const date = new Date(day.timestamp);
-                date.setDate(date.getDate()+1);
+                date.setDate(date.getDate() + 1);
 
                 const itemToAdd = this.state.eventItems[MonthScreen.convertDateToDateString(date)];
                 for (let element of itemToAdd) {
@@ -208,7 +204,7 @@ class MonthScreen extends Component {
         }
     }
 
-    renderEventCalendar(items=undefined){
+    renderEventCalendar(items = undefined) {
 
         return (
             <EventCalendar
@@ -266,12 +262,16 @@ class MonthScreen extends Component {
         return date.toISOString().split('T')[0];
     }
 
+    timeToFriendlyString(time) {
+        return moment(time).format('MMMM Do, h:mm:ss a')
+    }
+
     renderItem(item) {
-        const event = this.state.events.get(item)
+        const event = this.state.events.get(item);
         return (
             <TouchableOpacity
                 style={{
-                    backgroundColor: 'white',
+                    backgroundColor: '#F3CCFF',
                     flex: 1,
                     borderRadius: 5,
                     padding: 10,
@@ -280,11 +280,49 @@ class MonthScreen extends Component {
                 }}
                 onPress={() => Alert.alert(event.title)}
             >
-                <Text>{event.title}</Text>
-                <Text>{event.body.location}</Text>
-                <Text>{event.body.summary}</Text>
-                <Text>{new Date(event.startTime).toString()}</Text>
+                <Text style={{color: 'black', alignSelf: 'center', fontWeight: "700"}}>{event.title}</Text>
+
+                <Ionicons name={'pencil'} size={18} color={'blue'} style={{position: 'absolute', right: 20, top: 10}}
+                          onPress={() => console.log(1)}/>
+
+                {
+                    event.body.summary ?
+
+                        <View style={{paddingTop: 5, paddingBottom: 5}}>
+                            <Text>Summary: </Text>
+                            <Text style={{
+
+                                backgroundColor: 'white'
+                            }}>{event.body.summary}</Text>
+
+                        </View>
+                        : null}
+
+                {
+                    event.body.location ? <View>
+                        <Text>Location: </Text>
+                        <Text style={{backgroundColor: 'white'}}>{event.body.location}</Text>
+                    </View> : null
+                }
+
+                <Text>Start:</Text>
+                <Text style={{backgroundColor: 'white'}}>{this.timeToFriendlyString(event.startTime)}</Text>
+
+                <Text style={{marginTop: 5}}>End:</Text>
+                <Text style={{backgroundColor: 'white'}}>{this.timeToFriendlyString(event.endTime)}</Text>
             </TouchableOpacity>
+        );
+    }
+
+    renderEmptyDate() {
+        return (
+            <View style={{
+                height: 15,
+                flex: 1,
+                paddingTop: 30
+            }}>
+                <Text>This is empty date!</Text>
+            </View>
         );
     }
 
@@ -294,7 +332,8 @@ class MonthScreen extends Component {
         return (
             <View style={[globalStyles.container, {padding: 0, backgroundColor: colors.background}]}>
 
-                <Modal visible={this.state.modalOpen || this.props.navigation.getParam("modalOpen")} animationType={'slide'}>
+                <Modal visible={this.state.modalOpen || this.props.navigation.getParam("modalOpen")}
+                       animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={globalStyles.modalContent}>
                             <Ionicons style={globalStyles.closeModal()} name={"close"} size={24}
@@ -326,8 +365,8 @@ class MonthScreen extends Component {
                     futureScrollRange={this.state.maxDate * 12 + (11 - date.getMonth())}
 
                     renderItem={this.renderItem.bind(this)}
-                    renderEmptyDate={this.renderEventCalendar.bind(this)}
-                    renderEmptyData={this.renderEventCalendar.bind(this)}
+                    renderEmptyDate={this.renderEmptyDate.bind(this)}
+                    renderEmptyData={this.renderEmptyDate.bind(this)}
                     //renderDay={this.loadItems.bind(this)}
                     loadItemsForMonth={this.loadItems.bind(this)}
                     monthFormat={'yyyy MM'}
