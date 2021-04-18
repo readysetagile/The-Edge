@@ -215,7 +215,7 @@ class MonthScreen extends Component {
                 <Text style={{color: 'black', alignSelf: 'center', fontWeight: "700"}}>{event.title}</Text>
 
                 <Ionicons name={'pencil'} size={18} color={'blue'} style={{position: 'absolute', right: 20, top: 10}}
-                          onPress={() => console.log(1)}/>
+                          onPress={() => this.setState({modalOpen: true, editingEventID: event.id})}/>
 
                 {
                     event.body.summary ?
@@ -275,9 +275,9 @@ class MonthScreen extends Component {
                                           this.props.navigation.setParams({
                                               modalOpen: false
                                           });
-                                          this.setState({modalOpen: false})
+                                          this.setState({modalOpen: false, editingEventID: null })
                                       }}/>
-                            <NewEventForm onSubmit={this.createEventFromForm}/>
+                            <NewEventForm onSubmit={this.createEventFromForm} event={this.state.events.get(this.state.editingEventID)}/>
                         </View>
                     </TouchableWithoutFeedback>
                 </Modal>

@@ -21,7 +21,7 @@ export const globalStyles = {
         height: 50,
         marginBottom: 20,
         justifyContent: "center",
-        padding: 20
+        padding: 15
     },
     errorText: {
         color: 'gold',

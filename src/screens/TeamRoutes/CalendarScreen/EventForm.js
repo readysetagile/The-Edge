@@ -8,7 +8,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import FlatButton from "../../../Components/SubmitButton";
 import * as yup from "yup";
 
-export default function NewEventForm({onSubmit}) {
+export default function NewEventForm({onSubmit, event}) {
 
     const currDate = new Date();
     const [startDate, setStartDate] = useState(currDate);
@@ -28,18 +28,20 @@ export default function NewEventForm({onSubmit}) {
 
     })
 
+    const startingTime = new Date(event?.startTime || currDate);
+    const endingTime = new Date(event?.endTime || currDate);
+    console.log(event, 1)
     return (
         <View style={globalStyles.modalView()}>
-
             <Formik
                 initialValues={{
-                    title: '',
-                    location: '',
-                    summary: '',
-                    "start date": currDate,
-                    "start time": currDate,
-                    "end date": currDate,
-                    "end time": currDate
+                    title: event?.title || '',
+                    location: event?.body?.location || '',
+                    summary: event?.body?.summary || '',
+                    "start date": startingTime,
+                    "start time": startingTime,
+                    "end date": endingTime,
+                    "end time": endingTime
                 }}
                 validationSchema={EventSchema}
                 onSubmit={(values, actions) => {
@@ -50,12 +52,15 @@ export default function NewEventForm({onSubmit}) {
                 {(props) => (
                     <View style={{alignItems: 'center', padding: 10, flex: 1}}>
 
-                        <Text style={{color: colors.titleText, fontSize: 30, fontWeight: 'bold', padding: 20}}>New Event</Text>
-
+                        <Text style={{color: colors.titleText, fontSize: 30, fontWeight: 'bold', padding: 20}}>
+                            {event ? "Editing Event" : "New Event"}
+                        </Text>
+                        
                         <TextInput
                             style={[globalStyles.inputView, {marginBottom: 0}]}
                             placeholderTextColor={'#003f5c'}
                             placeholder='Title'
+                            value={props.values.title}
                             onChangeText={props.handleChange('title')}
                             onBlur={props.handleBlur('title')}
                         />
@@ -66,6 +71,7 @@ export default function NewEventForm({onSubmit}) {
                             style={[globalStyles.inputView]}
                             placeholderTextColor={'#003f5c'}
                             placeholder='Location'
+                            value={props.values.location}
                             onChangeText={props.handleChange('location')}
                             onBlur={props.handleBlur('location')}
                         />
@@ -75,6 +81,7 @@ export default function NewEventForm({onSubmit}) {
                             multiline={true}
                             placeholderTextColor={'#003f5c'}
                             placeholder='Summary'
+                            value={props.values.summary}
                             onChangeText={props.handleChange('summary')}
                             onBlur={props.handleBlur('summary')}
                         />
@@ -85,7 +92,7 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 80}}
                                     testID="dateTimePicker"
-                                    value={startDate}
+                                    value={props.values['start date']}
                                     mode={'date'}
                                     is24Hour={true}
                                     display="default"
@@ -104,7 +111,7 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 90}}
                                     testID="dateTimePicker"
-                                    value={startTime}
+                                    value={props.values['start time']}
                                     mode={'time'}
                                     is24Hour={true}
                                     display="default"
@@ -123,7 +130,7 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 80}}
                                     testID="dateTimePicker"
-                                    value={endDate}
+                                    value={props.values['end date']}
                                     mode={'date'}
                                     is24Hour={true}
                                     display="default"
@@ -141,7 +148,7 @@ export default function NewEventForm({onSubmit}) {
                                 <DateTimePicker
                                     style={{width: 90}}
                                     testID="dateTimePicker"
-                                    value={endTime}
+                                    value={props.values['end time']}
                                     mode={'time'}
                                     is24Hour={true}
                                     display="default"
