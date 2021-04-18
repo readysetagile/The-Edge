@@ -5,6 +5,7 @@ import HeaderBurgerNav from '../../src/Components/HeaderBurgerNav';
 import {openMenu} from "../../src/firebase/Util";
 import DayScreen from "../../src/screens/TeamRoutes/CalendarScreen/DayScreen";
 import {MonthScreen, YearScreen} from "../../src/screens";
+import {Ionicons} from "@expo/vector-icons";
 
 const screens = {
     
@@ -23,6 +24,19 @@ const screens = {
                 headerTitle: () => <HeaderBurgerNav leftSide={false} title={"Calendar - Month"} onPress={() => openMenu(navigation)}/>,
                 headerLeft: () => {
                     return <HeaderBackButton onPress={() => navigation.navigate("YearScreen")} label={navigation.getParam("yearNum")}/>
+                },
+                headerRight: () => {
+                    return (
+                        <Ionicons name={'add'} size={25}
+                                  onPress={() => {
+                                      navigation.setParams({
+                                          modalOpen: true
+                                      })
+                                  }}
+                                  color={'blue'} style={{
+                            right: 20,
+                        }}/>
+                    )
                 }
             }
         }

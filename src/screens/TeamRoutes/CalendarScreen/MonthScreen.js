@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text, View, Dimensions, TouchableWithoutFeedback, Keyboard, Modal} from 'react-native'
+import {Text, View, Dimensions, TouchableWithoutFeedback, Keyboard, Modal, TouchableOpacity, Alert} from 'react-native'
 import {globalStyles} from "../../GlobalStyles";
 import colors from "../../styles";
 import Edge from '../../../firebase';
@@ -7,6 +7,7 @@ import {Agenda} from 'react-native-calendars';
 import EventCalendar from 'react-native-events-calendar';
 import GlobalData from "../../../GlobalData";
 import {Ionicons} from "@expo/vector-icons";
+import moment from 'moment';
 import styles from "../../LoginRoutes/HomeScreen/styles";
 import TeamCreateForm from "../../LoginRoutes/HomeScreen/TeamCreateForm";
 import NewEventForm from "./EventForm";
@@ -25,6 +26,7 @@ class MonthScreen extends Component {
         events: new Map(),
         eventItems: {},
         modalOpen: false,
+        items: {}
     }
 
     constructor(props) {
@@ -37,6 +39,7 @@ class MonthScreen extends Component {
             events: new Map(),
             eventItems: {},
             modalOpen: false,
+            items: {}
         }
     }
 
@@ -81,6 +84,9 @@ class MonthScreen extends Component {
     componentDidMount() {
 
         //yyyy-mm-dd
+        this.props.navigation.setParams({
+            modalOpen: false
+        })
 
         Edge.teams.get(GlobalData.teamID).then(team => {
             team.getMember(GlobalData.profileID).then(member => {
@@ -157,10 +163,11 @@ class MonthScreen extends Component {
     createEventFromForm = (values) => {
 
         this.setState({modalOpen: false});
+        this.props.navigation.setParams({
+            modalOpen: false
+        })
         this.createEvent(values).then(event => {
-
             this.addEventToState(event);
-
         })
 
     }
@@ -175,7 +182,7 @@ class MonthScreen extends Component {
     }
 
     renderCalendar(day, item){
-        console.log(day, item)
+        //console.log(day, item)
         if((day && item)) {
 
             const items = [];
@@ -228,17 +235,75 @@ class MonthScreen extends Component {
     }
 
 
+    loadItems(day) {
+        setTimeout(() => {
+            for (let i = -15; i < 85; i++) {
+                const time = day.timestamp + i * 24 * 60 * 60 * 1000;
+                const strTime = this.timeToString(time);
+                if (!this.state.items[strTime]) {
+                    this.state.items[strTime] = [];
+                    const numItems = Math.floor(Math.random() * 3 + 1);
+                    for (let j = 0; j < numItems; j++) {
+                        this.state.items[strTime].push({
+                            name: 'Item for ' + strTime + ' #' + j,
+                            height: Math.max(50, Math.floor(Math.random() * 150))
+                        });
+                    }
+                }
+            }
+            const newItems = {};
+            Object.keys(this.state.items).forEach(key => {
+                newItems[key] = this.state.items[key];
+            });
+            this.setState({
+                items: newItems
+            });
+        }, 1000);
+    }
+
+    timeToString(time) {
+        const date = new Date(time);
+        return date.toISOString().split('T')[0];
+    }
+
+    renderItem(item) {
+        const event = this.state.events.get(item)
+        return (
+            <TouchableOpacity
+                style={{
+                    backgroundColor: 'white',
+                    flex: 1,
+                    borderRadius: 5,
+                    padding: 10,
+                    marginRight: 10,
+                    marginTop: 17,
+                }}
+                onPress={() => Alert.alert(event.title)}
+            >
+                <Text>{event.title}</Text>
+                <Text>{event.body.location}</Text>
+                <Text>{event.body.summary}</Text>
+                <Text>{new Date(event.startTime).toString()}</Text>
+            </TouchableOpacity>
+        );
+    }
+
     render() {
 
         const date = new Date();
         return (
             <View style={[globalStyles.container, {padding: 0, backgroundColor: colors.background}]}>
 
-                <Modal visible={this.state.modalOpen} animationType={'slide'}>
+                <Modal visible={this.state.modalOpen || this.props.navigation.getParam("modalOpen")} animationType={'slide'}>
                     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                         <View style={globalStyles.modalContent}>
                             <Ionicons style={globalStyles.closeModal()} name={"close"} size={24}
-                                      onPress={() => this.setState({modalOpen: false})}/>
+                                      onPress={() => {
+                                          this.props.navigation.setParams({
+                                              modalOpen: false
+                                          });
+                                          this.setState({modalOpen: false})
+                                      }}/>
                             <NewEventForm onSubmit={this.createEventFromForm}/>
                         </View>
                     </TouchableWithoutFeedback>
@@ -259,9 +324,12 @@ class MonthScreen extends Component {
                     items={this.state.eventItems}
                     pastScrollRange={this.state.minDate * 12 + (date.getMonth())}
                     futureScrollRange={this.state.maxDate * 12 + (11 - date.getMonth())}
+
+                    renderItem={this.renderItem.bind(this)}
                     renderEmptyDate={this.renderEventCalendar.bind(this)}
                     renderEmptyData={this.renderEventCalendar.bind(this)}
-                    renderDay={this.renderCalendar.bind(this)}
+                    //renderDay={this.loadItems.bind(this)}
+                    loadItemsForMonth={this.loadItems.bind(this)}
                     monthFormat={'yyyy MM'}
                     hideArrows={true}
                     hideExtraDays={true}
