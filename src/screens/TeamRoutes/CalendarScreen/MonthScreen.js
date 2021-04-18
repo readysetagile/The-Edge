@@ -123,6 +123,7 @@ class MonthScreen extends Component {
             })
         })
 
+
         const params = this.props.navigation.state.params
         setTimeout(() => {
             const agenda = this.agendaRef;
@@ -130,7 +131,6 @@ class MonthScreen extends Component {
         }, 200)
 
     }
-
 
     addEventToState(event) {
 
@@ -166,22 +166,35 @@ class MonthScreen extends Component {
                 this.addEventToState(event);
             })
         }else{
-            const event = this.state.events.get(eventID);
-            let startTime = values['start time'], startDate = values['start date'];
-            let endTime = values['end time'], endDate = values['end date'];
-            startTime = this.combineTimes(startTime, startDate);
-            endTime = this.combineTimes(endTime, endDate);
+            this.updateEvent(values, eventID);
 
-            event.startTime = startTime;
-            event.endTime = endTime;
-            event.title = values.title;
-            event.body = {
-                location: values.location,
-                summary: values.summary,
-            };
-            event.save();
+            const eventItems = this.state.eventItems;
+            this.setState({
+                eventItems: null,
+            }, () => {
+                this.setState({
+                    eventItems: eventItems
+                })
+            })
+
         }
+    }
 
+    updateEvent(values, eventID){
+        const event = this.state.events.get(eventID);
+        let startTime = values['start time'], startDate = values['start date'];
+        let endTime = values['end time'], endDate = values['end date'];
+        startTime = this.combineTimes(startTime, startDate);
+        endTime = this.combineTimes(endTime, endDate);
+
+        event.startTime = startTime;
+        event.endTime = endTime;
+        event.title = values.title;
+        event.body = {
+            location: values.location,
+            summary: values.summary,
+        };
+        event.save();
     }
 
     loadItems(day) {
