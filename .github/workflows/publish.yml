@@ -22,14 +22,14 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-        with:
-            node-version: 15.x
+        #with:
+            #node-version: 15.x
       - uses: expo/expo-github-action@v5
         with:
-            expo-version: 4.x
+            #expo-version: 4.x
             expo-username: ${{ github.event.inputs.expo_user}}
             expo-password: ${{ github.event.inputs.expo_password}}
       #- run: npm install
-      - run: yarn add expo
+      #- run: yarn add expo
       - run: expo login -u TheEdge -p reactiscool
       - run: expo publish --target managed
