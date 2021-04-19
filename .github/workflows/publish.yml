@@ -29,6 +29,6 @@ jobs:
             expo-version: 4.x
             expo-username: ${{ github.event.inputs.expo_user}}
             expo-password: ${{ github.event.inputs.expo_password}}
-      - run: npm install
+      #- run: npm install
       - run: expo login -u TheEdge -p reactiscool
       - run: expo publish --target managed
