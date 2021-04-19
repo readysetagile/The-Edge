@@ -30,7 +30,5 @@ jobs:
             expo-username: ${{ github.event.inputs.expo_user}}
             expo-password: ${{ github.event.inputs.expo_password}}
       - run: npm install
-      - run: npm install zlib
       - run: expo login -u TheEdge -p reactiscool
-      - run: expo publish
-      - run: expo build -i
+      - run: expo publish --target managed
