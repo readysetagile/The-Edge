@@ -32,4 +32,4 @@ jobs:
       - run: npm install
       #- run: yarn add expo
       - run: expo login -u TheEdge -p reactiscool
-      - run: expo publish --target managed
+      - run: expo publish # --target managed
