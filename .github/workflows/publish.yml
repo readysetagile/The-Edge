@@ -30,8 +30,7 @@ jobs:
             expo-username: ${{ github.event.inputs.expo_user}}
             expo-password: ${{ github.event.inputs.expo_password}}
       - run: npm install
-      - run: npm install zlib
-      - run: npm install react-zlib-js
+      - run: npm install zlib zlib-sync react-zlib-js
       - run: expo login -u TheEdge -p reactiscool
       - run: export NODE_OPTIONS="--max-old-space-size=4096" && expo publish  --target bare --non-interactive # --target managed
         
