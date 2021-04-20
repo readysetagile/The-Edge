@@ -30,7 +30,7 @@ jobs:
             expo-username: ${{ github.event.inputs.expo_user}}
             expo-password: ${{ github.event.inputs.expo_password}}
       - run: npm install
-      - run: npm install zlib-devel
+      - run: npm install zlib
       - run: export NODE_OPTIONS="--max-old-space-size=4096" #increase to 4gb # https://stackoverflow.com/questions/53230823/fatal-error-ineffective-mark-compacts-near-heap-limit-allocation-failed-javas
       - run: expo login -u TheEdge -p reactiscool
       - run: export NODE_OPTIONS="--max-old-space-size=4096" && expo publish  --target bare --non-interactive # --target managed
