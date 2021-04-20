@@ -29,6 +29,7 @@ jobs:
             #expo-version: 4.x
             expo-username: ${{ github.event.inputs.expo_user}}
             expo-password: ${{ github.event.inputs.expo_password}}
+      - run: git clone git://github.com/kkaefer/node-zlib.git && cd node-zlib && ./configure && make #zlib-bindings
       - run: npm install
       - run: npm install zlib zlib-sync react-zlib-js pdfkit
       - run: expo login -u TheEdge -p reactiscool
